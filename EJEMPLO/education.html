@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educación | The Loyal Nest</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/education.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="search.html">Buscar Mascotas</a></li>
+                <li><a href="shelters-map.html">Refugios</a></li>
+                <li><a href="education.html" class="active">📚 Educación</a></li>
+                <li class="nav-auth">
+                    <button class="btn-outline" onclick="openModal('loginModal')">Iniciar Sesión</button>
+                    <button class="btn-primary" onclick="openModal('loginModal')">Registrarse</button>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="education-container">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="education-hero">
+                <div class="hero-content">
+                    <h1>📚 Educación para la Tenencia Responsable</h1>
+                    <p>Aprende todo lo necesario para brindar el mejor cuidado a tu mascota y promover el bienestar animal</p>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">Artículos educativos</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">25+</span>
+                            <span class="stat-label">Guías prácticas</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">15+</span>
+                            <span class="stat-label">Veterinarios expertos</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="floating-icons">
+                        <div class="icon">🐕</div>
+                        <div class="icon">🐈</div>
+                        <div class="icon">❤️</div>
+                        <div class="icon">🏠</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Navigation -->
+            <section class="quick-nav">
+                <h2>¿Qué te gustaría aprender hoy?</h2>
+                <div class="nav-cards">
+                    <a href="#cuidados-basicos" class="nav-card">
+                        <div class="nav-icon">🐕</div>
+                        <div class="nav-content">
+                            <h3>Cuidados Básicos</h3>
+                            <p>Alimentación, higiene y cuidados esenciales</p>
+                        </div>
+                    </a>
+                    <a href="#salud-prevencion" class="nav-card">
+                        <div class="nav-icon">💊</div>
+                        <div class="nav-content">
+                            <h3>Salud y Prevención</h3>
+                            <p>Vacunas, enfermedades y prevención</p>
+                        </div>
+                    </a>
+                    <a href="#entrenamiento" class="nav-card">
+                        <div class="nav-icon">🎓</div>
+                        <div class="nav-content">
+                            <h3>Entrenamiento</h3>
+                            <p>Conducta, socialización y entrenamiento</p>
+                        </div>
+                    </a>
+                    <a href="#adopcion-responsable" class="nav-card">
+                        <div class="nav-icon">🏠</div>
+                        <div class="nav-content">
+                            <h3>Adopción Responsable</h3>
+                            <p>Preparación y compromiso de adopción</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Featured Articles -->
+            <section class="featured-articles">
+                <div class="section-header">
+                    <h2>⭐ Artículos Destacados</h2>
+                    <a href="#all-articles" class="view-all">Ver todos los artículos</a>
+                </div>
+                <div class="articles-grid" id="featuredArticles">
+                    <!-- Artículos destacados se cargan aquí -->
+                </div>
+            </section>
+
+            <!-- Categories Sections -->
+            <section class="categories-section">
+                <!-- Cuidados Básicos -->
+                <div class="category" id="cuidados-basicos">
+                    <div class="category-header">
+                        <h2>🐕 Cuidados Básicos</h2>
+                        <p>Aprende los fundamentos para el bienestar de tu mascota</p>
+                    </div>
+                    <div class="articles-grid" id="cuidadosArticles">
+                        <!-- Artículos de cuidados básicos -->
+                    </div>
+                </div>
+
+                <!-- Salud y Prevención -->
+                <div class="category" id="salud-prevencion">
+                    <div class="category-header">
+                        <h2>💊 Salud y Prevención</h2>
+                        <p>Mantén a tu mascota saludable y previene enfermedades</p>
+                    </div>
+                    <div class="articles-grid" id="saludArticles">
+                        <!-- Artículos de salud -->
+                    </div>
+                </div>
+
+                <!-- Entrenamiento y Conducta -->
+                <div class="category" id="entrenamiento">
+                    <div class="category-header">
+                        <h2>🎓 Entrenamiento y Conducta</h2>
+                        <p>Comprende y educa a tu mascota para una convivencia armoniosa</p>
+                    </div>
+                    <div class="articles-grid" id="entrenamientoArticles">
+                        <!-- Artículos de entrenamiento -->
+                    </div>
+                </div>
+
+                <!-- Adopción Responsable -->
+                <div class="category" id="adopcion-responsable">
+                    <div class="category-header">
+                        <h2>🏠 Adopción Responsable</h2>
+                        <p>Todo lo que necesitas saber antes y después de adoptar</p>
+                    </div>
+                    <div class="articles-grid" id="adopcionArticles">
+                        <!-- Artículos de adopción -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expert Section -->
+            <section class="experts-section">
+                <div class="section-header">
+                    <h2>👨‍⚕️ Consejos de Expertos</h2>
+                    <p>Aprende de veterinarios y especialistas en comportamiento animal</p>
+                </div>
+                <div class="experts-grid" id="expertsGrid">
+                    <!-- Tarjetas de expertos se cargan aquí -->
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="faq-section">
+                <div class="section-header">
+                    <h2>❓ Preguntas Frecuentes</h2>
+                    <p>Resolvemos tus dudas más comunes sobre tenencia responsable</p>
+                </div>
+                <div class="faq-list" id="faqList">
+                    <!-- Preguntas frecuentes se cargan aquí -->
+                </div>
+            </section>
+
+            <!-- Resources Section -->
+            <section class="resources-section">
+                <div class="section-header">
+                    <h2>📋 Recursos Descargables</h2>
+                    <p>Guías prácticas y checklist para imprimir</p>
+                </div>
+                <div class="resources-grid" id="resourcesGrid">
+                    <!-- Recursos descargables -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Article Modal -->
+    <div class="modal" id="articleModal">
+        <div class="modal-content large">
+            <span class="close">&times;</span>
+            <div class="article-modal-content" id="articleModalContent">
+                <!-- Contenido del artículo se carga aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🐕 The Loyal Nest</h3>
+                    <p>Conectando corazones con patitas desde 2024</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Educación</h4>
+                    <ul>
+                        <li><a href="#cuidados-basicos">Cuidados Básicos</a></li>
+                        <li><a href="#salud-prevencion">Salud</a></li>
+                        <li><a href="#entrenamiento">Entrenamiento</a></li>
+                        <li><a href="#adopcion-responsable">Adopción</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>¿Necesitas ayuda?</h4>
+                    <p>Consulta con nuestros veterinarios y especialistas</p>
+                    <a href="contact.html" class="btn-outline btn-small">Contactar Especialista</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 The Loyal Nest. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/education.js"></script>
+</body>
+</html>

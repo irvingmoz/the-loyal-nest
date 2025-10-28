@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Loyal Nest - Adopta una Mascota</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <span class="logo">🐕 The Loyal Nest</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Inicio</a></li>
+                <li><a href="#search">Buscar Mascotas</a></li>
+                <li><a href="#shelters">Refugios</a></li>
+                <li><a href="#education">Educación</a></li>
+                <li class="nav-auth">
+                    <button class="btn-outline" id="loginBtn">Iniciar Sesión</button>
+                    <button class="btn-primary" id="registerBtn">Registrarse</button>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="hero-title">Encuentra a tu <span class="highlight">mejor amigo</span></h1>
+            <p class="hero-subtitle">Conecta con refugios y rescata animales. La adopción es el mejor camino.</p>
+            <div class="hero-actions">
+                <button class="btn-primary btn-large" onclick="scrollToSearch()">
+                    🔍 Buscar Mascotas
+                </button>
+                <button class="btn-secondary btn-large">
+                    📚 Aprender Más
+                </button>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="pet-illustration">
+                <div class="pet-dog">🐕</div>
+                <div class="pet-cat">🐈</div>
+                <div class="pet-heart">❤️</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Search -->
+    <section class="quick-search" id="search">
+        <div class="container">
+            <h2 class="section-title">Encuentra tu compañero ideal</h2>
+            <div class="search-filters">
+                <div class="filter-group">
+                    <select class="filter-select">
+                        <option value="">🐕 Especie</option>
+                        <option value="perro">Perro</option>
+                        <option value="gato">Gato</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select class="filter-select">
+                        <option value="">🎂 Edad</option>
+                        <option value="cachorro">Cachorro</option>
+                        <option value="joven">Joven</option>
+                        <option value="adulto">Adulto</option>
+                        <option value="senior">Senior</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select class="filter-select">
+                        <option value="">📏 Tamaño</option>
+                        <option value="pequeno">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <input type="text" class="filter-input" placeholder="📍 Ubicación">
+                </div>
+                <button class="btn-primary search-btn">Buscar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Pets -->
+    <section class="featured-pets">
+        <div class="container">
+            <h2 class="section-title">Mascotas Destacadas</h2>
+            <div class="pets-grid" id="petsGrid">
+                <!-- Las mascotas se cargan dinámicamente -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">1,247</div>
+                    <div class="stat-label">Mascotas Adoptadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">42</div>
+                    <div class="stat-label">Refugios Asociados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">89%</div>
+                    <div class="stat-label">Tasa de Éxito</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Soporte</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🐕 The Loyal Nest</h3>
+                    <p>Conectando corazones con patitas desde 2024</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="#search">Buscar Mascotas</a></li>
+                        <li><a href="#shelters">Refugios</a></li>
+                        <li><a href="#education">Educación</a></li>
+                        <li><a href="#">Sobre Nosotros</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <ul>
+                        <li>📧 hola@theloyalnest.mx</li>
+                        <li>📞 55-1234-5678</li>
+                        <li>📍 Iztapalapa, CDMX</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 The Loyal Nest. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Iniciar Sesión</h2>
+            <form class="auth-form">
+                <input type="email" placeholder="📧 Correo electrónico" required>
+                <input type="password" placeholder="🔒 Contraseña" required>
+                <button type="submit" class="btn-primary btn-full">Acceder</button>
+            </form>
+            <p class="auth-switch">¿No tienes cuenta? <a href="#" id="switchToRegister">Regístrate aquí</a></p>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
