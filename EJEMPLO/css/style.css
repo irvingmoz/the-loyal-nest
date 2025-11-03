@@ -40,14 +40,23 @@ body {
 
 /* Header */
 .header {
-    background: var(--light);
-    box-shadow: var(--shadow);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
 }
-
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    max-width: 1200px;  /* ✅ Esto solo limita el contenido, no el fondo */
+    margin: 0 auto;
+}
 .nav {
     display: flex;
     justify-content: space-between;

@@ -10,19 +10,19 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
+     <header class="header">
         <nav class="nav">
             <div class="nav-brand">
                 <a href="index.html" class="logo">🐕 The Loyal Nest</a>
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="search.html">Buscar Mascotas</a></li>
-                <li><a href="shelters.html">Refugios</a></li>
-                <li><a href="education.html">Educación</a></li>
+                <li><a href="search-pets.html">Buscar Mascotas</a></li>
+                <li><a href="shelters-map.html">Refugios</a></li>
+                <li><a href="education.html" class="active">📚 Educación</a></li>
                 <li class="nav-auth">
-                    <button class="btn-outline" id="loginBtn">Iniciar Sesión</button>
-                    <button class="btn-primary" id="registerBtn">Registrarse</button>
+                    <button class="btn-outline" onclick="openModal('loginModal')">Iniciar Sesión</button>
+                    <button class="btn-primary" onclick="openModal('loginModal')">Registrarse</button>
                 </li>
             </ul>
             <div class="nav-toggle">
