@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Rescatista | The Loyal Nest</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dashboard-page">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">🐕</span>
+                <span class="logo-text">The Loyal Nest</span>
+            </div>
+        </div>
+
+        <div class="sidebar-user">
+            <div class="user-avatar">🏠</div>
+            <div class="user-info">
+                <span class="user-name">Refugio Patitas Felices</span>
+                <span class="user-role">Rescatista</span>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-item active">
+                <a href="#inicio" class="menu-link">
+                    <span class="menu-icon">🏠</span>
+                    <span class="menu-text">Inicio</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#mascotas" class="menu-link">
+                    <span class="menu-icon">🐕</span>
+                    <span class="menu-text">Mis Mascotas</span>
+                    <span class="menu-badge">15</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#solicitudes" class="menu-link">
+                    <span class="menu-icon">📋</span>
+                    <span class="menu-text">Solicitudes</span>
+                    <span class="menu-badge">8</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#agregar" class="menu-link">
+                    <span class="menu-icon">➕</span>
+                    <span class="menu-text">Agregar Mascota</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#reportes" class="menu-link">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-text">Reportes</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="#refugio" class="menu-link">
+                    <span class="menu-icon">🏠</span>
+                    <span class="menu-text">Mi Refugio</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="logout()">
+                <span class="logout-icon">🚪</span>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1>Bienvenido, Refugio Patitas 🏠</h1>
+                <p>Gestiona tus mascotas y solicitudes de adopción</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-primary" onclick="navigateTo('agregar')">
+                    <span class="btn-icon">➕</span>
+                    <span>Agregar Mascota</span>
+                </button>
+                <button class="btn-notification">
+                    <span class="notification-icon">🔔</span>
+                    <span class="notification-badge">5</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🐕</div>
+                <div class="stat-info">
+                    <span class="stat-number">15</span>
+                    <span class="stat-label">Mascotas Activas</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📋</div>
+                <div class="stat-info">
+                    <span class="stat-number">8</span>
+                    <span class="stat-label">Solicitudes Nuevas</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-info">
+                    <span class="stat-number">12</span>
+                    <span class="stat-label">Adopciones Este Mes</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-info">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Urgentes</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Urgent Pets -->
+        <section class="urgent-pets">
+            <div class="section-header">
+                <h2>🐾 Mascotas que Necesitan Hogar Urgente</h2>
+                <span class="urgent-badge">URGENTE</span>
+            </div>
+            <div class="pets-grid">
+                <!-- Urgent Pet Card -->
+                <div class="pet-card urgent">
+                    <div class="pet-image">
+                        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=300&h=200&fit=crop" alt="Toby">
+                        <span class="pet-status urgent">Urgente</span>
+                    </div>
+                    <div class="pet-info">
+                        <h3>Toby</h3>
+                        <div class="pet-details">
+                            <span>🐕 Mixed • 4 años</span>
+                            <span>⏰ Tiempo limitado: 3 días</span>
+                        </div>
+                        <p class="pet-description">Toby necesita un hogar urgente debido a problemas de espacio en el refugio.</p>
+                        <div class="pet-actions">
+                            <button class="btn-primary btn-sm">Ver Solicitudes</button>
+                            <button class="btn-outline btn-sm">Compartir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Applications -->
+        <div class="dashboard-grid">
+            <section class="applications-section">
+                <div class="section-header">
+                    <h2>📋 Solicitudes Recientes</h2>
+                    <a href="#ver-todas" class="see-all">Ver todas</a>
+                </div>
+                <div class="applications-list">
+                    <!-- Application Item -->
+                    <div class="application-card">
+                        <div class="application-header">
+                            <div class="applicant-info">
+                                <div class="applicant-avatar">👤</div>
+                                <div>
+                                    <h4>Carlos Rodríguez</h4>
+                                    <span>Para: Luna 🐈</span>
+                                </div>
+                            </div>
+                            <span class="application-status new">Nueva</span>
+                        </div>
+                        <div class="application-details">
+                            <span>📅 Enviada: Hoy</span>
+                            <span>🏠 CDMX, Condesa</span>
+                        </div>
+                        <div class="application-actions">
+                            <button class="btn-outline btn-sm">Rechazar</button>
+                            <button class="btn-primary btn-sm">Ver Solicitud</button>
+                        </div>
+                    </div>
+
+                    <!-- More application cards... -->
+                </div>
+            </section>
+
+            <!-- Quick Stats -->
+            <section class="quick-stats">
+                <div class="section-header">
+                    <h2>📊 Resumen Rápido</h2>
+                </div>
+                <div class="stats-cards">
+                    <div class="mini-stat">
+                        <span class="mini-stat-value">75%</span>
+                        <span class="mini-stat-label">Tasa de Éxito</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-value">3d</span>
+                        <span class="mini-stat-label">Tiempo Promedio</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-value">24</span>
+                        <span class="mini-stat-label">Total Adopciones</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
