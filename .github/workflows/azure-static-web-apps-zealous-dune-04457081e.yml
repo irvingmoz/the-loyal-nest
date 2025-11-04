@@ -1,4 +1,5 @@
 name: Azure Static Web Apps CI/CD
+
 on:
   push:
     branches: [ main ]
@@ -17,7 +18,7 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "EJEMPLO"        # <=== raíz del repo
-          api_location: ""         # no tienes API
+          app_location: "EJEMPLO"  # <--- aquí está tu index.html
+          api_location: ""         # no usas API
           output_location: ""      # sin build (HTML/CSS/JS planos)
 
