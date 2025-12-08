@@ -4,15 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa de Refugios | The Loyal Nest</title>
+
+    <!-- Estilos globales -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/map.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
     <!-- Header -->
-     <header class="header">
+    <header class="header">
         <nav class="nav">
             <div class="nav-brand">
                 <a href="index.html" class="logo">🐕 The Loyal Nest</a>
@@ -20,11 +23,24 @@
             <ul class="nav-links">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="search-pets.html">Buscar Mascotas</a></li>
-                <li><a href="shelters-map.html">Refugios</a></li>
-                <li><a href="education.html" class="active">📚 Educación</a></li>
+                <li><a href="shelters-map.html" class="active">Refugios</a></li>
+                <li><a href="education.html">📚 Educación</a></li>
+
+                <!-- Botones de autenticación -->
                 <li class="nav-auth">
-                    <button class="btn-outline" onclick="openModal('loginModal')">Iniciar Sesión</button>
-                    <button class="btn-primary" onclick="openModal('loginModal')">Registrarse</button>
+                    <button class="btn-outline" id="loginBtn">Iniciar Sesión</button>
+                    <button class="btn-primary" id="registerBtn">Registrarse</button>
+                </li>
+
+                <!-- Menú de usuario cuando hay sesión -->
+                <li id="userMenu" class="nav-user" style="display:none;">
+                    <span class="user-info">
+                        <strong id="userName">Mi cuenta</strong>
+                    </span>
+                    <div class="user-menu">
+                        <a href="#" id="userDashboardLink" class="menu-item">Ir a mi panel</a>
+                        <button type="button" class="menu-item logout" onclick="sessionManager.logout()">Cerrar sesión</button>
+                    </div>
                 </li>
             </ul>
             <div class="nav-toggle">
@@ -38,11 +54,11 @@
     <!-- Main Content -->
     <main class="map-container">
         <div class="container">
-            <!-- Header -->
+            <!-- Encabezado de la sección -->
             <div class="map-header">
                 <div class="header-content">
                     <h1>🗺️ Encuentra Refugios Cercanos</h1>
-                    <p>Descubre refugios y centros de adopción cerca de ti en Iztapalapa y CDMX</p>
+                    <p>Descubre refugios y centros de adopción cerca de ti en Iztapalapa y CDMX.</p>
                 </div>
                 <div class="header-actions">
                     <button class="btn-primary" onclick="locateUser()">
@@ -54,16 +70,16 @@
                 </div>
             </div>
 
-            <!-- Map and Filters -->
+            <!-- Layout principal: filtros + mapa + lista -->
             <div class="map-layout">
-                <!-- Filters Sidebar -->
-                <div class="filters-sidebar">
+                <!-- Sidebar de filtros -->
+                <aside class="filters-sidebar">
                     <div class="filters-header">
                         <h3>🔍 Filtros de Búsqueda</h3>
                         <button class="btn-text" onclick="clearFilters()">Limpiar</button>
                     </div>
 
-                    <!-- Distance Filter -->
+                    <!-- Filtro de distancia -->
                     <div class="filter-group">
                         <label for="distanceFilter">Distancia máxima</label>
                         <select id="distanceFilter" onchange="filterByDistance()">
@@ -75,7 +91,7 @@
                         </select>
                     </div>
 
-                    <!-- Species Filter -->
+                    <!-- Filtro de especies -->
                     <div class="filter-group">
                         <label>Especies disponibles</label>
                         <div class="checkbox-filters">
@@ -90,18 +106,17 @@
                         </div>
                     </div>
 
-                    <!-- Rating Filter -->
+                    <!-- Filtro de calificación -->
                     <div class="filter-group">
                         <label for="ratingFilter">Calificación mínima</label>
                         <select id="ratingFilter" onchange="filterShelters()">
-                            <option value="0">Todas las calificaciones</option>
-                            <option value="3">⭐ 3.0+</option>
-                            <option value="4" selected>⭐ 4.0+</option>
-                            <option value="4.5">⭐ 4.5+</option>
+                            <option value="3">3+ estrellas</option>
+                            <option value="4" selected>4+ estrellas</option>
+                            <option value="4.5">4.5+ estrellas</option>
                         </select>
                     </div>
 
-                    <!-- Services Filter -->
+                    <!-- Filtro de servicios -->
                     <div class="filter-group">
                         <label>Servicios disponibles</label>
                         <div class="checkbox-filters">
@@ -124,18 +139,18 @@
                         </div>
                     </div>
 
-                    <!-- Shelter Count -->
+                    <!-- Conteo de refugios -->
                     <div class="shelters-count">
                         <div class="count-badge">
-                            <span class="count-number" id="sheltersCount">24</span>
+                            <span class="count-number" id="sheltersCount">0</span>
                             <span class="count-label">refugios encontrados</span>
                         </div>
                     </div>
-                </div>
+                </aside>
 
-                <!-- Map and Results -->
-                <div class="map-content">
-                    <!-- Map Container -->
+                <!-- Contenido de mapa + resultados -->
+                <section class="map-content">
+                    <!-- Mapa -->
                     <div class="map-wrapper">
                         <div id="sheltersMap"></div>
                         <div class="map-controls">
@@ -151,8 +166,8 @@
                         </div>
                     </div>
 
-                    <!-- Results List -->
-                    <div class="results-sidebar">
+                    <!-- Lista de resultados -->
+                    <aside class="results-sidebar">
                         <div class="results-header">
                             <h3>🏠 Refugios Cercanos</h3>
                             <div class="results-sort">
@@ -167,11 +182,11 @@
                         <div class="results-list" id="sheltersList">
                             <!-- Los refugios se cargan dinámicamente -->
                         </div>
-                    </div>
-                </div>
+                    </aside>
+                </section>
             </div>
 
-            <!-- Statistics Section -->
+            <!-- Sección de estadísticas -->
             <section class="map-statistics">
                 <div class="stats-grid">
                     <div class="stat-item">
@@ -207,20 +222,20 @@
         </div>
     </main>
 
-    <!-- Shelter Detail Modal -->
+    <!-- Modal de detalles del refugio -->
     <div class="modal" id="shelterModal">
         <div class="modal-content large">
-            <span class="close">&times;</span>
+            <span class="close" onclick="closeModal('shelterModal')">&times;</span>
             <div class="shelter-modal-content" id="shelterModalContent">
                 <!-- El contenido del refugio se carga aquí -->
             </div>
         </div>
     </div>
 
-    <!-- Location Permission Modal -->
+    <!-- Modal de permiso de ubicación -->
     <div class="modal" id="locationModal">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span class="close" onclick="closeModal('locationModal')">&times;</span>
             <div class="location-modal-content">
                 <h3>📍 Permiso de Ubicación</h3>
                 <p>Para mostrarte refugios cercanos, necesitamos acceso a tu ubicación.</p>
@@ -229,6 +244,19 @@
                     <button class="btn-outline" onclick="closeModal('locationModal')">No permitir</button>
                     <button class="btn-primary" onclick="requestLocationPermission()">Permitir ubicación</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de login reutilizable -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Bienvenido a The Loyal Nest</h2>
+            <p>Para continuar, inicia sesión o crea una cuenta nueva.</p>
+            <div class="auth-actions">
+                <a href="auth.html" class="btn-primary btn-full">Iniciar Sesión</a>
+                <a href="register.html" class="btn-outline btn-full">Registrarme</a>
             </div>
         </div>
     </div>
@@ -244,7 +272,7 @@
                 <div class="footer-section">
                     <h4>Enlaces Rápidos</h4>
                     <ul>
-                        <li><a href="search.html">Buscar Mascotas</a></li>
+                        <li><a href="search-pets.html">Buscar Mascotas</a></li>
                         <li><a href="shelters-map.html">Mapa de Refugios</a></li>
                         <li><a href="education.html">Educación</a></li>
                     </ul>
@@ -252,7 +280,7 @@
                 <div class="footer-section">
                     <h4>¿Eres un refugio?</h4>
                     <p>Únete a nuestra plataforma y ayuda a más mascotas a encontrar hogar.</p>
-                    <a href="register-shelter.html" class="btn-outline btn-small">Registrar Refugio</a>
+                    <a href="register.html?type=rescatista" class="btn-outline btn-small">Registrar Refugio</a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -261,9 +289,14 @@
         </div>
     </footer>
 
-    <!-- Leaflet JavaScript -->
+    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="js/main.js"></script>
+
+    <!-- Scripts comunes -->
+    <script src="js/script.js"></script>
+    <script src="js/session-manager.js"></script>
+
+    <!-- Lógica del mapa -->
     <script src="js/map.js"></script>
 </body>
 </html>
