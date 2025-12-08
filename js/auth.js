@@ -393,26 +393,37 @@ function isValidEmail(email) {
 
 // Redirigir después del registro
 function redirectAfterRegistration(userType) {
+    // Usar las rutas reales de tus archivos HTML
     const routes = {
-        'adoptante': 'dashboard-adoptante.html',
-        'rescatista': 'dashboard-rescatista.html',
-        'administrador': 'pending-approval.html'
+        adoptante: 'dashboard_adoptante.html',
+        rescatista: 'dashboard_rescatista.html',
+        // Antes: 'pending-approval.html' (que no existe)
+        administrador: 'dashboard-admin.html'
     };
-    
-    window.location.href = routes[userType] || 'index.html';
+
+    const target = routes[userType] || 'index.html';
+    window.location.href = target;
 }
 
-// Redirigir al dashboard
+// Redirigir al dashboard (por ejemplo, después de login)
 function redirectToDashboard(userType) {
-    const routes = {
-        'adoptante': 'dashboard-adoptante.html',
-        'rescatista': 'dashboard-rescatista.html',
-        'administrador': 'dashboard-admin.html'
-    };
-    
-    window.location.href = routes[userType] || 'index.html';
-}
+    // Si no nos pasan el tipo explícito, intentamos sacar el usuario actual
+    if (!userType && typeof SessionManager !== 'undefined') {
+        const current = SessionManager.getCurrentUser();
+        if (current) {
+            userType = current.type;
+        }
+    }
 
+    const routes = {
+        adoptante: 'dashboard_adoptante.html',
+        rescatista: 'dashboard_rescatista.html',
+        administrador: 'dashboard-admin.html'
+    };
+
+    const target = routes[userType] || 'index.html';
+    window.location.href = target;
+}
 // Llenar datos de demostración
 function fillDemo(userType) {
     const demos = {
@@ -529,3 +540,4 @@ document.addEventListener('keydown', function(e) {
         document.body.style.overflow = 'auto';
     }
 });
+
