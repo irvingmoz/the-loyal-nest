@@ -6,22 +6,34 @@
     <title>Buscar Mascotas | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/search-pets.css">
-    
 </head>
 <body>
-     <header class="header">
+    <header class="header">
         <nav class="nav">
             <div class="nav-brand">
                 <a href="index.html" class="logo">🐕 The Loyal Nest</a>
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="search-pets.html">Buscar Mascotas</a></li>
+                <li><a href="search-pets.html" class="active">Buscar Mascotas</a></li>
                 <li><a href="shelters-map.html">Refugios</a></li>
-                <li><a href="education.html" class="active">📚 Educación</a></li>
+                <li><a href="education.html">📚 Educación</a></li>
+
+                <!-- Botones de autenticación -->
                 <li class="nav-auth">
-                    <button class="btn-outline" onclick="openModal('loginModal')">Iniciar Sesión</button>
-                    <button class="btn-primary" onclick="openModal('loginModal')">Registrarse</button>
+                    <button class="btn-outline" id="loginBtn">Iniciar Sesión</button>
+                    <button class="btn-primary" id="registerBtn">Registrarse</button>
+                </li>
+
+                <!-- Menú de usuario cuando hay sesión -->
+                <li id="userMenu" class="nav-user" style="display: none;">
+                    <span class="user-info">
+                        <strong id="userName">Mi cuenta</strong>
+                    </span>
+                    <div class="user-menu">
+                        <a href="#" id="userDashboardLink" class="menu-item">Ir a mi panel</a>
+                        <button type="button" class="menu-item logout" onclick="sessionManager.logout()">Cerrar sesión</button>
+                    </div>
                 </li>
             </ul>
             <div class="nav-toggle">
@@ -43,30 +55,35 @@
                 <div class="search-bar">
                     <div class="search-input-group">
                         <span class="search-icon">🔍</span>
-                        <input type="text" id="mainSearch" placeholder="Buscar por nombre, raza o características...">
-                        <button class="btn-primary" onclick="performSearch()">Buscar</button>
+                        <input 
+                            type="text" 
+                            id="mainSearchInput" 
+                            placeholder="Busca por nombre, raza o características..."
+                        >
                     </div>
+                    <button class="btn-primary search-btn" id="mainSearchBtn">
+                        Buscar
+                    </button>
                 </div>
 
                 <!-- Filtros rápidos -->
                 <div class="quick-filters">
-                    <button class="filter-chip active" data-filter="all">Todas</button>
-                    <button class="filter-chip" data-filter="perro">🐕 Perros</button>
-                    <button class="filter-chip" data-filter="gato">🐈 Gatos</button>
-                    <button class="filter-chip" data-filter="cachorro">🐶 Cachorros</button>
-                    <button class="filter-chip" data-filter="urgente">⚠️ Urgentes</button>
-                    <button class="filter-chip" data-filter="apartamento">🏢 Aptos</button>
+                    <button class="chip" data-type="perro">🐕 Perros</button>
+                    <button class="chip" data-type="gato">🐈 Gatos</button>
+                    <button class="chip" data-type="cachorro">🐾 Cachorros</button>
+                    <button class="chip" data-type="adulto">✨ Adultos</button>
+                    <button class="chip" data-type="especial">💖 Casos Especiales</button>
                 </div>
             </div>
         </section>
 
         <!-- Contenido principal -->
-        <div class="search-container">
-            <!-- Sidebar de filtros -->
-            <aside class="filters-sidebar">
+        <div class="container search-layout">
+            <!-- Panel de filtros -->
+            <aside class="filters-panel">
                 <div class="filters-header">
-                    <h3>🔍 Filtros</h3>
-                    <button class="btn-text" onclick="resetFilters()">Limpiar</button>
+                    <h2>Filtros</h2>
+                    <button class="btn-text" id="clearFiltersBtn">Limpiar filtros</button>
                 </div>
 
                 <!-- Filtro por ubicación -->
@@ -87,45 +104,34 @@
                     <div class="checkbox-group">
                         <label class="checkbox-label">
                             <input type="checkbox" name="type" value="perro" checked>
-                            <span class="checkmark"></span>
-                            🐕 Perro
+                            <span>Perros</span>
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" name="type" value="gato" checked>
-                            <span class="checkmark"></span>
-                            🐈 Gato
+                            <span>Gatos</span>
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" name="type" value="otro">
-                            <span class="checkmark"></span>
-                            🐹 Otros
+                            <span>Otros</span>
                         </label>
                     </div>
                 </div>
 
                 <!-- Filtro por edad -->
                 <div class="filter-group">
-                    <h4>🎂 Edad</h4>
+                    <h4>⏳ Edad</h4>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="age" value="cachorro">
-                            <span class="checkmark"></span>
-                            🐶 Cachorro (0-1 año)
+                            <input type="checkbox" name="age" value="cachorro" checked>
+                            <span>Cachorros (0-1 año)</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="age" value="joven">
-                            <span class="checkmark"></span>
-                            🐕 Joven (1-3 años)
+                            <input type="checkbox" name="age" value="joven" checked>
+                            <span>Jóvenes (1-5 años)</span>
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" name="age" value="adulto">
-                            <span class="checkmark"></span>
-                            🐕 Adulto (3-8 años)
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="age" value="senior">
-                            <span class="checkmark"></span>
-                            🐕 Senior (8+ años)
+                            <span>Adultos (5+ años)</span>
                         </label>
                     </div>
                 </div>
@@ -135,70 +141,79 @@
                     <h4>📏 Tamaño</h4>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="size" value="pequeno">
-                            <span class="checkmark"></span>
-                            Pequeño (1-10 kg)
+                            <input type="checkbox" name="size" value="pequeno" checked>
+                            <span>Pequeño</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="size" value="mediano">
-                            <span class="checkmark"></span>
-                            Mediano (11-25 kg)
+                            <input type="checkbox" name="size" value="mediano" checked>
+                            <span>Mediano</span>
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" name="size" value="grande">
-                            <span class="checkmark"></span>
-                            Grande (26+ kg)
+                            <span>Grande</span>
                         </label>
                     </div>
                 </div>
 
-                <!-- Filtro por género -->
+                <!-- Filtro por características -->
                 <div class="filter-group">
-                    <h4>⚧️ Género</h4>
+                    <h4>⭐ Características</h4>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="gender" value="macho">
-                            <span class="checkmark"></span>
-                            ♂️ Macho
+                            <input type="checkbox" name="feature" value="ninos">
+                            <span>Bueno con niños</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="gender" value="hembra">
-                            <span class="checkmark"></span>
-                            ♀️ Hembra
+                            <input type="checkbox" name="feature" value="otros-perros">
+                            <span>Convive con otros perros</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="feature" value="gatos">
+                            <span>Convive con gatos</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="feature" value="departamento">
+                            <span>Apto para departamento</span>
                         </label>
                     </div>
                 </div>
 
-                <button class="btn-primary btn-full" onclick="applyFilters()">Aplicar Filtros</button>
+                <!-- Orden -->
+                <div class="filter-group">
+                    <h4>Ordenar por</h4>
+                    <select id="sortBy" class="filter-select">
+                        <option value="recientes">Más recientes</option>
+                        <option value="edad-asc">Edad: menor a mayor</option>
+                        <option value="edad-desc">Edad: mayor a menor</option>
+                    </select>
+                </div>
+
+                <!-- CTA extra -->
+                <div class="filter-cta">
+                    <h4>¿Eres rescatista?</h4>
+                    <p>Publica mascotas desde tu panel y encuentra familias ideales.</p>
+                    <a href="register.html?type=rescatista" class="btn-outline btn-full">
+                        Publicar mascotas
+                    </a>
+                </div>
             </aside>
 
-            <!-- Resultados de búsqueda -->
-            <section class="search-results">
+            <!-- Resultados -->
+            <section class="results-panel">
                 <div class="results-header">
-                    <div class="results-info">
-                        <h3 id="resultsCount">Cargando mascotas...</h3>
-                        <span id="resultsLocation"></span>
+                    <div>
+                        <h2>Mascotas Disponibles</h2>
+                        <p id="resultsCount">Mostrando 0 resultados</p>
                     </div>
-                    <div class="sort-options">
-                        <label>Ordenar por:</label>
-                        <select id="sortBy" onchange="sortPets()">
-                            <option value="recent">Más Recientes</option>
-                            <option value="urgent">Más Urgentes</option>
-                            <option value="name">Nombre A-Z</option>
-                            <option value="age">Edad</option>
-                        </select>
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid">🔳 Vista de tarjetas</button>
+                        <button class="view-btn" data-view="list">📋 Vista de lista</button>
                     </div>
                 </div>
 
-                <!-- Grid de mascotas -->
-                <div class="pets-grid" id="petsGrid">
-                    <!-- Las mascotas se cargan aquí con JavaScript -->
-                </div>
-
-                <!-- Loading state -->
-                <div class="loading-state" id="loadingState">
-                    <div class="loading-spinner"></div>
-                    <p>Buscando mascotas...</p>
+                <!-- Contenedor de resultados -->
+                <div id="petsResults" class="pets-grid">
+                    <!-- Tarjetas generadas por JS -->
                 </div>
 
                 <!-- Paginación -->
@@ -211,6 +226,52 @@
         </div>
     </main>
 
+    <!-- Modal de login reutilizable -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Bienvenido a The Loyal Nest</h2>
+            <p>Para continuar, inicia sesión o crea una cuenta nueva.</p>
+            <div class="auth-actions">
+                <a href="auth.html" class="btn-primary btn-full">Iniciar Sesión</a>
+                <a href="register.html" class="btn-outline btn-full">Registrarme</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🐕 The Loyal Nest</h3>
+                    <p>Conectando corazones con patitas desde 2024.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Explorar</h4>
+                    <ul>
+                        <li><a href="auth.html">Iniciar Sesión</a></li>
+                        <li><a href="register.html">Registrarse</a></li>
+                        <li><a href="education.html">Cómo Funciona</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#privacidad">Privacidad</a></li>
+                        <li><a href="#terminos">Términos</a></li>
+                        <li><a href="#cookies">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts comunes -->
+    <script src="js/script.js"></script>
+    <script src="js/session-manager.js"></script>
+
+    <!-- Script específico de búsqueda -->
     <script src="js/search-pets.js"></script>
 </body>
 </html>
