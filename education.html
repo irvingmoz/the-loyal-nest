@@ -21,8 +21,8 @@
                 <li><a href="shelters-map.html">Refugios</a></li>
                 <li><a href="education.html" class="active">📚 Educación</a></li>
                 <li class="nav-auth">
-                    <button class="btn-outline" onclick="openModal('loginModal')">Iniciar Sesión</button>
-                    <button class="btn-primary" onclick="openModal('loginModal')">Registrarse</button>
+                    <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
+                    <a href="register.html" class="btn-primary">Registrarse</a>
                 </li>
             </ul>
             <div class="nav-toggle">
@@ -40,7 +40,13 @@
             <section class="education-hero">
                 <div class="hero-content">
                     <h1>📚 Educación para la Tenencia Responsable</h1>
-                    <p>Aprende todo lo necesario para brindar el mejor cuidado a tu mascota y promover el bienestar animal</p>
+                    <p>Aprende todo lo necesario para brindar el mejor cuidado a tu mascota y promover el bienestar animal.</p>
+                    <div class="hero-tags">
+                        <span class="tag">Cuidados básicos</span>
+                        <span class="tag">Salud y prevención</span>
+                        <span class="tag">Adopción responsable</span>
+                        <span class="tag">Entrenamiento y conducta</span>
+                    </div>
                     <div class="hero-stats">
                         <div class="stat">
                             <span class="stat-number">50+</span>
@@ -73,29 +79,29 @@
                     <a href="#cuidados-basicos" class="nav-card">
                         <div class="nav-icon">🐕</div>
                         <div class="nav-content">
-                            <h3>Cuidados Básicos</h3>
-                            <p>Alimentación, higiene y cuidados esenciales</p>
+                            <h3>Cuidados básicos</h3>
+                            <p>Alimentación, higiene y bienestar diario.</p>
                         </div>
                     </a>
                     <a href="#salud-prevencion" class="nav-card">
-                        <div class="nav-icon">💊</div>
+                        <div class="nav-icon">💉</div>
                         <div class="nav-content">
-                            <h3>Salud y Prevención</h3>
-                            <p>Vacunas, enfermedades y prevención</p>
+                            <h3>Salud y prevención</h3>
+                            <p>Vacunas, desparasitación y visitas al veterinario.</p>
                         </div>
                     </a>
                     <a href="#entrenamiento" class="nav-card">
                         <div class="nav-icon">🎓</div>
                         <div class="nav-content">
                             <h3>Entrenamiento</h3>
-                            <p>Conducta, socialización y entrenamiento</p>
+                            <p>Educación y manejo de conductas.</p>
                         </div>
                     </a>
                     <a href="#adopcion-responsable" class="nav-card">
                         <div class="nav-icon">🏠</div>
                         <div class="nav-content">
-                            <h3>Adopción Responsable</h3>
-                            <p>Preparación y compromiso de adopción</p>
+                            <h3>Adopción responsable</h3>
+                            <p>Antes, durante y después de adoptar.</p>
                         </div>
                     </a>
                 </div>
@@ -104,21 +110,21 @@
             <!-- Featured Articles -->
             <section class="featured-articles">
                 <div class="section-header">
-                    <h2>⭐ Artículos Destacados</h2>
-                    <a href="#all-articles" class="view-all">Ver todos los artículos</a>
+                    <h2>🌟 Artículos destacados</h2>
+                    <a href="#cuidados-basicos" class="view-all">Ver todos los temas</a>
                 </div>
                 <div class="articles-grid" id="featuredArticles">
-                    <!-- Artículos destacados se cargan aquí -->
+                    <!-- Artículos destacados cargados por JS -->
                 </div>
             </section>
 
-            <!-- Categories Sections -->
-            <section class="categories-section">
+            <!-- Categories -->
+            <section class="education-categories">
                 <!-- Cuidados Básicos -->
                 <div class="category" id="cuidados-basicos">
                     <div class="category-header">
-                        <h2>🐕 Cuidados Básicos</h2>
-                        <p>Aprende los fundamentos para el bienestar de tu mascota</p>
+                        <h2>🐾 Cuidados Básicos</h2>
+                        <p>Todo lo esencial para el bienestar diario de tu mascota</p>
                     </div>
                     <div class="articles-grid" id="cuidadosArticles">
                         <!-- Artículos de cuidados básicos -->
@@ -159,47 +165,45 @@
                 </div>
             </section>
 
-            <!-- Expert Section -->
+            <!-- Experts Section -->
             <section class="experts-section">
                 <div class="section-header">
-                    <h2>👨‍⚕️ Consejos de Expertos</h2>
-                    <p>Aprende de veterinarios y especialistas en comportamiento animal</p>
+                    <h2>👩‍⚕️ Nuestros expertos</h2>
+                    <a href="#resources" class="view-all">Ver recursos recomendados</a>
                 </div>
                 <div class="experts-grid" id="expertsGrid">
-                    <!-- Tarjetas de expertos se cargan aquí -->
+                    <!-- Tarjetas de expertos cargadas por JS -->
                 </div>
             </section>
 
-            <!-- FAQ Section -->
+            <!-- FAQ -->
             <section class="faq-section">
                 <div class="section-header">
-                    <h2>❓ Preguntas Frecuentes</h2>
-                    <p>Resolvemos tus dudas más comunes sobre tenencia responsable</p>
+                    <h2>❓ Preguntas frecuentes</h2>
                 </div>
                 <div class="faq-list" id="faqList">
-                    <!-- Preguntas frecuentes se cargan aquí -->
+                    <!-- FAQs cargadas por JS -->
                 </div>
             </section>
 
-            <!-- Resources Section -->
-            <section class="resources-section">
+            <!-- Resources -->
+            <section class="resources-section" id="resources">
                 <div class="section-header">
-                    <h2>📋 Recursos Descargables</h2>
-                    <p>Guías prácticas y checklist para imprimir</p>
+                    <h2>📂 Recursos descargables</h2>
                 </div>
                 <div class="resources-grid" id="resourcesGrid">
-                    <!-- Recursos descargables -->
+                    <!-- Recursos cargados por JS -->
                 </div>
             </section>
         </div>
     </main>
 
-    <!-- Article Modal -->
-    <div class="modal" id="articleModal">
-        <div class="modal-content large">
-            <span class="close">&times;</span>
+    <!-- Modal de artículo -->
+    <div id="articleModal" class="modal">
+        <div class="modal-content article-modal">
+            <span class="close" onclick="closeModal('articleModal')">&times;</span>
             <div class="article-modal-content" id="articleModalContent">
-                <!-- Contenido del artículo se carga aquí -->
+                <!-- Contenido del artículo dinámico -->
             </div>
         </div>
     </div>
@@ -233,7 +237,7 @@
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script src="js/script.js"></script>
     <script src="js/education.js"></script>
 </body>
 </html>
