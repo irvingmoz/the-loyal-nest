@@ -107,21 +107,28 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
 });
 
-// Inicializar el mapa de Leaflet
 function initializeMap() {
-    // Centro inicial en Iztapalapa, CDMX
-    const iztapalapaCoords = [19.3575, -99.0671];
+    // 1. Coordenadas fijas de Iztapalapa
+    const iztapalapaCoords = [19.35529, -99.06224];
     
+    // 2. Inicializar mapa
     map = L.map('sheltersMap').setView(iztapalapaCoords, 13);
 
-    // Capa base de OpenStreetMap
+    // 3. Capa visual (Tiles)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors',
-        maxZoom: 18
+        maxZoom: 19
     }).addTo(map);
 
-    // Agregar controles de escala
+    // 4. TRUCO DE MAGIA: Forzar actualización de tamaño después de 0.5 segundos
+    // Esto arregla el error del "cuadro gris" o "mapa azul incompleto"
+    setTimeout(function(){ 
+        map.invalidateSize(); 
+    }, 500);
+
+    // 5. Agregar control de escala
     L.control.scale().addTo(map);
+}
 
     // Intentar obtener la ubicación del usuario
     setTimeout(() => {
@@ -667,3 +674,4 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 function navigateTo(url) {
     window.location.href = url;
 }
+
