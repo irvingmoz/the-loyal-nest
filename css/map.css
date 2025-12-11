@@ -1,8 +1,8 @@
 /* Map Styles */
-.map-container {
-    margin-top: 100px;
-    padding: 2rem 0;
-    min-height: calc(100vh - 200px);
+.map-view {
+    margin-top: 80px;
+    width: 100vw;
+    height: calc(100vh - 80px);
 }
 
 /* Header */
@@ -645,3 +645,4 @@
 .filters-sidebar::-webkit-scrollbar-thumb:hover {
     background: var(--gray-dark);
 } 
+
