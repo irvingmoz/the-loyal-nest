@@ -324,39 +324,72 @@ function downloadMock(title, filename) {
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
 }
+// --- RECURSOS DESCARGABLES (CON DESCARGA SIMULADA REAL) ---
+document.addEventListener('DOMContentLoaded', () => {
+    // ... tus otras cargas ...
+    loadResources(); 
+});
 
-// --- 4. MODAL DE ARTÍCULOS ---
-function openModalArticle(id) {
-    const article = articlesDB.find(a => a.id === id);
-    if (!article) return;
+function loadResources() {
+    const container = document.getElementById('resourcesGrid');
+    if(!container) return;
 
-    const modalContent = document.getElementById('articleModalContent');
-    modalContent.innerHTML = `
-        <div class="modal-injected-content">
-            <div style="text-align: right; margin-bottom: 10px;">
-                <span class="tag" style="background:var(--primary); color:white; padding:4px 10px; border-radius:12px; font-size:0.8rem;">
-                    ${article.category.replace('-', ' ').toUpperCase()}
-                </span>
-            </div>
-            <h2>${article.title}</h2>
-            <div style="font-size: 1.1rem; line-height: 1.6; color: #444; margin-top: 20px;">
-                ${article.content}
-            </div>
-            <div style="margin-top: 30px; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
-                <button onclick="closeModal('articleModal')" class="btn-outline">Cerrar</button>
-            </div>
+    const resources = [
+        { title: "Guía de Cachorros", size: "2.4 MB", icon: "🐶", file: "guia_cachorros.txt" },
+        { title: "Cartilla de Vacunación", size: "1.1 MB", icon: "💉", file: "cartilla.txt" },
+        { title: "Manual de Adopción", size: "3.5 MB", icon: "🏠", file: "manual_adopcion.txt" },
+        { title: "Lista Alimentos Tóxicos", size: "0.5 MB", icon: "⚠️", file: "toxicos.txt" }
+    ];
+
+    container.innerHTML = resources.map(res => `
+        <div class="resource-card">
+            <div style="font-size:3rem; margin-bottom:10px;">${res.icon}</div>
+            <h3 style="font-size:1.1rem; margin:0;">${res.title}</h3>
+            <p style="color:#666; font-size:0.9rem;">Formato PDF • ${res.size}</p>
+            <button class="btn-outline btn-small" style="margin-top:10px;" onclick="downloadMock('${res.title}', '${res.file}')">
+                ⬇ Descargar
+            </button>
         </div>
+    `).join('');
+}
+
+// ESTA FUNCIÓN HACE LA MAGIA
+function downloadMock(title, filename) {
+    // 1. Creamos el contenido del archivo "al vuelo"
+    const textContent = `
+    THE LOYAL NEST - ${title.toUpperCase()}
+    ==========================================
+    
+    Gracias por descargar este recurso educativo.
+    
+    Este es un archivo de demostración para el proyecto escolar.
+    En una versión real, aquí verías el contenido completo del manual en PDF.
+    
+    Recuerda:
+    - Vacuna a tu mascota.
+    - Adopta, no compres.
+    - Esteriliza.
+    
+    Atte: El equipo de The Loyal Nest.
     `;
-    document.getElementById('articleModal').style.display = 'block';
-    document.body.style.overflow = 'hidden';
+
+    // 2. Creamos un "Blob" (un archivo en memoria)
+    const blob = new Blob([textContent], { type: 'text/plain' });
+    
+    // 3. Creamos una URL temporal para ese archivo
+    const url = window.URL.createObjectURL(blob);
+    
+    // 4. Creamos un enlace invisible, le damos clic y lo borramos
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = filename; // El nombre con el que se bajará
+    
+    document.body.appendChild(a);
+    a.click();
+    
+    // 5. Limpieza
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
 }
 
-function closeModal(id) {
-    document.getElementById(id).style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-window.onclick = function(e) {
-    const m = document.getElementById('articleModal');
-    if (e.target == m) closeModal('articleModal');
-}
