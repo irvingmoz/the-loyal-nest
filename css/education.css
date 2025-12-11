@@ -704,3 +704,46 @@
 .article-modal-content::-webkit-scrollbar-thumb:hover {
     background: var(--gray-dark);
 }
+/* --- FIX PARA EL MODAL DE ARTÍCULOS --- */
+/* Pega esto al final de css/education.css */
+
+/* 1. Ajustar el contenedor del modal para que no sea gigante */
+.modal-content.article-modal {
+    height: auto !important; /* Quita altura fija */
+    min-height: unset !important;
+    max-height: 85vh; /* Máximo 85% de la pantalla */
+    overflow: hidden; /* El scroll lo maneja el contenido interno */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 2. Ajustar el cuerpo del contenido */
+#articleModalContent {
+    padding: 0 !important; /* Quitamos padding del contenedor padre */
+    overflow-y: auto; /* Scroll interno aquí */
+}
+
+/* 3. Estilo para el contenido inyectado por JS */
+.modal-injected-content {
+    padding: 30px;
+}
+
+.modal-injected-content h2 {
+    margin-top: 0;
+    line-height: 1.2;
+    color: var(--dark);
+}
+
+.modal-injected-content .tag {
+    display: inline-block;
+    margin-bottom: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* 4. Ajustes para imágenes dentro del texto (si hubiera) */
+.modal-injected-content img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 15px 0;
+}
