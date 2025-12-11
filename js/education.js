@@ -197,3 +197,31 @@ window.onclick = function(event) {
     const modal = document.getElementById('articleModal');
     if (event.target == modal) closeModal('articleModal');
 }
+// Agrega esto al final de js/education.js
+
+// --- RECURSOS DESCARGABLES (EXTRA) ---
+document.addEventListener('DOMContentLoaded', () => {
+    // ... las otras funciones ...
+    loadResources(); // <--- Agrega esta llamada
+});
+
+function loadResources() {
+    const container = document.getElementById('resourcesGrid');
+    if(!container) return;
+
+    const resources = [
+        { title: "Guía de Cachorros", size: "2.4 MB", icon: "🐶" },
+        { title: "Cartilla de Vacunación", size: "1.1 MB", icon: "💉" },
+        { title: "Manual de Adopción", size: "3.5 MB", icon: "🏠" },
+        { title: "Lista de Alimentos Tóxicos", size: "0.5 MB", icon: "⚠️" }
+    ];
+
+    container.innerHTML = resources.map(res => `
+        <div class="resource-card" onclick="alert('Descargando ${res.title}...')">
+            <div style="font-size:3rem; margin-bottom:10px;">${res.icon}</div>
+            <h3 style="font-size:1.1rem; margin:0;">${res.title}</h3>
+            <p style="color:#666; font-size:0.9rem;">PDF • ${res.size}</p>
+            <button class="btn-outline btn-small" style="margin-top:10px;">⬇ Descargar</button>
+        </div>
+    `).join('');
+}
