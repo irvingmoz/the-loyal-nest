@@ -1,133 +1,376 @@
-// js/pets.js
-// CRUD de mascotas y renderizado de listados
+// =============================
+//   BASE DE MASCOTAS (CATÁLOGO)
+// =============================
+const pets = [
+    {
+        id: 1,
+        name: 'Bruno',
+        species: 'perro',
+        breed: 'Labrador',
+        size: 'grande',
+        age: '3 años',
+        temperament: 'juguetón y sociable',
+        description: 'Bruno es un labrador chocolate que ama las caminatas largas y convivir con niños.',
+        image: 'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&h=600&fit=crop'
+    },
+    {
+        id: 2,
+        name: 'Maya',
+        species: 'perro',
+        breed: 'Corgi',
+        size: 'mediano',
+        age: '2 años',
+        temperament: 'tierna y curiosa',
+        description: 'Maya disfruta aprender trucos nuevos y siempre busca estar cerca de su familia.',
+        image: 'https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=800&h=600&fit=crop'
+    },
+    {
+        id: 3,
+        name: 'Luna',
+        species: 'gato',
+        breed: 'Mestizo',
+        size: 'pequeño',
+        age: '1 año',
+        temperament: 'tranquila y observadora',
+        description: 'Luna es una gatita negra de ojos grandes que adora las siestas al sol y los sillones cómodos.',
+        image: 'https://images.unsplash.com/photo-1455970022149-a8f26b6902dd?w=800&h=600&fit=crop'
+    },
+    {
+        id: 4,
+        name: 'Simón',
+        species: 'perro',
+        breed: 'Pastor Alemán',
+        size: 'grande',
+        age: '4 años',
+        temperament: 'leal y protector',
+        description: 'Simón es muy inteligente, sabe órdenes básicas y busca un hogar con espacio para ejercitarse.',
+        image: 'https://images.unsplash.com/photo-1619983081563-430f63602796?w=800&h=600&fit=crop'
+    },
+    {
+        id: 5,
+        name: 'Nala',
+        species: 'gato',
+        breed: 'Siamesa',
+        size: 'mediano',
+        age: '3 años',
+        temperament: 'afectuosa y vocal',
+        description: 'Nala sigue a su humano a todas partes, le encanta platicar y recibir caricias en la barbilla.',
+        image: 'https://images.unsplash.com/photo-1472491235688-bdc81a63246e?w=800&h=600&fit=crop'
+    },
+    {
+        id: 6,
+        name: 'Taco',
+        species: 'perro',
+        breed: 'Chihuahua',
+        size: 'pequeño',
+        age: '2 años',
+        temperament: 'alegre y valiente',
+        description: 'Taco es diminuto pero con gran personalidad; disfruta los paseos cortos y acurrucarse.',
+        image: 'https://images.unsplash.com/photo-1525253013412-55c1a69a5738?w=800&h=600&fit=crop'
+    },
+    {
+        id: 7,
+        name: 'Kiara',
+        species: 'perro',
+        breed: 'Golden Retriever',
+        size: 'grande',
+        age: '5 años',
+        temperament: 'dulce y paciente',
+        description: 'Kiara es una golden color miel que adora el agua y se lleva excelente con otros perros.',
+        image: 'https://images.unsplash.com/photo-1504595403659-9088ce801e29?w=800&h=600&fit=crop'
+    },
+    {
+        id: 8,
+        name: 'Michi',
+        species: 'gato',
+        breed: 'Atigrado',
+        size: 'mediano',
+        age: '2 años',
+        temperament: 'juguetón y adaptable',
+        description: 'Michi es un gato atigrado que disfruta los rascadores y convivir con otros gatos.',
+        image: 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=800&h=600&fit=crop'
+    },
+    {
+        id: 9,
+        name: 'Rocco',
+        species: 'perro',
+        breed: 'Husky',
+        size: 'grande',
+        age: '3 años',
+        temperament: 'enérgico y charlador',
+        description: 'Rocco ama correr, necesita actividad diaria y mucha atención de su familia humana.',
+        image: 'https://images.unsplash.com/photo-1534338580013-382cf48bd435?w=800&h=600&fit=crop'
+    }
+];
 
-document.addEventListener('DOMContentLoaded', () => {
-    const addForm = document.getElementById('addPetForm');
-    const petList = document.getElementById('petList');
-    const ownerInput = document.getElementById('petOwner');
+// =============================
+//   VARIABLES GLOBALES
+// =============================
+let activeSpecies = '';
+let selectedPet = null;
+const storageKey = 'loyalNestAdoptionRequests';
 
-    const user = getSessionUser();
-    if (ownerInput && user?.organization) ownerInput.value = user.organization;
-
-    if (addForm) addForm.addEventListener('submit', submitPetForm);
-    if (petList) loadPets();
-});
-
-async function loadPets() {
+// =============================
+//   MANEJO DE SOLICITUDES
+// =============================
+function getSavedRequests() {
     try {
-        const res = await apiFetch('/pets');
-        if (!res.ok) throw new Error('No se pudieron cargar las mascotas');
-        const data = await res.json();
-        renderPetList(data);
+        const saved = localStorage.getItem(storageKey);
+        return saved ? JSON.parse(saved) : [];
     } catch (error) {
-        console.error(error);
-        renderPetList([]);
+        console.error('No se pudieron leer las solicitudes', error);
+        return [];
     }
 }
 
-function renderPetList(pets) {
-    const list = document.getElementById('petList');
-    if (!list) return;
-    if (!pets.length) {
-        list.innerHTML = '<p>No hay mascotas registradas.</p>';
+function saveRequests(requests) {
+    try {
+        localStorage.setItem(storageKey, JSON.stringify(requests));
+    } catch (error) {
+        console.error('No se pudieron guardar las solicitudes', error);
+    }
+}
+
+// =============================
+//   FILTROS Y CATÁLOGO
+// =============================
+function renderBreedOptions() {
+    const breedSelect = document.getElementById('filterBreed');
+    if (!breedSelect) return;
+
+    const breeds = new Set();
+    pets.forEach((pet) => {
+        if (!activeSpecies || pet.species === activeSpecies) breeds.add(pet.breed);
+    });
+
+    breedSelect.innerHTML =
+        '<option value="">Todas</option>' +
+        [...breeds].sort().map((b) => `<option value="${b.toLowerCase()}">${b}</option>`).join('');
+}
+
+function filterPets() {
+    const searchTerm = document.getElementById('filterSearch').value.toLowerCase();
+    const breed = document.getElementById('filterBreed').value;
+    const size = document.getElementById('filterSize').value;
+
+    return pets.filter((pet) => {
+        const matchSpecies = activeSpecies ? pet.species === activeSpecies : true;
+        const matchBreed = breed ? pet.breed.toLowerCase() === breed : true;
+        const matchSize = size ? pet.size === size : true;
+        const matchTerm = searchTerm
+            ? `${pet.name} ${pet.description} ${pet.temperament}`.toLowerCase().includes(searchTerm)
+            : true;
+
+        return matchSpecies && matchBreed && matchSize && matchTerm;
+    });
+}
+
+function renderPets() {
+    const container = document.getElementById('searchResults');
+    if (!container) return;
+
+    const filtered = filterPets();
+    if (!filtered.length) {
+        container.innerHTML =
+            '<p class="muted">No hay coincidencias con los filtros seleccionados.</p>';
         return;
     }
-    list.innerHTML = pets.map((pet) => `
-        <article class="card pet-card" data-pet-id="${pet.id}">
-            <div class="pet-card__header">
+
+    container.innerHTML = filtered
+        .map(
+            (pet) => `
+        <article class="pet-card">
+            <img src="${pet.image}" alt="${pet.name}" class="pet-card__image">
+
+            <div class="pet-card__meta">
                 <div>
                     <h3>${pet.name}</h3>
-                    <p class="muted">${pet.species} · ${pet.size || 'Tamaño n/d'} · ${pet.age || 'Edad n/d'}</p>
+                    <p class="muted">${pet.breed} · ${pet.age}</p>
                 </div>
-                <span class="status status-${pet.status || 'disponible'}">${pet.status || 'disponible'}</span>
+                <span class="pet-chip">${pet.species}</span>
             </div>
-            <p>${pet.description || 'Sin descripción'}</p>
+
+            <p>${pet.description}</p>
+
+            <div class="pet-card__tags">
+                <span>🐾 ${pet.temperament}</span>
+                <span>📏 Tamaño ${pet.size}</span>
+            </div>
+
             <div class="pet-card__actions">
-                <a class="btn-link" href="pet-profile.html?id=${pet.id}">Ver ficha</a>
-                <button class="btn-outline" onclick="startEditPet('${pet.id}')">Editar</button>
-                <button class="btn-text danger" onclick="deletePet('${pet.id}')">Eliminar</button>
+                <span class="badge-status">Disponible</span>
+                <button class="btn-primary" data-action="open-drawer" data-pet-id="${pet.id}">
+                    Solicitar adopción
+                </button>
             </div>
         </article>
-    `).join('');
+    `
+        )
+        .join('');
 }
 
-async function submitPetForm(event) {
+function updateSpeciesFilter(target) {
+    if (!target.dataset.species) return;
+
+    document
+        .querySelectorAll('#speciesFilters .pill')
+        .forEach((pill) => pill.classList.remove('pill--active'));
+
+    target.classList.add('pill--active');
+    activeSpecies = target.dataset.species;
+
+    renderBreedOptions();
+    renderPets();
+}
+
+// =============================
+//   DRAWER (FORMULARIO)
+// =============================
+function openDrawer(petId) {
+    const drawer = document.getElementById('adoptionDrawer');
+    const pet = pets.find((p) => p.id === Number(pId));
+
+    if (!drawer || !pet) return;
+
+    selectedPet = pet;
+
+    drawer.setAttribute('aria-hidden', 'false');
+    drawer.querySelector('#drawerPetName').textContent = pet.name;
+    drawer.querySelector('#drawerPetMeta').textContent = `${pet.breed} · ${pet.size} · ${pet.age}`;
+}
+
+function closeDrawer() {
+    const drawer = document.getElementById('adoptionDrawer');
+    if (!drawer) return;
+
+    drawer.setAttribute('aria-hidden', 'true');
+    selectedPet = null;
+
+    document.getElementById('adoptionForm').reset();
+}
+
+function submitAdoption(event) {
     event.preventDefault();
-    const form = event.target;
-    const data = new FormData(form);
-    const petId = form.dataset.editingId;
-    try {
-        form.querySelector('button[type="submit"]').disabled = true;
-        const url = petId ? `/pets/${petId}` : '/pets';
-        const method = petId ? 'PUT' : 'POST';
-        const res = await apiFetch(url, { method, body: JSON.stringify(Object.fromEntries(data.entries())) });
-        if (!res.ok) throw new Error('No se pudo guardar');
-        form.reset();
-        form.dataset.editingId = '';
-        document.getElementById('formStatus').textContent = 'Mascota guardada correctamente';
-        loadPets();
-    } catch (error) {
-        console.error(error);
-        document.getElementById('formStatus').textContent = 'Error al guardar la mascota';
-    } finally {
-        form.querySelector('button[type="submit"]').disabled = false;
+    if (!selectedPet) return;
+
+    const formData = new FormData(event.target);
+
+    const newRequest = {
+        id: Date.now(),
+        petId: selectedPet.id,
+        petName: selectedPet.name,
+        applicant: formData.get('applicant'),
+        email: formData.get('email'),
+        message: formData.get('message'),
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+    };
+
+    const requests = [newRequest, ...getSavedRequests()];
+    saveRequests(requests);
+
+    renderRequests();
+    closeDrawer();
+
+    document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+}
+
+// =============================
+//   PANEL ADMIN DE SOLICITUDES
+// =============================
+function renderRequests() {
+    const requests = getSavedRequests();
+
+    const table = document.getElementById('requestsTable');
+    const empty = document.getElementById('requestEmpty');
+    const body = document.getElementById('requestsBody');
+
+    if (!table || !empty || !body) return;
+
+    if (!requests.length) {
+        table.style.display = 'none';
+        empty.style.display = 'block';
+        return;
     }
+
+    table.style.display = 'block';
+    empty.style.display = 'none';
+
+    body.innerHTML = requests
+        .map(
+            (req) => `
+        <div class="table__row" data-request-id="${req.id}">
+            <span>${req.applicant}<br><small class="muted">${req.email}</small></span>
+            <span>${req.petName}</span>
+            <span class="muted" style="white-space: pre-line;">${req.message}</span>
+            <span><span class="status-chip ${req.status}">${req.status}</span></span>
+            <span class="table__actions">
+                <button class="btn-outline" data-action="approve" data-request-id="${req.id}">Aprobar</button>
+                <button class="btn-outline" data-action="reject" data-request-id="${req.id}">Rechazar</button>
+            </span>
+        </div>
+    `
+        )
+        .join('');
 }
 
-async function startEditPet(id) {
-    try {
-        const res = await apiFetch(`/pets/${id}`);
-        if (!res.ok) throw new Error('No se pudo cargar la mascota');
-        const pet = await res.json();
-        const form = document.getElementById('addPetForm');
-        ['name', 'species', 'age', 'size', 'status', 'description', 'shelter'].forEach((field) => {
-            if (form.elements[field]) form.elements[field].value = pet[field] || '';
-        });
-        form.dataset.editingId = id;
-        document.getElementById('formStatus').textContent = 'Editando mascota existente';
-    } catch (error) {
-        console.error(error);
-    }
+function updateRequestStatus(id, status) {
+    const requests = getSavedRequests();
+
+    const next = requests.map((req) => (req.id === id ? { ...req, status } : req));
+
+    saveRequests(next);
+    renderRequests();
 }
 
-async function deletePet(id) {
-    if (!confirm('¿Eliminar esta mascota?')) return;
-    try {
-        const res = await apiFetch(`/pets/${id}`, { method: 'DELETE' });
-        if (!res.ok) throw new Error('No se pudo eliminar');
-        loadPets();
-    } catch (error) {
-        console.error(error);
-        alert('No se pudo eliminar la mascota');
-    }
+// =============================
+//   EVENTOS / LISTENERS
+// =============================
+function setupInteractions() {
+    document.getElementById('filterSearch').addEventListener('input', renderPets);
+    document.getElementById('filterSize').addEventListener('change', renderPets);
+    document.getElementById('filterBreed').addEventListener('change', renderPets);
+
+    document.getElementById('adoptionForm').addEventListener('submit', submitAdoption);
+    document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
+    document.getElementById('cancelDrawer').addEventListener('click', closeDrawer);
+
+    document.getElementById('scrollToCatalog').addEventListener('click', () => {
+        document.getElementById('catalogPanel').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('scrollToRequests').addEventListener('click', () => {
+        document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('speciesFilters').addEventListener('click', (event) => {
+        if (event.target.matches('.pill')) updateSpeciesFilter(event.target);
+    });
+
+    document.getElementById('searchResults').addEventListener('click', (event) => {
+        const btn = event.target.closest('[data-action="open-drawer"]');
+        if (btn) openDrawer(btn.dataset.petId);
+    });
+
+    document.getElementById('requestsBody').addEventListener('click', (event) => {
+        const btn = event.target.closest('button[data-action]');
+        if (!btn) return;
+
+        const id = Number(btn.dataset.requestId);
+
+        if (btn.dataset.action === 'approve') updateRequestStatus(id, 'approved');
+        if (btn.dataset.action === 'reject') updateRequestStatus(id, 'rejected');
+    });
 }
 
-// 🔁 RENOMBRADAS para no chocar con pet-profile.js
-async function loadPetProfileCard() {
-    const params = new URLSearchParams(window.location.search);
-    const petId = params.get('id');
-    if (!petId) return;
-    try {
-        const res = await apiFetch(`/pets/${petId}`);
-        if (!res.ok) throw new Error('No se pudo cargar la mascota');
-        const pet = await res.json();
-        renderPetProfileCard(pet);
-    } catch (error) {
-        console.error(error);
-    }
+// =============================
+//   INICIO
+// =============================
+function init() {
+    renderBreedOptions();
+    renderPets();
+    renderRequests();
+    setupInteractions();
 }
 
-function renderPetProfileCard(pet) {
-    const card = document.getElementById('petProfileCard');
-    if (!card) return;
-    card.querySelector('[data-field="name"]').textContent = pet.name;
-    card.querySelector('[data-field="description"]').textContent = pet.description || 'Sin descripción';
-    card.querySelector('[data-field="meta"]').textContent = `${pet.species} · ${pet.size || 'Tamaño n/d'} · ${pet.age || 'Edad n/d'}`;
-    const ownerBox = card.querySelector('[data-field="owner"]');
-    if (ownerBox) ownerBox.textContent = pet.owner ? `${pet.owner.name} (${pet.owner.contact})` : 'Sin dueño registrado';
-    const status = card.querySelector('[data-field="status"]');
-    if (status) status.textContent = pet.status || 'disponible';
-}
-
-// Sólo se ejecuta en páginas donde exista #petProfileCard
-document.addEventListener('DOMContentLoaded', loadPetProfileCard);
+document.addEventListener('DOMContentLoaded', init);
