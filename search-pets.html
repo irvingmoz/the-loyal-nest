@@ -273,5 +273,68 @@
 
     <!-- Script específico de búsqueda -->
     <script src="js/search-pets.js"></script>
+
+    <script src="js/pets.js"></script>
+<script>
+  const petsContainer = document.getElementById("pets-container");
+  const filtroEspecie = document.getElementById("filtro-especie");
+  const filtroEdad = document.getElementById("filtro-edad");
+
+  // Mostrar todas las mascotas al inicio
+  mostrarMascotas(pets);
+
+  function mostrarMascotas(lista) {
+    petsContainer.innerHTML = "";
+
+    if (lista.length === 0) {
+      petsContainer.innerHTML = "<p>No hay resultados para esos filtros.</p>";
+      return;
+    }
+
+    lista.forEach(pet => {
+      const card = document.createElement("div");
+      card.className = "pet-card";
+
+      card.innerHTML = `
+        <img src="${pet.imagen}" alt="${pet.nombre}">
+        <h3>${pet.nombre}</h3>
+        <p><strong>Especie:</strong> ${pet.especie}</p>
+        <p><strong>Edad:</strong> ${pet.edadCategoria}</p>
+        <p><strong>Tamaño:</strong> ${pet.tamano}</p>
+        <button onclick="verPerfil(${pet.id})">Ver Perfil</button>
+      `;
+
+      petsContainer.appendChild(card);
+    });
+  }
+
+  // Filtros
+  function filtrar() {
+    const especie = filtroEspecie.value;
+    const edad = filtroEdad.value;
+
+    let filtrados = pets;
+
+    if (especie !== "Todos") {
+      filtrados = filtrados.filter(p => p.especie === especie);
+    }
+
+    if (edad !== "Todos") {
+      filtrados = filtrados.filter(p => p.edadCategoria === edad);
+    }
+
+    mostrarMascotas(filtrados);
+  }
+
+  filtroEspecie.addEventListener("change", filtrar);
+  filtroEdad.addEventListener("change", filtrar);
+
+  // Acción del botón
+  function verPerfil(id) {
+    window.location.href = `pet-profile.html?id=${id}`;
+  }
+</script>
+
 </body>
 </html>
+
