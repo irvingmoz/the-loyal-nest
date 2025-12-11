@@ -15,28 +15,33 @@
         }
         .auth-card {
             background: white; padding: 40px; border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; /* Hice más ancha la tarjeta */
         }
         .auth-header { text-align: center; margin-bottom: 30px; }
         .auth-header h2 { color: var(--primary); margin-bottom: 10px; font-size: 1.8rem; }
         
-        /* ESTILOS DE LAS TARJETAS DE SELECCIÓN */
-        .type-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        /* AHORA SON 3 COLUMNAS */
+        .type-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        
         .type-card {
-            border: 2px solid #eee; border-radius: 12px; padding: 20px; text-align: center;
+            border: 2px solid #eee; border-radius: 12px; padding: 15px; text-align: center;
             cursor: pointer; transition: all 0.3s ease;
         }
         .type-card:hover { border-color: var(--primary); background: #fff8f0; transform: translateY(-3px); }
-        .type-card .icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
-        .type-card h3 { font-size: 1rem; margin: 0; color: var(--dark); }
+        .type-card .icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+        .type-card h3 { font-size: 0.9rem; margin: 0; color: var(--dark); font-weight: 600; }
         
-        /* Formulario */
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); }
-        .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
         
         .auth-switch { text-align: center; margin-top: 20px; font-size: 0.9rem; }
         .btn-link { background: none; border: none; color: #666; text-decoration: underline; cursor: pointer; margin-bottom: 15px; }
+        
+        /* Ajuste para móvil */
+        @media (max-width: 500px) {
+            .type-cards { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -59,17 +64,21 @@
         <div id="stepSelection" class="auth-card">
             <div class="auth-header">
                 <h2>¡Bienvenido!</h2>
-                <p>Elige cómo quieres unirte a nosotros</p>
+                <p>Elige tu perfil para comenzar</p>
             </div>
             
             <div class="type-cards">
                 <div class="type-card" onclick="selectUserType('adoptante')">
                     <span class="icon">🐾</span>
-                    <h3>Quiero Adoptar</h3>
+                    <h3>Adoptante</h3>
                 </div>
                 <div class="type-card" onclick="selectUserType('rescatista')">
                     <span class="icon">🏠</span>
-                    <h3>Soy Rescatista</h3>
+                    <h3>Rescatista</h3>
+                </div>
+                <div class="type-card" onclick="selectUserType('administrador')">
+                    <span class="icon">⚙️</span>
+                    <h3>Admin</h3>
                 </div>
             </div>
             
@@ -83,7 +92,7 @@
             
             <div class="auth-header">
                 <h2 id="formTitle">Registro</h2>
-                <p>Completa tus datos para continuar</p>
+                <p>Completa tus datos</p>
             </div>
 
             <form id="registerForm">
@@ -97,6 +106,11 @@
                 <div class="form-group" id="refugioField" style="display: none;">
                     <label>Nombre del Refugio</label>
                     <input type="text" id="nombreRefugio" placeholder="Ej. Patitas Felices">
+                </div>
+
+                <div class="form-group" id="adminField" style="display: none;">
+                    <label>Razón de la solicitud (Código de acceso)</label>
+                    <textarea id="razonAdmin" rows="2" placeholder="Explica por qué solicitas acceso de administrador"></textarea>
                 </div>
 
                 <div class="form-group">
