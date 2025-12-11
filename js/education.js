@@ -1,109 +1,53 @@
 // js/education.js
 
-// --- BASE DE DATOS DE ARTÍCULOS ---
+// --- 1. BASE DE DATOS DE ARTÍCULOS ---
+// He puesto la MISMA imagen en todos para que no falle ninguna.
+const commonImage = "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=600&q=80";
+
 const articlesDB = [
-    // 1. CUIDADOS BÁSICOS
     {
-        id: 1, category: "cuidados-basicos",
-        title: "🥩 Nutrición: ¿Qué debe comer tu mascota?",
+        id: 1, category: "cuidados-basicos", title: "🥩 Nutrición: ¿Qué debe comer tu mascota?",
         excerpt: "Guía completa sobre alimentación balanceada.",
-        image: "https://images.unsplash.com/photo-1589924691195-41432c84c161?auto=format&fit=crop&w=500&q=60",
-        content: `
-            <h3>La base de una vida sana</h3>
-            <p>La nutrición es el pilar de la salud de tu mascota. Tanto perros como gatos son carnívoros, por lo que su dieta debe basarse principalmente en <strong>proteína animal</strong> de alta calidad.</p>
-            <h3>¿Croquetas o Comida Casera?</h3>
-            <ul>
-                <li><strong>Croquetas (Pienso):</strong> Busca marcas donde el primer ingrediente sea carne (pollo, res, pescado) y no cereales.</li>
-                <li><strong>Dieta BARF/Casera:</strong> Excelente si está supervisada por un veterinario nutricionista.</li>
-            </ul>
-            <h3>⚠️ Alimentos Prohibidos</h3>
-            <p>Nunca des: Chocolate, Cebolla/Ajo, Uvas/Pasas, Huesos cocidos o Alcohol.</p>
-        `
+        image: commonImage, // <--- Misma imagen
+        content: `<h3>La base de una vida sana</h3><p>La nutrición es el pilar de la salud. Perros y gatos necesitan principalmente <strong>proteína animal</strong>.</p><h3>⚠️ Alimentos Prohibidos</h3><p>Nunca des: Chocolate, Cebolla, Uvas, Huesos cocidos o Alcohol.</p>`
     },
     {
-        id: 2, category: "cuidados-basicos",
-        title: "🛁 Higiene y Baño: Mitos y Realidades",
+        id: 2, category: "cuidados-basicos", title: "🛁 Higiene y Baño",
         excerpt: "¿Cada cuánto bañar a un perro?",
-        image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=500&q=60",
-        content: `
-            <h3>Perros: Frecuencia de Baño</h3>
-            <p>Lo recomendable es hacerlo <strong>una vez cada 3 o 4 semanas</strong>. Bañarlos seguido daña su piel. Usa siempre champú para perros.</p>
-            <h3>Gatos: ¿Se bañan?</h3>
-            <p>Generalmente, no. Se acicalan solos y el baño les estresa. Solo hazlo si es estrictamente necesario.</p>
-            <h3>🦷 Cepillado y Dientes</h3>
-            <p>El cepillado diario es clave para eliminar pelo muerto. Intenta también cepillar sus dientes 2-3 veces por semana para evitar sarro.</p>
-        `
-    },
-    // 2. SALUD
-    {
-        id: 3, category: "salud-prevencion",
-        title: "💉 Calendario de Vacunación Esencial",
-        excerpt: "Protege a tu mejor amigo de enfermedades mortales.",
-        image: "https://images.unsplash.com/photo-1628009368231-760335298025?auto=format&fit=crop&w=500&q=60",
-        content: `
-            <h3>Perros (Cachorros)</h3>
-            <ul>
-                <li><strong>6 semanas:</strong> Puppy (Parvovirus/Moquillo).</li>
-                <li><strong>8-16 semanas:</strong> Refuerzos de Polivalente.</li>
-                <li><strong>4-6 meses:</strong> Rabia (Obligatoria).</li>
-            </ul>
-            <h3>Gatos</h3>
-            <p>Requieren la <strong>Triple Felina</strong> y Rabia. Considera Leucemia si salen.</p>
-        `
+        image: commonImage, // <--- Misma imagen
+        content: `<h3>Perros: Frecuencia</h3><p>Báñalo <strong>una vez al mes</strong>. Hacerlo seguido daña su piel.</p><h3>Gatos</h3><p>No, ellos se limpian solos.</p>`
     },
     {
-        id: 4, category: "salud-prevencion",
-        title: "❤️ Esterilización: Un Acto de Amor",
-        excerpt: "Desmentimos los mitos sobre la esterilización.",
-        image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?auto=format&fit=crop&w=500&q=60",
-        content: `
-            <h3>Beneficios Médicos</h3>
-            <ul>
-                <li><strong>Hembras:</strong> Elimina riesgo de infecciones uterinas y reduce tumores mamarios.</li>
-                <li><strong>Machos:</strong> Previene cáncer testicular.</li>
-            </ul>
-            <h3>Mito: "Deben tener una camada"</h3>
-            <p><strong>Falso.</strong> No hay beneficio médico. Esterilizar antes del primer celo es lo más saludable.</p>
-        `
+        id: 3, category: "salud-prevencion", title: "💉 Calendario de Vacunación",
+        excerpt: "Protege a tu mejor amigo.",
+        image: commonImage, // <--- Misma imagen
+        content: `<h3>Perros</h3><ul><li>6 semanas: Puppy</li><li>6 meses: Rabia</li></ul><h3>Gatos</h3><p>Triple Felina y Rabia son esenciales.</p>`
     },
-    // 3. ENTRENAMIENTO
     {
-        id: 5, category: "entrenamiento",
-        title: "🎓 Entrenamiento en Positivo",
-        excerpt: "Cómo educar sin castigos.",
-        image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=500&q=60",
-        content: `
-            <h3>¿Qué es?</h3>
-            <p>Premiar las conductas deseadas en lugar de castigar las malas. El cerebro aprende más rápido buscando la recompensa.</p>
-            <h3>Reglas de Oro</h3>
-            <ol>
-                <li><strong>Timing:</strong> Premia en el instante exacto.</li>
-                <li><strong>Consistencia:</strong> Las reglas deben ser siempre las mismas.</li>
-                <li><strong>Paciencia:</strong> Sesiones cortas (5-10 min) son mejores.</li>
-            </ol>
-        `
+        id: 4, category: "salud-prevencion", title: "❤️ Esterilización",
+        excerpt: "Beneficios médicos y de comportamiento.",
+        image: commonImage, // <--- Misma imagen
+        content: `<h3>Beneficios</h3><p>Evita tumores, cáncer y controla la sobrepoblación.</p>`
     },
-    // 4. ADOPCIÓN
     {
-        id: 6, category: "adopcion-responsable",
-        title: "🏠 La Regla del 3-3-3",
-        excerpt: "Etapas emocionales de un perro adoptado.",
-        image: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=500&q=60",
-        content: `
-            <h3>3 Días: Descompresión</h3>
-            <p>Puede estar asustado o esconderse. Dale espacio.</p>
-            <h3>3 Semanas: Rutina</h3>
-            <p>Empieza a entender su nueva vida y a mostrar su personalidad.</p>
-            <h3>3 Meses: Pertenencia</h3>
-            <p>Ya se siente en casa y confía en ti. Verás su mejor versión.</p>
-        `
+        id: 5, category: "entrenamiento", title: "🎓 Entrenamiento Positivo",
+        excerpt: "Educar sin castigos.",
+        image: commonImage, // <--- Misma imagen
+        content: `<h3>¿Cómo funciona?</h3><p>Premia lo bueno, ignora lo malo. Sé constante y ten paciencia.</p>`
+    },
+    {
+        id: 6, category: "adopcion-responsable", title: "🏠 Regla del 3-3-3",
+        excerpt: "Etapas de adaptación.",
+        image: commonImage, // <--- Misma imagen
+        content: `<h3>3 Días</h3><p>Descompresión.</p><h3>3 Semanas</h3><p>Rutina.</p><h3>3 Meses</h3><p>Pertenencia.</p>`
     }
 ];
 
-// --- RENDERIZADO ---
+// --- 2. RENDERIZADO INICIAL ---
 document.addEventListener('DOMContentLoaded', () => {
     renderArticles();
     loadFeatured();
+    // loadResources(); // Descomenta si quieres los recursos descargables
 });
 
 function renderArticles() {
@@ -121,9 +65,7 @@ function renderArticles() {
 
 function loadFeatured() {
     const featured = document.getElementById('featuredArticles');
-    if(featured) {
-        articlesDB.slice(0, 3).forEach(a => featured.innerHTML += createCard(a));
-    }
+    if(featured) articlesDB.slice(0, 3).forEach(a => featured.innerHTML += createCard(a));
 }
 
 function createCard(article) {
@@ -139,14 +81,14 @@ function createCard(article) {
     `;
 }
 
-// --- MODAL LIMPIO ---
+// --- 3. MODAL DE ARTÍCULOS ---
 function openModalArticle(id) {
     const article = articlesDB.find(a => a.id === id);
     if (!article) return;
 
     const modalContent = document.getElementById('articleModalContent');
     
-    // Contenido inyectado (Sin imagen gigante, solo texto limpio)
+    // Contenido inyectado (Modal limpio y ordenado)
     modalContent.innerHTML = `
         <div class="modal-injected-content">
             <div style="text-align: right; margin-bottom: 10px;">
