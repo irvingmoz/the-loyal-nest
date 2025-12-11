@@ -670,17 +670,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return Math.round((R * c) * 10) / 10; // Distancia en km con 1 decimal
 }
 
-// Navegación
-function navigateTo(url) {
-    window.location.href = url;
-}
-window.addEventListener('load', function() {
-    setTimeout(function() {
-        if(map) {
-            map.invalidateSize();
-            console.log("Mapa redibujado forzosamente");
-        }
-    }, 1000); // Espera 1 segundo a que todo cargue
-});
+
+
 
 
