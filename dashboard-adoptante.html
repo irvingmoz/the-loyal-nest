@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Adoptante | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/dashboard2.css">
 </head>
 <body class="dashboard-page">
     <!-- Sidebar -->
@@ -27,39 +27,39 @@
 
         <ul class="sidebar-menu">
             <li class="menu-item active">
-                <a href="#inicio" class="menu-link">
+                <a href="#inicio" class="menu-link" data-section="inicio">
                     <span class="menu-icon">🏠</span>
                     <span class="menu-text">Inicio</span>
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#buscar" class="menu-link">
+                <a href="search-pets.html" class="menu-link" data-section="buscar">
                     <span class="menu-icon">🔍</span>
                     <span class="menu-text">Buscar Mascotas</span>
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#solicitudes" class="menu-link">
+                <a href="#solicitudes" class="menu-link" data-section="solicitudes">
                     <span class="menu-icon">📋</span>
                     <span class="menu-text">Mis Solicitudes</span>
                     <span class="menu-badge">3</span>
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#favoritos" class="menu-link">
+                <a href="#favoritos" class="menu-link" data-section="favoritos">
                     <span class="menu-icon">❤️</span>
                     <span class="menu-text">Favoritos</span>
                     <span class="menu-badge">5</span>
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#perfil" class="menu-link">
+                <a href="#perfil" class="menu-link" data-section="perfil">
                     <span class="menu-icon">👤</span>
                     <span class="menu-text">Mi Perfil</span>
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#configuracion" class="menu-link">
+                <a href="#configuracion" class="menu-link" data-section="configuracion">
                     <span class="menu-icon">⚙️</span>
                     <span class="menu-text">Configuración</span>
                 </a>
@@ -151,6 +151,31 @@
             </div>
         </div>
 
+        <!-- Solicitudes de adopción -->
+        <section class="requests-section dashboard-section" id="solicitudes">
+            <div class="section-header">
+                <h2>Mis Solicitudes</h2>
+                <span class="section-subtitle">Estado: En Revisión</span>
+            </div>
+            <div class="requests-card">
+                <div id="requestsEmpty" class="empty-state" style="display:none;">
+                    <p>⚠️ Aún no has enviado solicitudes de adopción.</p>
+                </div>
+                <table class="table" id="requestsTable" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Mascota</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="requestsTableBody">
+                        <!-- Solicitudes dinámicas -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- Recent Activity & Pets Grid -->
         <div class="dashboard-grid">
             <!-- Mascotas Recomendadas -->
@@ -161,7 +186,7 @@
                 </div>
                 <div class="pets-grid">
                     <!-- Pet Card 1 -->
-                    <div class="pet-card">
+                    <div class="pet-card" data-pet-id="1">
                         <div class="pet-image">
                             <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=200&fit=crop" alt="Max">
                             <button class="btn-favorite">❤️</button>
@@ -174,14 +199,14 @@
                                 <span>📍 CDMX, Benito Juárez</span>
                             </div>
                             <div class="pet-actions">
-                                <button class="btn-outline btn-sm">Ver Detalles</button>
-                                <button class="btn-primary btn-sm">Solicitar</button>
+                                <button class="btn-outline btn-sm" data-view-details data-pet-id="1">Ver Detalles</button>
+                                <button class="btn-primary btn-sm" data-pet-id="1">Solicitar</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Pet Card 2 -->
-                    <div class="pet-card">
+                    <div class="pet-card" data-pet-id="2">
                         <div class="pet-image">
                             <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&h=200&fit=crop" alt="Luna">
                             <button class="btn-favorite">❤️</button>
@@ -194,14 +219,14 @@
                                 <span>📍 CDMX, Coyoacán</span>
                             </div>
                             <div class="pet-actions">
-                                <button class="btn-outline btn-sm">Ver Detalles</button>
-                                <button class="btn-primary btn-sm">Solicitar</button>
+                                <button class="btn-outline btn-sm" data-view-details data-pet-id="2">Ver Detalles</button>
+                                <button class="btn-primary btn-sm" data-pet-id="2">Solicitar</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Pet Card 3 -->
-                    <div class="pet-card">
+                    <div class="pet-card" data-pet-id="3">
                         <div class="pet-image">
                             <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&h=200&fit=crop" alt="Rocky">
                             <button class="btn-favorite active">❤️</button>
@@ -214,8 +239,8 @@
                                 <span>📍 CDMX, Miguel Hidalgo</span>
                             </div>
                             <div class="pet-actions">
-                                <button class="btn-outline btn-sm">Ver Detalles</button>
-                                <button class="btn-primary btn-sm" disabled>En Proceso</button>
+                                <button class="btn-outline btn-sm" data-view-details data-pet-id="3">Ver Detalles</button>
+                                <button class="btn-primary btn-sm" data-pet-id="3" disabled>En Proceso</button>
                             </div>
                         </div>
                     </div>
@@ -255,6 +280,32 @@
                             <p>Viste el perfil de <strong>"Simba"</strong></p>
                             <span class="activity-time">Hace 1 semana</span>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Favoritos -->
+            <section class="dashboard-section" id="favoritos" style="display:none;">
+                <div class="section-header">
+                    <h2>Mis Favoritos</h2>
+                    <span class="section-subtitle">Accede rápido a tus mascotas guardadas</span>
+                </div>
+                <div class="requests-card">
+                    <div class="empty-state">
+                        <p>💛 Aún no has agregado mascotas a favoritos.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Perfil -->
+            <section class="dashboard-section" id="perfil" style="display:none;">
+                <div class="section-header">
+                    <h2>Mi Perfil</h2>
+                    <span class="section-subtitle">Actualiza tus datos para agilizar solicitudes</span>
+                </div>
+                <div class="requests-card">
+                    <div class="empty-state">
+                        <p>✏️ Próximamente podrás editar tu información desde aquí.</p>
                     </div>
                 </div>
             </section>
