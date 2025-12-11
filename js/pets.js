@@ -1,5 +1,6 @@
 // =============================
-//   BASE DE MASCOTAS (CATÁLOGO)
+//     BASE DE MASCOTAS (CATÁLOGO)
+// (La edad se cambió a un valor numérico en años para facilitar la lógica de filtrado)
 // =============================
 const pets = [
     {
@@ -8,7 +9,7 @@ const pets = [
         species: 'perro',
         breed: 'Labrador',
         size: 'grande',
-        age: '3 años',
+        age: 3, // Edad en años
         temperament: 'juguetón y sociable',
         description: 'Bruno es un labrador chocolate que ama las caminatas largas y convivir con niños.',
         image: 'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&h=600&fit=crop'
@@ -19,7 +20,7 @@ const pets = [
         species: 'perro',
         breed: 'Corgi',
         size: 'mediano',
-        age: '2 años',
+        age: 0.8, // 9 meses (cachorro)
         temperament: 'tierna y curiosa',
         description: 'Maya disfruta aprender trucos nuevos y siempre busca estar cerca de su familia.',
         image: 'https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=800&h=600&fit=crop'
@@ -30,7 +31,7 @@ const pets = [
         species: 'gato',
         breed: 'Mestizo',
         size: 'pequeño',
-        age: '1 año',
+        age: 1, // 1 año (adulto joven)
         temperament: 'tranquila y observadora',
         description: 'Luna es una gatita negra de ojos grandes que adora las siestas al sol y los sillones cómodos.',
         image: 'https://images.unsplash.com/photo-1455970022149-a8f26b6902dd?w=800&h=600&fit=crop'
@@ -41,7 +42,7 @@ const pets = [
         species: 'perro',
         breed: 'Pastor Alemán',
         size: 'grande',
-        age: '4 años',
+        age: 4, // Edad en años
         temperament: 'leal y protector',
         description: 'Simón es muy inteligente, sabe órdenes básicas y busca un hogar con espacio para ejercitarse.',
         image: 'https://images.unsplash.com/photo-1619983081563-430f63602796?w=800&h=600&fit=crop'
@@ -52,7 +53,7 @@ const pets = [
         species: 'gato',
         breed: 'Siamesa',
         size: 'mediano',
-        age: '3 años',
+        age: 10, // Senior (para prueba)
         temperament: 'afectuosa y vocal',
         description: 'Nala sigue a su humano a todas partes, le encanta platicar y recibir caricias en la barbilla.',
         image: 'https://images.unsplash.com/photo-1472491235688-bdc81a63246e?w=800&h=600&fit=crop'
@@ -63,7 +64,7 @@ const pets = [
         species: 'perro',
         breed: 'Chihuahua',
         size: 'pequeño',
-        age: '2 años',
+        age: 2, // Edad en años
         temperament: 'alegre y valiente',
         description: 'Taco es diminuto pero con gran personalidad; disfruta los paseos cortos y acurrucarse.',
         image: 'https://images.unsplash.com/photo-1525253013412-55c1a69a5738?w=800&h=600&fit=crop'
@@ -74,7 +75,7 @@ const pets = [
         species: 'perro',
         breed: 'Golden Retriever',
         size: 'grande',
-        age: '5 años',
+        age: 5, // Edad en años
         temperament: 'dulce y paciente',
         description: 'Kiara es una golden color miel que adora el agua y se lleva excelente con otros perros.',
         image: 'https://images.unsplash.com/photo-1504595403659-9088ce801e29?w=800&h=600&fit=crop'
@@ -85,7 +86,7 @@ const pets = [
         species: 'gato',
         breed: 'Atigrado',
         size: 'mediano',
-        age: '2 años',
+        age: 0.5, // 6 meses (cachorro)
         temperament: 'juguetón y adaptable',
         description: 'Michi es un gato atigrado que disfruta los rascadores y convivir con otros gatos.',
         image: 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=800&h=600&fit=crop'
@@ -96,22 +97,33 @@ const pets = [
         species: 'perro',
         breed: 'Husky',
         size: 'grande',
-        age: '3 años',
+        age: 3, // Edad en años
         temperament: 'enérgico y charlador',
         description: 'Rocco ama correr, necesita actividad diaria y mucha atención de su familia humana.',
         image: 'https://images.unsplash.com/photo-1534338580013-382cf48bd435?w=800&h=600&fit=crop'
+    },
+    {
+        id: 10,
+        name: 'Milo',
+        species: 'gato',
+        breed: 'Ragdoll',
+        size: 'grande',
+        age: 1.5, // 1 año y medio
+        temperament: 'relajado y cariñoso',
+        description: 'Milo es un gigante gentil que busca un hogar tranquilo y muchas caricias.',
+        image: 'https://images.unsplash.com/photo-1596854407944-be1f4503724c?w=800&h=600&fit=crop'
     }
 ];
 
 // =============================
-//   VARIABLES GLOBALES
+//     VARIABLES GLOBALES
 // =============================
 let activeSpecies = '';
 let selectedPet = null;
 const storageKey = 'loyalNestAdoptionRequests';
 
 // =============================
-//   MANEJO DE SOLICITUDES
+//     MANEJO DE SOLICITUDES
 // =============================
 function getSavedRequests() {
     try {
@@ -132,7 +144,7 @@ function saveRequests(requests) {
 }
 
 // =============================
-//   FILTROS Y CATÁLOGO
+//     FILTROS Y CATÁLOGO
 // =============================
 function renderBreedOptions() {
     const breedSelect = document.getElementById('filterBreed');
@@ -144,7 +156,7 @@ function renderBreedOptions() {
     });
 
     breedSelect.innerHTML =
-        '<option value="">Todas</option>' +
+        '<option value="">Raza</option>' + // Asegura que la opción Raza siempre esté
         [...breeds].sort().map((b) => `<option value="${b.toLowerCase()}">${b}</option>`).join('');
 }
 
@@ -152,18 +164,41 @@ function filterPets() {
     const searchTerm = document.getElementById('filterSearch').value.toLowerCase();
     const breed = document.getElementById('filterBreed').value;
     const size = document.getElementById('filterSize').value;
+    const ageFilter = document.getElementById('filterAge').value; // ⬅️ NUEVO: Capturar filtro de edad
 
     return pets.filter((pet) => {
         const matchSpecies = activeSpecies ? pet.species === activeSpecies : true;
         const matchBreed = breed ? pet.breed.toLowerCase() === breed : true;
         const matchSize = size ? pet.size === size : true;
+
+        // ⬅️ Lógica del filtro de edad (Cachorro/Adulto/Senior)
+        let matchAge = true;
+        if (ageFilter) {
+            const petAge = pet.age;
+            if (ageFilter === 'cachorro') {
+                matchAge = petAge < 1; // Menos de 1 año
+            } else if (ageFilter === 'adulto') {
+                matchAge = petAge >= 1 && petAge <= 7; // Entre 1 y 7 años
+            } else if (ageFilter === 'senior') {
+                matchAge = petAge > 7; // Más de 7 años
+            }
+        }
+        
         const matchTerm = searchTerm
             ? `${pet.name} ${pet.description} ${pet.temperament}`.toLowerCase().includes(searchTerm)
             : true;
 
-        return matchSpecies && matchBreed && matchSize && matchTerm;
+        return matchSpecies && matchBreed && matchSize && matchAge && matchTerm; // ⬅️ Incluir matchAge en la condición
     });
 }
+
+function getAgeDisplay(age) {
+    if (age >= 1) {
+        return `${Math.floor(age)} años`;
+    }
+    return `${Math.round(age * 12)} meses`;
+}
+
 
 function renderPets() {
     const container = document.getElementById('searchResults');
@@ -185,7 +220,7 @@ function renderPets() {
             <div class="pet-card__meta">
                 <div>
                     <h3>${pet.name}</h3>
-                    <p class="muted">${pet.breed} · ${pet.age}</p>
+                    <p class="muted">${pet.breed} · ${getAgeDisplay(pet.age)}</p>
                 </div>
                 <span class="pet-chip">${pet.species}</span>
             </div>
@@ -200,7 +235,7 @@ function renderPets() {
             <div class="pet-card__actions">
                 <span class="badge-status">Disponible</span>
                 <button class="btn-primary" data-action="open-drawer" data-pet-id="${pet.id}">
-                    Solicitar adopción
+                    Ver Perfil / Adoptar
                 </button>
             </div>
         </article>
@@ -224,9 +259,9 @@ function updateSpeciesFilter(target) {
 }
 
 // =============================
-//   DRAWER (FORMULARIO)
+//     DRAWER (FORMULARIO)
 // =============================
-function openDrawer(petId) {
+function openDrawer(pId) { // Cambié petId por pId para evitar conflicto con la variable interna
     const drawer = document.getElementById('adoptionDrawer');
     const pet = pets.find((p) => p.id === Number(pId));
 
@@ -236,7 +271,7 @@ function openDrawer(petId) {
 
     drawer.setAttribute('aria-hidden', 'false');
     drawer.querySelector('#drawerPetName').textContent = pet.name;
-    drawer.querySelector('#drawerPetMeta').textContent = `${pet.breed} · ${pet.size} · ${pet.age}`;
+    drawer.querySelector('#drawerPetMeta').textContent = `${pet.breed} · ${pet.size} · ${getAgeDisplay(pet.age)}`; // Uso de getAgeDisplay
 }
 
 function closeDrawer() {
@@ -276,7 +311,7 @@ function submitAdoption(event) {
 }
 
 // =============================
-//   PANEL ADMIN DE SOLICITUDES
+//     PANEL ADMIN DE SOLICITUDES
 // =============================
 function renderRequests() {
     const requests = getSavedRequests();
@@ -324,12 +359,13 @@ function updateRequestStatus(id, status) {
 }
 
 // =============================
-//   EVENTOS / LISTENERS
+//     EVENTOS / LISTENERS
 // =============================
 function setupInteractions() {
     document.getElementById('filterSearch').addEventListener('input', renderPets);
     document.getElementById('filterSize').addEventListener('change', renderPets);
     document.getElementById('filterBreed').addEventListener('change', renderPets);
+    document.getElementById('filterAge').addEventListener('change', renderPets); // ⬅️ NUEVO: Listener para el filtro de edad
 
     document.getElementById('adoptionForm').addEventListener('submit', submitAdoption);
     document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
@@ -364,7 +400,7 @@ function setupInteractions() {
 }
 
 // =============================
-//   INICIO
+//     INICIO
 // =============================
 function init() {
     renderBreedOptions();
