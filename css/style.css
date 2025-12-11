@@ -113,11 +113,11 @@ body {
 /* Botones */
 .btn-primary {
     background: var(--primary);
-    color: white;
+    color: #000000;
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: var(--radius);
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
@@ -565,4 +565,5 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
 
