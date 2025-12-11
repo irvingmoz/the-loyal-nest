@@ -179,3 +179,30 @@ function actualizarNavbar() {
         if(navUser) navUser.style.display = 'none';
     }
 }
+// --- LÓGICA DE SESIÓN PERSISTENTE (Pegar al final de js/auth.js) ---
+
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Revisar si hay un usuario guardado en el navegador
+    const usuarioGuardado = localStorage.getItem("usuarioLogueado"); // Asegúrate que esta clave coincida con la que usas al guardar
+
+    // Referencias a los botones del Navbar (Asegúrate de ponerle estos ID a tu HTML)
+    const btnIniciarSesion = document.getElementById("nav-login"); // El botón de "Iniciar Sesión"
+    const menuUsuario = document.getElementById("nav-user");       // El área de "Mi Cuenta / Cerrar Sesión"
+
+    if (usuarioGuardado) {
+        // SI HAY SESIÓN:
+        console.log("Usuario detectado, ajustando Navbar...");
+        if(btnIniciarSesion) btnIniciarSesion.style.display = "none"; // Oculta "Iniciar Sesión"
+        if(menuUsuario) menuUsuario.style.display = "block";          // Muestra "Mi Cuenta"
+    } else {
+        // NO HAY SESIÓN:
+        if(btnIniciarSesion) btnIniciarSesion.style.display = "block"; // Muestra "Iniciar Sesión"
+        if(menuUsuario) menuUsuario.style.display = "none";            // Oculta "Mi Cuenta"
+    }
+});
+
+// Función para Cerrar Sesión (conéctala a tu botón de salir)
+function cerrarSesion() {
+    localStorage.removeItem("usuarioLogueado");
+    window.location.href = "auth.html"; // Te regresa al login
+}
