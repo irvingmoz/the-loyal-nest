@@ -567,4 +567,45 @@ body {
     }
 }
 
+.pet-card {
+  width: 250px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  padding: 15px;
+  margin: 10px;
+  text-align: center;
+  transition: transform .2s;
+}
+
+.pet-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.pet-card:hover {
+  transform: scale(1.04);
+}
+
+.pet-card h3 {
+  margin: 10px 0 5px;
+}
+
+.pet-card button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.pet-card button:hover {
+  background: #3e8e41;
+}
+
+
 
