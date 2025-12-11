@@ -196,7 +196,6 @@ function updateModalTitle(pet) {
 // Cargar mascotas relacionadas
 function loadRelatedPets() {
     const relatedGrid = document.getElementById('relatedPetsGrid');
-
     if (!relatedGrid) return;
 
     const related = petsData.filter(pet => !currentPet || pet.id !== currentPet.id);
@@ -296,7 +295,7 @@ function openAdoptionModal() {
                 </div>
                 
                 <div class="form-actions">
-                    <button type="button" class="btn-outline">Cancelar</button>
+                    <button type="button" class="btn-outline" onclick="closeModal('adoptionModal')">Cancelar</button>
                     <button type="button" class="btn-primary">Siguiente</button>
                 </div>
             </form>
@@ -309,14 +308,6 @@ function openAdoptionModal() {
     }
     
     openModal('adoptionModal');
-}
-
-// Función para ver mascota (simulación)
-function viewPet(petId) {
-    // En una implementación real, redirigiría a la página de la mascota
-    console.log(`Ver perfil de mascota ID: ${petId}`);
-    // Simular redirección
-    window.location.href = `pet-profile.html?id=${petId}`;
 }
 
 // Mejorar la función de modal existente
