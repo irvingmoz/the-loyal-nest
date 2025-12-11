@@ -1,109 +1,145 @@
-// js/auth.js - GESTIÓN DE USUARIOS Y SESIÓN
+// js/auth.js - GESTIÓN DE USUARIOS Y SESIÓN + INTERFAZ DE REGISTRO
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Verificar si hay alguien logueado al cargar la página
+    // 1. Verificar sesión al cargar
     actualizarNavbar();
 
-    // 2. Manejar Registro (Solo si estamos en register.html)
+    // 2. Manejar Registro
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Evita que se recargue la página
+            e.preventDefault();
             registrarUsuario();
         });
     }
 
-    // 3. Manejar Login (Solo si estamos en auth.html)
+    // 3. Manejar Login
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Evita que se recargue la página
+            e.preventDefault();
             iniciarSesion();
         });
     }
 });
 
-// --- LÓGICA DE REGISTRO ---
+// --- FUNCIONES DE INTERFAZ (LO QUE TE FALTABA) ---
+
+// Esta función se activa al dar clic en las tarjetas de "Quiero Adoptar" o "Soy Rescatista"
+function selectUserType(tipo) {
+    // 1. Ocultar la pantalla de selección y mostrar el formulario
+    const stepSelection = document.getElementById('stepSelection');
+    const stepForm = document.getElementById('stepForm');
+    
+    if (stepSelection && stepForm) {
+        stepSelection.style.display = 'none';
+        stepForm.style.display = 'block';
+    }
+
+    // 2. Guardar el tipo en el campo oculto
+    const tipoInput = document.getElementById('tipo');
+    if (tipoInput) tipoInput.value = tipo;
+
+    // 3. Personalizar el formulario según lo que eligieron
+    const formTitle = document.getElementById('formTitle');
+    const refugioField = document.getElementById('refugioField');
+    const nombreRefugioInput = document.getElementById('nombreRefugio');
+
+    if (tipo === 'rescatista') {
+        if (formTitle) formTitle.innerText = 'Registro de Refugio';
+        if (refugioField) refugioField.style.display = 'block'; // Muestra campo extra
+        if (nombreRefugioInput) nombreRefugioInput.required = true;
+    } else {
+        if (formTitle) formTitle.innerText = 'Registro de Adoptante';
+        if (refugioField) refugioField.style.display = 'none'; // Oculta campo extra
+        if (nombreRefugioInput) nombreRefugioInput.required = false;
+    }
+}
+
+// Función para el botón "Volver"
+function goBack() {
+    document.getElementById('stepForm').style.display = 'none';
+    document.getElementById('stepSelection').style.display = 'block';
+    document.getElementById('registerForm').reset();
+}
+
+// --- LÓGICA DE BASE DE DATOS (LOCALSTORAGE) ---
+
 function registrarUsuario() {
     const nombre = document.getElementById('nombre').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    const tipo = document.getElementById('tipo').value;
     
-    // Si tienes un select de tipo de usuario, lo tomamos, si no, es 'adoptante'
-    const tipoSelect = document.getElementById('tipo');
-    const tipo = tipoSelect ? tipoSelect.value : 'adoptante';
+    // Si es rescatista, agregamos el nombre del refugio al nombre de usuario
+    let nombreFinal = nombre;
+    if (tipo === 'rescatista') {
+        const nombreRefugio = document.getElementById('nombreRefugio').value;
+        nombreFinal = `${nombre} (${nombreRefugio})`;
+    }
 
-    // 1. Validar si ya existe el correo
+    // 1. Validar si ya existe
     const usuarios = JSON.parse(localStorage.getItem('usuarios_db')) || [];
     if (usuarios.find(u => u.email === email)) {
         alert('Este correo ya está registrado.');
         return;
     }
 
-    // 2. Crear objeto de usuario
+    // 2. Crear usuario
     const nuevoUsuario = { 
         id: Date.now(), 
-        nombre: nombre, 
+        nombre: nombreFinal, 
         email: email, 
         password: password, 
         tipo: tipo 
     };
 
-    // 3. Guardar en la "Base de Datos" (LocalStorage)
+    // 3. Guardar
     usuarios.push(nuevoUsuario);
     localStorage.setItem('usuarios_db', JSON.stringify(usuarios));
     
-    // 4. Iniciar sesión automáticamente
+    // 4. Iniciar sesión auto
     localStorage.setItem('usuario_activo', JSON.stringify(nuevoUsuario));
     
     alert('¡Cuenta creada con éxito! Bienvenido.');
-    window.location.href = 'index.html'; // Te manda al inicio ya logueado
+    window.location.href = 'index.html';
 }
 
-// --- LÓGICA DE LOGIN ---
 function iniciarSesion() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    // 1. Buscar en la base de datos
     const usuarios = JSON.parse(localStorage.getItem('usuarios_db')) || [];
     const usuarioEncontrado = usuarios.find(u => u.email === email && u.password === password);
 
     if (usuarioEncontrado) {
-        // 2. Guardar sesión
         localStorage.setItem('usuario_activo', JSON.stringify(usuarioEncontrado));
-        // alert('Bienvenido de nuevo');
-        window.location.href = 'index.html'; // Te manda al inicio
+        window.location.href = 'index.html';
     } else {
-        alert('Correo o contraseña incorrectos. Intenta de nuevo.');
+        alert('Correo o contraseña incorrectos.');
     }
 }
 
-// --- LÓGICA DE CIERRE DE SESIÓN ---
 function cerrarSesion() {
-    localStorage.removeItem('usuario_activo'); // Borra la sesión
-    window.location.href = 'index.html'; // Recarga la página para ver el menú de visitante
+    localStorage.removeItem('usuario_activo');
+    window.location.href = 'index.html';
 }
 
-// --- ACTUALIZAR NAVBAR (La Magia) ---
 function actualizarNavbar() {
-    // Revisamos si hay un usuario guardado
     const usuario = JSON.parse(localStorage.getItem('usuario_activo'));
     
-    const navAuth = document.querySelector('.nav-auth'); // Botones login/registro
-    const navUser = document.getElementById('userMenu'); // Menú de usuario "Hola Juan"
-    const userNameSpan = document.getElementById('userName'); // Donde va el nombre
+    const navAuth = document.querySelector('.nav-auth');
+    const navUser = document.getElementById('userMenu');
+    const userNameSpan = document.getElementById('userName');
 
     if (usuario) {
-        // SI EL USUARIO ESTÁ LOGUEADO:
-        if (navAuth) navAuth.style.display = 'none'; // Ocultamos botones de registro
+        if (navAuth) navAuth.style.display = 'none';
         if (navUser) {
-            navUser.style.display = 'flex'; // Mostramos el menú de usuario
-            if (userNameSpan) userNameSpan.textContent = usuario.nombre; // Ponemos su nombre
+            navUser.style.display = 'flex';
+            if (userNameSpan) userNameSpan.textContent = usuario.nombre;
         }
     } else {
-        // SI ES VISITANTE:
-        if (navAuth) navAuth.style.display = 'flex'; // Mostramos botones de registro
-        if (navUser) navUser.style.display = 'none'; // Ocultamos menú de usuario
+        if (navAuth) navAuth.style.display = 'flex';
+        if (navUser) navUser.style.display = 'none';
     }
 }
