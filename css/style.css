@@ -210,7 +210,7 @@ body {
 
 .hero-subtitle {
     font-size: 1.25rem;
-    color: var(--gray);
+    color: var(--white);
     margin-bottom: 2rem;
     line-height: 1.6;
 }
@@ -565,3 +565,4 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
