@@ -1,167 +1,138 @@
-// js/auth.js - CUMPLE RF01 Y RF03 (Login estricto)
-
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Cargar estado de la barra de navegación
-    actualizarNavbar();
-
-    // 2. Controlar el Registro
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // ¡VITAL! Evita recarga
-            registrarUsuario();
-        });
-    }
-
-    // 3. Controlar el Login
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // ¡VITAL! Evita recarga
-            iniciarSesion();
-        });
-    }
-});
-
-// --- INTERFAZ REGISTRO (Selección de tipo) ---
-function selectUserType(tipo) {
-    const stepSelection = document.getElementById('stepSelection');
-    const stepForm = document.getElementById('stepForm');
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse | The Loyal Nest</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    if (stepSelection && stepForm) {
-        stepSelection.style.display = 'none';
-        stepForm.style.display = 'block';
-    }
-
-    const tipoInput = document.getElementById('tipo');
-    if (tipoInput) tipoInput.value = tipo;
-
-    // Ajustar formulario según tipo
-    const formTitle = document.getElementById('formTitle');
-    const refugioField = document.getElementById('refugioField');
-    const adminField = document.getElementById('adminField');
-    const nombreRefugio = document.getElementById('nombreRefugio');
-    const razonAdmin = document.getElementById('razonAdmin');
-
-    // Limpiar
-    if(refugioField) refugioField.style.display = 'none';
-    if(adminField) adminField.style.display = 'none';
-    if(nombreRefugio) nombreRefugio.required = false;
-    if(razonAdmin) razonAdmin.required = false;
-
-    if (tipo === 'rescatista') {
-        if(formTitle) formTitle.innerText = 'Registro de Refugio';
-        if(refugioField) refugioField.style.display = 'block';
-        if(nombreRefugio) nombreRefugio.required = true;
-    } 
-    else if (tipo === 'administrador') {
-        if(formTitle) formTitle.innerText = 'Solicitud de Admin';
-        if(adminField) adminField.style.display = 'block';
-        if(razonAdmin) razonAdmin.required = true;
-    } 
-    else {
-        if(formTitle) formTitle.innerText = 'Registro de Adoptante';
-    }
-}
-
-function goBack() {
-    document.getElementById('stepForm').style.display = 'none';
-    document.getElementById('stepSelection').style.display = 'block';
-    document.getElementById('registerForm').reset();
-}
-
-// --- RF01: REGISTRO DE USUARIOS ---
-function registrarUsuario() {
-    const nombre = document.getElementById('nombre').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const tipo = document.getElementById('tipo').value;
-    
-    let nombreFinal = nombre;
-    if (tipo === 'rescatista') {
-        nombreFinal = `${nombre} (${document.getElementById('nombreRefugio').value})`;
-    }
-
-    // Validar duplicados
-    const usuarios = JSON.parse(localStorage.getItem('usuarios_db')) || [];
-    if (usuarios.find(u => u.email === email)) {
-        alert('❌ Este correo ya está registrado.');
-        return;
-    }
-
-    // Guardar usuario
-    const nuevoUsuario = { id: Date.now(), nombre: nombreFinal, email, password, tipo };
-    usuarios.push(nuevoUsuario);
-    localStorage.setItem('usuarios_db', JSON.stringify(usuarios));
-    
-    // Auto-login
-    localStorage.setItem('usuario_activo', JSON.stringify(nuevoUsuario));
-    
-    alert('✅ ¡Cuenta creada con éxito!');
-    window.location.href = 'index.html';
-}
-
-// --- RF03: INICIO DE SESIÓN ---
-function iniciarSesion() {
-    console.log("Intentando iniciar sesión..."); // Para depuración
-    
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    const usuarios = JSON.parse(localStorage.getItem('usuarios_db')) || [];
-    
-    // Buscar coincidencia exacta
-    const usuario = usuarios.find(u => u.email === email && u.password === password);
-
-    if (usuario) {
-        localStorage.setItem('usuario_activo', JSON.stringify(usuario));
-        alert(`👋 Bienvenido de nuevo, ${usuario.nombre}`);
+    <style>
+        .auth-wrapper {
+            display: flex; justify-content: center; align-items: center;
+            min-height: calc(100vh - 80px); padding: 40px 20px;
+            background-color: #f8f9fa; margin-top: 80px;
+        }
+        .auth-card {
+            background: white; padding: 40px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px;
+        }
+        .auth-header { text-align: center; margin-bottom: 30px; }
+        .auth-header h2 { color: var(--primary); margin-bottom: 10px; font-size: 1.8rem; }
         
-        // Redirección forzada
-        window.location.replace('index.html'); 
-    } else {
-        alert('❌ Correo o contraseña incorrectos.\nVerifica tus datos o regístrate si no tienes cuenta.');
-    }
-}
-
-// --- RECUPERACIÓN DE CONTRASEÑA ---
-function recuperarContra(event) {
-    if(event) event.preventDefault(); // Evita salto de página
-    
-    const correo = prompt("📧 Ingresa tu correo para restablecer tu contraseña:");
-    
-    if (correo) {
-        // Validación básica de formato email
-        if(correo.includes('@') && correo.includes('.')) {
-            alert(`✅ Hemos enviado un enlace de recuperación a: ${correo}\n(Revisa tu bandeja de entrada)`);
-        } else {
-            alert("❌ Por favor ingresa un correo válido.");
+        .type-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .type-card {
+            border: 2px solid #eee; border-radius: 12px; padding: 15px; text-align: center;
+            cursor: pointer; transition: all 0.3s ease;
         }
-    }
-}
+        .type-card:hover { border-color: var(--primary); background: #fff8f0; transform: translateY(-3px); }
+        .type-card .icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+        .type-card h3 { font-size: 0.9rem; margin: 0; color: var(--dark); font-weight: 600; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+        
+        .password-rules { font-size: 0.8rem; color: #666; margin-top: 5px; }
+        .auth-switch { text-align: center; margin-top: 20px; font-size: 0.9rem; }
+        .btn-link { background: none; border: none; color: #666; text-decoration: underline; cursor: pointer; margin-bottom: 15px; }
+        
+        @media (max-width: 500px) { .type-cards { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
 
-// --- SESIÓN Y NAVBAR ---
-function cerrarSesion() {
-    localStorage.removeItem('usuario_activo');
-    window.location.href = 'index.html';
-}
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li class="nav-auth">
+                    <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
+                    <a href="register.html" class="btn-primary">Registrarse</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
 
-function actualizarNavbar() {
-    const usuario = JSON.parse(localStorage.getItem('usuario_activo'));
-    const navAuth = document.querySelector('.nav-auth');
-    const navUser = document.getElementById('userMenu');
-    const userNameSpan = document.getElementById('userName');
+    <main class="auth-wrapper">
+        
+        <div id="stepSelection" class="auth-card">
+            <div class="auth-header">
+                <h2>¡Bienvenido!</h2>
+                <p>Elige tu perfil para comenzar</p>
+            </div>
+            
+            <div class="type-cards">
+                <div class="type-card" onclick="selectUserType('adoptante')">
+                    <span class="icon">🐾</span><h3>Adoptante</h3>
+                </div>
+                <div class="type-card" onclick="selectUserType('rescatista')">
+                    <span class="icon">🏠</span><h3>Rescatista</h3>
+                </div>
+                <div class="type-card" onclick="selectUserType('administrador')">
+                    <span class="icon">⚙️</span><h3>Admin</h3>
+                </div>
+            </div>
+            
+            <div class="auth-switch">
+                ¿Ya tienes cuenta? <a href="auth.html" style="color: var(--primary);">Inicia Sesión</a>
+            </div>
+        </div>
 
-    if (usuario) {
-        // Usuario logueado
-        if (navAuth) navAuth.style.display = 'none';
-        if (navUser) {
-            navUser.style.display = 'flex';
-            if (userNameSpan) userNameSpan.textContent = usuario.nombre;
-        }
-    } else {
-        // Visitante
-        if (navAuth) navAuth.style.display = 'flex';
-        if (navUser) navUser.style.display = 'none';
-    }
-}
+        <div id="stepForm" class="auth-card" style="display: none;">
+            <button onclick="goBack()" class="btn-link">← Volver a elegir</button>
+            
+            <div class="auth-header">
+                <h2 id="formTitle">Registro</h2>
+                <p>Completa tus datos</p>
+            </div>
+
+            <form id="registerForm">
+                <input type="hidden" id="tipo" value="adoptante">
+
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="nombre" required placeholder="Tu nombre">
+                </div>
+
+                <div class="form-group" id="refugioField" style="display: none;">
+                    <label>Nombre del Refugio</label>
+                    <input type="text" id="nombreRefugio" placeholder="Ej. Patitas Felices">
+                </div>
+
+                <div class="form-group" id="adminField" style="display: none;">
+                    <label>Razón de la solicitud</label>
+                    <textarea id="razonAdmin" rows="2" placeholder="Explica por qué solicitas acceso"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="email" required placeholder="tu@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="password" required placeholder="Crea tu contraseña">
+                    <div class="password-rules">
+                        ⚠️ Reglas: Mínimo 12 caracteres, 1 Mayúscula, 1 Número y 1 Símbolo.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary btn-full" style="width: 100%;">Crear Cuenta</button>
+            </form>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 The Loyal Nest.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
