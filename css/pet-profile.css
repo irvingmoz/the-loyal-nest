@@ -1,23 +1,9 @@
 /* ============================
    PERFIL DE MASCOTA (pet-profile.html)
-   Basado en el HTML actual
+   CSS LIGERO Y ESPECÍFICO
    ============================ */
 
-/* Ajuste general del main en esta página (si quieres afinar) */
-main.container {
-    max-width: 1100px;
-    margin-top: 110px;
-    margin-bottom: 3rem;
-}
-
-/* ---------- Panel principal de la mascota ---------- */
-
-#petProfileCard {
-    /* el .panel ya da fondo y sombra en tu style.css,
-       aquí afinamos detalles del header y contenido */
-}
-
-/* Header del panel principal (nombre + estado) */
+/* Panel principal de la ficha */
 #petProfileCard .panel__header {
     display: flex;
     justify-content: space-between;
@@ -36,7 +22,7 @@ main.container {
     margin: 0;
 }
 
-/* Badge de estado principal (span.status en el header) */
+/* Badge de estado (span.status en el header) */
 #petProfileCard .status[data-field="status"] {
     align-self: center;
     padding: 0.4rem 1rem;
@@ -49,27 +35,10 @@ main.container {
     white-space: nowrap;
 }
 
-/* Opcional: estilos condicionales según texto del estado */
-#petProfileCard .status[data-field="status"] {
-    background: var(--primary, #ff914d);
-}
-#petProfileCard .status[data-field="status"]:contains("adoptado"),
-#petProfileCard .status[data-field="status"]:contains("adoptada") {
-    background: var(--gray, #6c757d);
-}
-#petProfileCard .status[data-field="status"]:contains("proceso") {
-    background: var(--warning, #ffc107);
-    color: #212529;
-}
-
 /* Texto descriptivo y refugio */
 #petProfileCard [data-field="description"] {
     margin: 1rem 0 0.75rem;
     line-height: 1.6;
-}
-
-#petProfileCard p strong {
-    font-weight: 600;
 }
 
 /* Botón "Solicitar adopción" */
@@ -77,41 +46,14 @@ main.container {
     margin-top: 1rem;
 }
 
-/* ---------- Panel de historial médico ---------- */
+/* ---------- Historial médico (solo pequeños ajustes) ---------- */
 
-.panel:nth-of-type(2) .panel__header h2,
-.panel:nth-of-type(3) .panel__header h2 {
-    margin: 0;
-    font-size: 1.25rem;
+#medicalHistory td,
+#medicalHistory th {
+    font-size: 0.9rem;
 }
 
-/* Tabla del historial médico */
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 0.75rem;
-    font-size: 0.95rem;
-}
-
-.table thead th {
-    text-align: left;
-    padding: 0.75rem 0.75rem;
-    border-bottom: 2px solid var(--gray-light, #e9ecef);
-    font-weight: 600;
-    background: #f8f9fa;
-}
-
-.table tbody td {
-    padding: 0.65rem 0.75rem;
-    border-bottom: 1px solid var(--gray-light, #e9ecef);
-    vertical-align: top;
-}
-
-.table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-/* Formulario de historial médico (debajo de la tabla) */
+/* Form debajo de la tabla */
 #medicalForm.form-grid {
     margin-top: 1rem;
     gap: 1rem;
@@ -125,25 +67,11 @@ main.container {
     gap: 0.25rem;
 }
 
-#medicalForm select,
-#medicalForm input,
-#medicalForm textarea {
-    font: inherit;
-}
+/* ---------- Cards del timeline (adoptionRequests) ---------- */
 
-/* ---------- Timeline de solicitudes (cards-grid) ---------- */
-
-#adoptionRequests.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
-}
-
-/* Si adoptions.js genera <article class="card"> ya se ve bien; por si acaso: */
 #adoptionRequests .card {
+    /* Si tus cards ya tienen estilo global, esto es opcional */
     border-radius: var(--radius, 12px);
-    box-shadow: var(--shadow, 0 4px 10px rgba(0, 0, 0, 0.06));
-    padding: 1rem 1.25rem;
 }
 
 /* ---------- Modal de adopción (dialog#adoptionModal) ---------- */
@@ -161,7 +89,6 @@ main.container {
     background: rgba(15, 23, 42, 0.6);
 }
 
-/* Contenido del formulario dentro del dialog */
 #adoptionModal .form-grid {
     padding: 1.5rem 1.5rem 1rem;
     gap: 1rem;
@@ -175,8 +102,8 @@ main.container {
 #adoptionModal label {
     display: flex;
     flex-direction: column;
-    font-size: 0.9rem;
     gap: 0.25rem;
+    font-size: 0.9rem;
 }
 
 #adoptionModal textarea {
@@ -189,9 +116,8 @@ main.container {
     margin-top: 0.25rem;
 }
 
-/* Botón "Cerrar" del dialog */
-#adoptionModal + .btn-text,
-#adoptionModal button.btn-text {
+/* Botón "Cerrar" dentro del dialog */
+#adoptionModal > button.btn-text {
     display: block;
     width: 100%;
     text-align: center;
@@ -201,7 +127,7 @@ main.container {
     cursor: pointer;
 }
 
-/* ---------- Ajustes responsivos ---------- */
+/* ---------- Responsivo básico ---------- */
 
 @media (max-width: 768px) {
     #petProfileCard .panel__header {
@@ -216,16 +142,6 @@ main.container {
 
     #medicalForm.form-grid {
         grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-    main.container {
-        margin-top: 90px;
-    }
-
-    #petProfileCard h1[data-field="name"] {
-        font-size: 1.8rem;
     }
 }
 
