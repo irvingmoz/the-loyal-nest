@@ -4,71 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa de Refugios | The Loyal Nest</title>
-    
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/map.css">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
 
     <header class="header">
         <nav class="nav">
-            <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+            <div class="nav-brand">
+                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+            </div>
             <ul class="nav-links">
                 <li><a href="index.html">Inicio</a></li>
+                <li><a href="search-pets.html">Buscar Mascotas</a></li>
+                <li><a href="shelters-map.html" class="active">Refugios</a></li>
+                <li><a href="education.html">Educación</a></li>
+                <li class="nav-auth">
+                    <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
+                </li>
             </ul>
         </nav>
     </header>
 
-    <div class="map-container">
+    <main class="map-view">
         
-        <div class="map-header">
-            <div class="header-content">
-                <h1>🗺️ Refugios Cercanos</h1>
-            </div>
-            <div>
-                <button class="btn-primary" onclick="locateUser()">📍 Mi Ubicación</button>
-            </div>
+        <div class="map-toolbar">
+            <h1>📍 Refugios Cercanos</h1>
+            <button class="btn-primary" onclick="locateUser()">📍 Mi Ubicación</button>
         </div>
 
-        <div class="map-layout">
+        <div class="map-grid">
             
-            <aside class="filters-sidebar">
-                <h3>Filtros</h3>
-                <div class="filter-group">
-                    <label>Distancia</label>
-                    <select id="distanceFilter" onchange="filterShelters()">
-                        <option value="10" selected>10 km</option>
-                        <option value="50">50 km</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Especies</label>
-                    <div class="checkbox-filters">
-                        <label class="checkbox-item"><input type="checkbox" name="species" value="perro" checked onchange="filterShelters()"> Perros</label>
-                        <label class="checkbox-item"><input type="checkbox" name="species" value="gato" checked onchange="filterShelters()"> Gatos</label>
+            <aside class="sidebar-filters">
+                <div class="filters-content">
+                    <div class="filters-header">
+                        <h3>🔍 Filtros</h3>
+                        <button onclick="clearFilters()" class="btn-text">Limpiar</button>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Distancia máxima</label>
+                        <select id="distanceFilter" onchange="filterShelters()">
+                            <option value="5">5 km</option>
+                            <option value="10" selected>10 km</option>
+                            <option value="25">25 km</option>
+                            <option value="50">50 km</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Especies disponibles</label>
+                        <div class="checkbox-list">
+                            <label><input type="checkbox" name="species" value="perro" checked onchange="filterShelters()"> 🐕 Perros</label>
+                            <label><input type="checkbox" name="species" value="gato" checked onchange="filterShelters()"> 🐈 Gatos</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Calificación mínima</label>
+                        <select id="ratingFilter" onchange="filterShelters()">
+                            <option value="3">3+ estrellas</option>
+                            <option value="4" selected>4+ estrellas</option>
+                            <option value="4.5">4.5+ estrellas</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Servicios disponibles</label>
+                        <div class="checkbox-list">
+                            <label><input type="checkbox" name="services" value="adopcion" checked onchange="filterShelters()"> 🏠 Adopción</label>
+                            <label><input type="checkbox" name="services" value="esterilizacion" onchange="filterShelters()"> 💊 Esterilización</label>
+                            <label><input type="checkbox" name="services" value="vacunacion" onchange="filterShelters()"> 💉 Vacunación</label>
+                            <label><input type="checkbox" name="services" value="urgencias" onchange="filterShelters()"> 🚑 Urgencias</label>
+                        </div>
+                    </div>
+
+                    <div class="shelters-counter">
+                        <strong id="sheltersCount">0</strong> refugios encontrados
                     </div>
                 </div>
-                <p id="sheltersCount" style="text-align:center; font-weight:bold; margin-top:20px;">Cargando...</p>
             </aside>
 
-            <section class="map-content">
-                <div class="map-wrapper">
-                    <div id="sheltersMap"></div> 
-                </div>
+            <section class="map-canvas-container">
+                <div id="sheltersMap"></div>
             </section>
 
-            <aside class="results-sidebar">
-                <div class="results-header">Resultados</div>
-                <div class="results-list" id="sheltersList"></div>
+            <aside class="sidebar-results">
+                <div class="results-header">
+                    <h3>Resultados</h3>
+                    <select id="sortResults" onchange="sortShelters()" style="font-size:0.8rem; padding:5px;">
+                        <option value="distance">Más cercanos</option>
+                        <option value="rating">Mejor calificados</option>
+                    </select>
+                </div>
+                <div id="sheltersList" class="results-list">
+                    </div>
             </aside>
 
         </div>
-    </div>
+    </main>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="js/map.js"></script>
-
 </body>
 </html>
