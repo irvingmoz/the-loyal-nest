@@ -6,6 +6,7 @@
     <title>Perfil de mascota | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 <header class="header">
     <nav class="nav">
@@ -21,6 +22,8 @@
 </header>
 
 <main class="container" style="margin-top:110px; max-width:1100px;">
+
+    <!-- SECCIÓN PERFIL -->
     <section class="panel" id="petProfileCard">
         <header class="panel__header">
             <div>
@@ -30,51 +33,82 @@
             </div>
             <span class="status" data-field="status">disponible</span>
         </header>
+
         <p data-field="description">Descripción pendiente</p>
         <p><strong>Refugio / contacto:</strong> <span data-field="owner">-</span></p>
-        <button class="btn-primary" data-hide-role="rescatista,rescuer" onclick="document.getElementById('adoptionModal').showModal()">Solicitar adopción</button>
+
+        <button class="btn-primary" data-hide-role="rescatista,rescuer"
+            onclick="document.getElementById('adoptionModal').showModal()">
+            Solicitar adopción
+        </button>
     </section>
 
+    <!-- SECCIÓN HISTORIAL MÉDICO -->
     <section class="panel">
         <header class="panel__header"><h2>Historial médico</h2></header>
+
         <table class="table">
-            <thead><tr><th>Tipo</th><th>Fecha</th><th>Notas</th><th>Próxima</th></tr></thead>
+            <thead>
+                <tr><th>Tipo</th><th>Fecha</th><th>Notas</th><th>Próxima</th></tr>
+            </thead>
             <tbody id="medicalHistory"></tbody>
         </table>
+
+        <!-- Esto solo lo ven roles de refugio -->
         <form id="medicalForm" class="form-grid" data-require-role="rescatista,rescuer">
-            <label>Tipo<select name="type"><option>Vacuna</option><option>Desparasitación</option><option>Cita</option></select></label>
-            <label>Fecha<input type="date" name="date" required></label>
-            <label>Notas<textarea name="notes"></textarea></label>
-            <label>Próxima fecha<input type="date" name="nextDate"></label>
+            <label>Tipo
+                <select name="type">
+                    <option>Vacuna</option>
+                    <option>Desparasitación</option>
+                    <option>Cita</option>
+                </select>
+            </label>
+
+            <label>Fecha <input type="date" name="date" required></label>
+            <label>Notas <textarea name="notes"></textarea></label>
+            <label>Próxima fecha <input type="date" name="nextDate"></label>
+
             <button class="btn-outline" type="submit">Agregar entrada</button>
         </form>
     </section>
 
+    <!-- TIMELINE -->
     <section class="panel">
         <header class="panel__header"><h2>Timeline de solicitudes</h2></header>
         <div id="adoptionRequests" class="cards-grid"></div>
     </section>
+
 </main>
 
+<!-- MODAL -->
 <dialog id="adoptionModal">
     <form id="adoptionRequestForm" class="form-grid" method="dialog">
         <h3>Solicitar adopción</h3>
-        <label>Mensaje<textarea name="message" required></textarea></label>
+
+        <label>Mensaje
+            <textarea name="message" required></textarea>
+        </label>
+
         <input type="hidden" name="petId" value="">
         <button class="btn-primary" type="submit">Enviar</button>
+
         <div id="adoptionStatus" class="muted"></div>
     </form>
-    <button class="btn-text" onclick="document.getElementById('adoptionModal').close()">Cerrar</button>
+
+    <button class="btn-text" onclick="document.getElementById('adoptionModal').close()">
+        Cerrar
+    </button>
 </dialog>
 
+<!-- SCRIPTS CORRECTOS -->
 <script src="js/session.js"></script>
-<script src="js/pets.js"></script>
-<script src="js/medical.js"></script>
-<script src="js/adoptions.js"></script>
+<script src="js/pet-profile.js"></script>  <!-- ESTE ES EL CORRECTO -->
+<script src="js/adoptions.js"></script>     <!-- Opcional -->
 <script>
-    const petIdParam = new URLSearchParams(window.location.search).get('id');
+    const idParam = new URLSearchParams(window.location.search).get('id');
     const requestForm = document.getElementById('adoptionRequestForm');
-    if (requestForm && petIdParam) requestForm.petId.value = petIdParam;
+    if (requestForm && idParam) requestForm.petId.value = idParam;
 </script>
+
 </body>
 </html>
