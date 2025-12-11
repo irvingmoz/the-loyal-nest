@@ -20,31 +20,104 @@
     </nav>
 </header>
 
-<main class="container" style="margin-top:110px; max-width:1100px;">
-    <header class="panel__header">
-        <div>
-            <p class="muted">Explorar</p>
-            <h1>Encuentra tu compañero ideal</h1>
+<main class="container" style="margin-top:110px; max-width:1200px;">
+    <section class="hero hero--muted">
+        <div class="hero__content">
+            <p class="muted">Buscar mascotas</p>
+            <h1>Adopta con confianza y enamórate del catálogo</h1>
+            <p class="muted">Explora perros y gatos listos para un hogar. Filtra por especie, raza o tamaño y envía tu solicitud sin salir de esta página.</p>
+            <div class="hero__actions">
+                <button class="btn-primary" id="scrollToCatalog">Ver catálogo</button>
+                <button class="btn-outline" id="scrollToRequests">Panel administrador</button>
+            </div>
         </div>
-    </header>
+        <div class="hero__media">
+            <div class="hero__badge">Catálogo curado</div>
+            <img src="https://images.unsplash.com/photo-1505623776324-32c5ba67cae7?w=700&h=520&fit=crop" alt="Perro listo para adopción" class="hero__image">
+        </div>
+    </section>
 
-    <form id="searchForm" class="form-grid">
-        <label>Especie<select name="species"><option value="">Todas</option><option value="Perro">Perro</option><option value="Gato">Gato</option></select></label>
-        <label>Tamaño<select name="size"><option value="">Cualquiera</option><option value="Chico">Chico</option><option value="Mediano">Mediano</option><option value="Grande">Grande</option></select></label>
-        <label>Ubicación<input name="location" placeholder="Ciudad"></label>
-        <label>Edad mínima<input type="number" name="ageMin" min="0"></label>
-        <label>Edad máxima<input type="number" name="ageMax" min="0"></label>
-        <button class="btn-primary" type="submit">Buscar</button>
-        <div class="form-status muted"></div>
-    </form>
+    <section class="panel" id="catalogPanel">
+        <header class="panel__header panel__header--stacked">
+            <div>
+                <p class="muted">Catálogo</p>
+                <h2>Mira a todos los candidatos</h2>
+            </div>
+            <div class="pill-group" id="speciesFilters">
+                <button class="pill pill--active" data-species="">Todos</button>
+                <button class="pill" data-species="perro">Perros</button>
+                <button class="pill" data-species="gato">Gatos</button>
+            </div>
+        </header>
 
-    <section class="panel">
-        <div id="searchResults" class="cards-grid"></div>
-        <div id="searchPagination" class="pagination"></div>
+        <div class="filters-grid">
+            <label class="filter">
+                <span>Raza</span>
+                <select id="filterBreed"></select>
+            </label>
+            <label class="filter">
+                <span>Tamaño</span>
+                <select id="filterSize">
+                    <option value="">Cualquiera</option>
+                    <option value="pequeño">Pequeño</option>
+                    <option value="mediano">Mediano</option>
+                    <option value="grande">Grande</option>
+                </select>
+            </label>
+            <label class="filter filter--wide">
+                <span>Busca por nombre o personalidad</span>
+                <input type="search" id="filterSearch" placeholder="Ej. juguetón, tranquilo, Bruno">
+            </label>
+        </div>
+
+        <div id="searchResults" class="cards-grid cards-grid--pets"></div>
+    </section>
+
+    <section class="panel" id="adminPanel">
+        <header class="panel__header panel__header--stacked">
+            <div>
+                <p class="muted">Panel administrador</p>
+                <h2>Solicitudes de adopción</h2>
+                <p class="muted">Aquí puedes revisar las solicitudes capturadas en esta página y decidir si aprobar o rechazar.</p>
+            </div>
+        </header>
+        <div id="requestEmpty" class="muted" style="margin:16px 0;">No hay solicitudes todavía.</div>
+        <div class="table" id="requestsTable" style="display:none;">
+            <div class="table__header">
+                <span>Persona</span>
+                <span>Mascota</span>
+                <span>Mensaje</span>
+                <span>Estado</span>
+                <span>Acciones</span>
+            </div>
+            <div class="table__body" id="requestsBody"></div>
+        </div>
+    </section>
+
+    <section class="drawer" id="adoptionDrawer" aria-hidden="true">
+        <div class="drawer__content">
+            <div class="drawer__header">
+                <div>
+                    <p class="muted">Solicitud de adopción</p>
+                    <h3 id="drawerPetName"></h3>
+                    <p class="muted" id="drawerPetMeta"></p>
+                </div>
+                <button class="btn-icon" id="closeDrawer" aria-label="Cerrar">✕</button>
+            </div>
+            <form id="adoptionForm" class="form-grid form-grid--stacked">
+                <label>Tu nombre<input required name="applicant" placeholder="Nombre completo"></label>
+                <label>Correo electrónico<input required name="email" type="email" placeholder="tucorreo@email.com"></label>
+                <label>Mensaje para el refugio<textarea required name="message" rows="4" placeholder="Cuéntanos sobre tu hogar y por qué quieres adoptarlo"></textarea></label>
+                <div class="form-actions">
+                    <button type="button" class="btn-outline" id="cancelDrawer">Cancelar</button>
+                    <button class="btn-primary" type="submit">Enviar solicitud</button>
+                </div>
+            </form>
+        </div>
     </section>
 </main>
 
 <script src="js/session.js"></script>
-<script src="js/search.js"></script>
+<script src="js/search-pets.js"></script>
 </body>
 </html>
