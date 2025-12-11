@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     initializeDashboard();
     checkUserSession();
+    loadAdoptionRequests();
 });
 
 // Inicializar dashboard
@@ -38,9 +39,14 @@ function setupEventListeners() {
     const menuLinks = document.querySelectorAll('.menu-link');
     menuLinks.forEach(link => {
         link.addEventListener('click', function(e) {
+            const section = this.dataset.section;
+
+            if (section === 'buscar') {
+                return; // Deja que el enlace navegue a search-pets.html
+            }
+
             e.preventDefault();
-            const target = this.getAttribute('href').substring(1);
-            navigateTo(target);
+            navigateTo(section || this.getAttribute('href').replace('#', ''));
         });
     });
     
@@ -60,6 +66,15 @@ function setupEventListeners() {
                 handleAdoptionRequest(this);
             });
         }
+    });
+
+    // Ver detalles
+    const detailButtons = document.querySelectorAll('[data-view-details]');
+    detailButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const petId = this.dataset.petId || this.closest('.pet-card')?.dataset.petId;
+            window.location.href = `pet-profile.html?id=${petId || 1}`;
+        });
     });
 }
 
@@ -90,34 +105,39 @@ function updateUserInfo() {
 
 // Navegar a sección
 function navigateTo(section) {
-    // En una aplicación real, aquí cargarías el contenido dinámicamente
-    console.log('Navegando a:', section);
-    
-    // Actualizar menú activo
-    document.querySelectorAll('.menu-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    const activeItem = document.querySelector(`[href="#${section}"]`).parentElement;
-    activeItem.classList.add('active');
-    
-    // Mostrar contenido correspondiente
+    const sidebarLinks = document.querySelectorAll('.menu-item');
+    sidebarLinks.forEach(item => item.classList.remove('active'));
+
+    const activeItem = document.querySelector(`[data-section="${section}"]`)?.closest('.menu-item');
+    if (activeItem) activeItem.classList.add('active');
+
+    if (section === 'buscar') {
+        window.location.href = 'search-pets.html';
+        return;
+    }
+
+    if (section === 'inicio') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+    }
+
     showSection(section);
 }
 
 // Mostrar sección específica
 function showSection(section) {
+    const targetSection = document.getElementById(section);
+    if (!targetSection) return;
+
     // Ocultar todas las secciones
     const sections = document.querySelectorAll('.dashboard-section');
     sections.forEach(sec => {
         sec.style.display = 'none';
     });
-    
+
     // Mostrar sección seleccionada
-    const targetSection = document.getElementById(section);
-    if (targetSection) {
-        targetSection.style.display = 'block';
-    }
+    targetSection.style.display = 'block';
+    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Alternar favorito
@@ -136,11 +156,41 @@ function toggleFavorite(button) {
     updateFavoriteCount();
 }
 
+function loadAdoptionRequests() {
+    const requests = getSavedRequests();
+    const table = document.getElementById('requestsTable');
+    const tbody = document.getElementById('requestsTableBody');
+    const emptyState = document.getElementById('requestsEmpty');
+
+    if (!table || !tbody || !emptyState) return;
+
+    if (!requests.length) {
+        table.style.display = 'none';
+        emptyState.style.display = 'block';
+        setStatNumber('Solicitudes', 0);
+        return;
+    }
+
+    table.style.display = 'table';
+    emptyState.style.display = 'none';
+    tbody.innerHTML = requests.map(request => `
+        <tr>
+            <td>${request.nombreMascota}</td>
+            <td>${formatDate(request.fecha)}</td>
+            <td><span class="pet-status available">${request.estado}</span></td>
+        </tr>
+    `).join('');
+
+    setStatNumber('Solicitudes', requests.length);
+}
+
 // Manejar solicitud de adopción
 function handleAdoptionRequest(button) {
     const petCard = button.closest('.pet-card');
     const petName = petCard.querySelector('h3').textContent;
-    
+    const petId = petCard.dataset.petId || button.dataset.petId || Date.now();
+    const requests = getSavedRequests();
+
     // Mostrar loading
     const originalText = button.innerHTML;
     button.innerHTML = '⏳ Procesando...';
@@ -151,11 +201,26 @@ function handleAdoptionRequest(button) {
         button.innerHTML = '✅ Solicitado';
         button.disabled = true;
         button.style.background = 'var(--success)';
-        
+
         showNotification(`🐕 Solicitud enviada para ${petName}`, 'success');
-        
-        // Actualizar estadísticas
+
+        // Guardar solicitud en localStorage
+        const newRequest = {
+            idSolicitud: Date.now(),
+            idMascota: Number(petId),
+            nombreMascota: petName,
+            fecha: new Date().toISOString(),
+            estado: 'En Revisión'
+        };
+
+        requests.push(newRequest);
+        localStorage.setItem('adoptionRequests', JSON.stringify(requests));
+
+        // Refrescar tabla y estadísticas
+        loadAdoptionRequests();
         updateStats();
+
+        // Actualizar estadísticas
     }, 2000);
 }
 
@@ -163,17 +228,27 @@ function handleAdoptionRequest(button) {
 function updateStats() {
     // En una aplicación real, aquí obtendrías datos del servidor
     const stats = {
-        solicitudes: Math.floor(Math.random() * 5) + 1,
+        solicitudes: getSavedRequests().length,
         favoritos: Math.floor(Math.random() * 10) + 1,
         adopciones: Math.floor(Math.random() * 3) + 1,
         vistas: Math.floor(Math.random() * 20) + 5
     };
-    
-    // Actualizar UI
-    Object.keys(stats).forEach(stat => {
-        const element = document.querySelector(`.stat-number:contains("${stat}")`);
-        if (element) {
-            animateValue(element, 0, stats[stat], 1000);
+
+    setStatNumber('Solicitudes', stats.solicitudes);
+    setStatNumber('Favoritos', stats.favoritos);
+    setStatNumber('Adopciones', stats.adopciones);
+    setStatNumber('Mascotas Vistas', stats.vistas);
+}
+
+function setStatNumber(labelText, value) {
+    const cards = document.querySelectorAll('.stat-card');
+    cards.forEach(card => {
+        const label = card.querySelector('.stat-label');
+        if (label && label.textContent.includes(labelText)) {
+            const number = card.querySelector('.stat-number');
+            if (number) {
+                number.textContent = value;
+            }
         }
     });
 }
@@ -270,6 +345,21 @@ function updateFavoriteCount() {
     if (favoriteBadge) {
         favoriteBadge.textContent = favoriteCount;
     }
+}
+
+function getSavedRequests() {
+    try {
+        return JSON.parse(localStorage.getItem('adoptionRequests')) || [];
+    } catch (error) {
+        console.error('No se pudieron leer las solicitudes almacenadas', error);
+        return [];
+    }
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 // Cerrar sesión

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Max - Labrador Mix | The Loyal Nest</title>
+    <title>Perfil de Mascota | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/pet-profile.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -38,9 +38,9 @@
         <div class="container">
             <a href="index.html" class="breadcrumb-link">Inicio</a>
             <span class="breadcrumb-separator">/</span>
-            <a href="search.html" class="breadcrumb-link">Buscar Mascotas</a>
+            <a href="search-pets.html" class="breadcrumb-link">Buscar Mascotas</a>
             <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current">Max</span>
+            <span class="breadcrumb-current" id="breadcrumbName">Mascota</span>
         </div>
     </section>
 
@@ -51,7 +51,7 @@
                 <button class="btn-back" onclick="history.back()">
                     ← Volver a resultados
                 </button>
-                <h1 class="pet-title">Max <span class="pet-badge available">Disponible</span></h1>
+                <h1 class="pet-title" id="petTitle">Mascota <span class="pet-badge available" id="petStatus">Disponible</span></h1>
             </div>
 
             <div class="profile-content">
@@ -59,21 +59,10 @@
                 <div class="profile-left">
                     <div class="pet-gallery">
                         <div class="gallery-main">
-                            <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=300&fit=crop" alt="Max - Labrador Mix" class="main-image">
+                            <img src="" alt="Mascota" class="main-image" id="mainImage">
                         </div>
-                        <div class="gallery-thumbs">
-                            <div class="thumb active">
-                                <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=100&h=75&fit=crop" alt="Max 1">
-                            </div>
-                            <div class="thumb">
-                                <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=100&h=75&fit=crop" alt="Max 2">
-                            </div>
-                            <div class="thumb">
-                                <img src="https://images.unsplash.com/photo-1560743641-3914f2c45636?w=100&h=75&fit=crop" alt="Max 3">
-                            </div>
-                            <div class="thumb">
-                                <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=100&h=75&fit=crop" alt="Max 4">
-                            </div>
+                        <div class="gallery-thumbs" id="galleryThumbs">
+                            <!-- Miniaturas dinámicas -->
                         </div>
                     </div>
 
@@ -82,27 +71,27 @@
                         <div class="info-grid">
                             <div class="info-item">
                                 <span class="info-label">Especie:</span>
-                                <span class="info-value">🐕 Perro</span>
+                                <span class="info-value" id="petSpecies">—</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Raza:</span>
-                                <span class="info-value">Labrador Mix</span>
+                                <span class="info-value" id="petBreed">—</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Edad:</span>
-                                <span class="info-value">2 años</span>
+                                <span class="info-value" id="petAge">—</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Sexo:</span>
-                                <span class="info-value">Macho</span>
+                                <span class="info-value" id="petSex">—</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Tamaño:</span>
-                                <span class="info-value">Mediano</span>
+                                <span class="info-value" id="petSize">—</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Peso:</span>
-                                <span class="info-value">18 kg</span>
+                                <span class="info-value" id="petWeight">—</span>
                             </div>
                         </div>
                     </div>
@@ -179,8 +168,8 @@
 
                     <!-- Description -->
                     <div class="description-card">
-                        <h3>📝 Sobre Max</h3>
-                        <p>Max es un perro increíblemente cariñoso y juguetón que llegó a nuestro refugio después de ser rescatado de la calle. Es un Labrador Mix de 2 años que adora los mimos y los paseos.</p>
+                        <h3 id="descriptionTitle">📝 Sobre la mascota</h3>
+                        <p id="descriptionText">Cargando información de la mascota...</p>
                         
                         <div class="personality-traits">
                             <span class="trait positive">😊 Cariñoso</span>
@@ -224,8 +213,8 @@
                     <!-- Adoption CTA -->
                     <div class="adoption-cta">
                         <div class="cta-content">
-                            <h3>¿Listo para darle un hogar a Max?</h3>
-                            <p>Actualmente tiene <strong>12 solicitudes</strong> de adopción. ¡No esperes demasiado!</p>
+                            <h3 id="adoptionPrompt">¿Listo para darle un hogar?</h3>
+                            <p>Actualmente tiene <strong id="adoptionRequestsCount">0 solicitudes</strong> de adopción. ¡No esperes demasiado!</p>
                             <div class="cta-actions">
                                 <button class="btn-primary btn-large" id="adoptBtn">
                                     ❤️ Enviar Solicitud de Adopción
@@ -285,7 +274,7 @@
     <div class="modal" id="adoptionModal">
         <div class="modal-content large">
             <span class="close">&times;</span>
-            <h2>📋 Solicitud de Adopción - Max</h2>
+            <h2 id="adoptionModalTitle">📋 Solicitud de Adopción</h2>
             <div class="adoption-form">
                 <!-- El formulario se cargará aquí dinámicamente -->
             </div>
