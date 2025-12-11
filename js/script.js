@@ -156,10 +156,10 @@ function scrollToSearch() {
     }
 }
 
+// 🔁 FUNCIÓN GLOBAL ÚNICA: ver perfil de mascota
 function viewPet(petId) {
-    // En una implementación real, redirigiría a la página del perfil
-    console.log(`Ver perfil de mascota ID: ${petId}`);
-    alert(`Redirigiendo al perfil de ${featuredPets.find(pet => pet.id === petId)?.name}`);
+    // Redirige siempre a la página de perfil con el id en query
+    window.location.href = `pet-profile.html?id=${petId}`;
 }
 
 // Smooth scroll para enlaces de navegación
