@@ -669,6 +669,15 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     return Math.round((R * c) * 10) / 10; // Distancia en km con 1 decimal
 }
+// Pega esto al final de js/map.js
+// Esto obliga al mapa a "pintarse" correctamente un segundo después de cargar
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        if (typeof map !== 'undefined') {
+            map.invalidateSize(); 
+        }
+    }, 1000); 
+});
 
 
 
