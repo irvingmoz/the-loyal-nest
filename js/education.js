@@ -1,13 +1,12 @@
 // js/education.js
 
-// --- BASE DE DATOS DE ARTÍCULOS (Con Emojis en los Títulos) ---
+// --- BASE DE DATOS DE ARTÍCULOS ---
 const articlesDB = [
     // 1. CUIDADOS BÁSICOS
     {
-        id: 1,
-        category: "cuidados-basicos",
+        id: 1, category: "cuidados-basicos",
         title: "🥩 Nutrición: ¿Qué debe comer tu mascota?",
-        excerpt: "Guía completa sobre alimentación balanceada, croquetas vs comida casera y alimentos prohibidos.",
+        excerpt: "Guía completa sobre alimentación balanceada.",
         image: "https://images.unsplash.com/photo-1589924691195-41432c84c161?auto=format&fit=crop&w=500&q=60",
         content: `
             <h3>La base de una vida sana</h3>
@@ -22,10 +21,9 @@ const articlesDB = [
         `
     },
     {
-        id: 2,
-        category: "cuidados-basicos",
+        id: 2, category: "cuidados-basicos",
         title: "🛁 Higiene y Baño: Mitos y Realidades",
-        excerpt: "¿Cada cuánto bañar a un perro? ¿Los gatos se bañan? Todo sobre la limpieza.",
+        excerpt: "¿Cada cuánto bañar a un perro?",
         image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=500&q=60",
         content: `
             <h3>Perros: Frecuencia de Baño</h3>
@@ -36,13 +34,11 @@ const articlesDB = [
             <p>El cepillado diario es clave para eliminar pelo muerto. Intenta también cepillar sus dientes 2-3 veces por semana para evitar sarro.</p>
         `
     },
-
-    // 2. SALUD Y PREVENCIÓN
+    // 2. SALUD
     {
-        id: 3,
-        category: "salud-prevencion",
+        id: 3, category: "salud-prevencion",
         title: "💉 Calendario de Vacunación Esencial",
-        excerpt: "Protege a tu mejor amigo de enfermedades mortales como el Parvovirus y el Moquillo.",
+        excerpt: "Protege a tu mejor amigo de enfermedades mortales.",
         image: "https://images.unsplash.com/photo-1628009368231-760335298025?auto=format&fit=crop&w=500&q=60",
         content: `
             <h3>Perros (Cachorros)</h3>
@@ -53,197 +49,61 @@ const articlesDB = [
             </ul>
             <h3>Gatos</h3>
             <p>Requieren la <strong>Triple Felina</strong> y Rabia. Considera Leucemia si salen.</p>
-            <p><em>*Los adultos necesitan refuerzos anuales.</em></p>
         `
     },
     {
-        id: 4,
-        category: "salud-prevencion",
+        id: 4, category: "salud-prevencion",
         title: "❤️ Esterilización: Un Acto de Amor",
-        excerpt: "Desmentimos los mitos sobre la esterilización y explicamos sus beneficios médicos.",
+        excerpt: "Desmentimos los mitos sobre la esterilización.",
         image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?auto=format&fit=crop&w=500&q=60",
         content: `
             <h3>Beneficios Médicos</h3>
             <ul>
                 <li><strong>Hembras:</strong> Elimina riesgo de infecciones uterinas y reduce tumores mamarios.</li>
-                <li><strong>Machos:</strong> Previene cáncer testicular y problemas de próstata.</li>
+                <li><strong>Machos:</strong> Previene cáncer testicular.</li>
             </ul>
-            <h3>Beneficios de Comportamiento</h3>
-            <p>Reduce el marcaje, la agresividad y el instinto de escapar para buscar pareja.</p>
             <h3>Mito: "Deben tener una camada"</h3>
             <p><strong>Falso.</strong> No hay beneficio médico. Esterilizar antes del primer celo es lo más saludable.</p>
         `
     },
-
     // 3. ENTRENAMIENTO
     {
-        id: 5,
-        category: "entrenamiento",
+        id: 5, category: "entrenamiento",
         title: "🎓 Entrenamiento en Positivo",
-        excerpt: "Cómo educar sin castigos y lograr un vínculo de confianza inquebrantable.",
+        excerpt: "Cómo educar sin castigos.",
         image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=500&q=60",
         content: `
             <h3>¿Qué es?</h3>
             <p>Premiar las conductas deseadas en lugar de castigar las malas. El cerebro aprende más rápido buscando la recompensa.</p>
             <h3>Reglas de Oro</h3>
             <ol>
-                <li><strong>Timing:</strong> Premia en el instante exacto de la acción.</li>
+                <li><strong>Timing:</strong> Premia en el instante exacto.</li>
                 <li><strong>Consistencia:</strong> Las reglas deben ser siempre las mismas.</li>
-                <li><strong>Paciencia:</strong> Sesiones cortas y divertidas (5-10 min) son mejores.</li>
+                <li><strong>Paciencia:</strong> Sesiones cortas (5-10 min) son mejores.</li>
             </ol>
         `
     },
-
     // 4. ADOPCIÓN
     {
-        id: 6,
-        category: "adopcion-responsable",
-        title: "🏠 La Regla del 3-3-3 en Adopción",
-        excerpt: "Entiende las etapas emocionales por las que pasa un perro rescatado al llegar a casa.",
+        id: 6, category: "adopcion-responsable",
+        title: "🏠 La Regla del 3-3-3",
+        excerpt: "Etapas emocionales de un perro adoptado.",
         image: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=500&q=60",
         content: `
             <h3>3 Días: Descompresión</h3>
-            <p>Puede estar asustado o esconderse. Dale espacio, no lo abrumes.</p>
+            <p>Puede estar asustado o esconderse. Dale espacio.</p>
             <h3>3 Semanas: Rutina</h3>
-            <p>Empieza a entender su nueva vida y a mostrar su personalidad. Establece horarios claros.</p>
+            <p>Empieza a entender su nueva vida y a mostrar su personalidad.</p>
             <h3>3 Meses: Pertenencia</h3>
             <p>Ya se siente en casa y confía en ti. Verás su mejor versión.</p>
-            <p><strong>La paciencia es clave para una adaptación exitosa.</strong></p>
         `
     }
 ];
 
-// --- RENDERIZADO EN EL HTML ---
-document.addEventListener('DOMContentLoaded', () => {
-    renderArticles();
-    loadFeaturedArticles();
-});
-
-function renderArticles() {
-    articlesDB.forEach(article => {
-        const cardHTML = createCardHTML(article);
-        let containerId = "";
-        if (article.category === 'cuidados-basicos') containerId = 'cuidadosArticles';
-        else if (article.category === 'salud-prevencion') containerId = 'saludArticles';
-        else if (article.category === 'entrenamiento') containerId = 'entrenamientoArticles';
-        else if (article.category === 'adopcion-responsable') containerId = 'adopcionArticles';
-
-        const container = document.getElementById(containerId);
-        if (container) container.innerHTML += cardHTML;
-    });
-}
-
-function loadFeaturedArticles() {
-    const featuredContainer = document.getElementById('featuredArticles');
-    if(featuredContainer) {
-        articlesDB.slice(0, 3).forEach(article => {
-            featuredContainer.innerHTML += createCardHTML(article);
-        });
-    }
-}
-
-function createCardHTML(article) {
-    return `
-        <article class="article-card">
-            <div class="article-img" style="background-image: url('${article.image}');"></div>
-            <div class="article-content">
-                <h3 class="article-title">${article.title}</h3>
-                <p class="article-excerpt">${article.excerpt}</p>
-                <button class="btn-primary btn-full" onclick="openArticleModal(${article.id})">Leer Artículo</button>
-            </div>
-        </article>
-    `;
-}
-
-// --- LÓGICA DEL MODAL (Aquí está el cambio principal) ---
-function openArticleModal(id) {
-    const article = articlesDB.find(a => a.id === id);
-    if (!article) return;
-
-    const modalContent = document.getElementById('articleModalContent');
-    
-    // AQUÍ QUITAMOS LA IMAGEN Y AJUSTAMOS EL PADDING
-    modalContent.innerHTML = `
-        <div style="padding: 40px 30px 30px;"> <span class="tag" style="background:var(--primary); color:white; padding:5px 10px; border-radius:15px; font-size:0.8rem;">
-                ${article.category.replace('-', ' ').toUpperCase()}
-            </span>
-            <h2 style="margin: 15px 0; color:var(--dark); font-size:2rem;">
-                ${article.title} </h2>
-            <div style="line-height: 1.8; color:#444; font-size:1.1rem;">
-                ${article.content}
-            </div>
-            <hr style="margin:30px 0; border:0; border-top:1px solid #eee;">
-            <div style="text-align:center;">
-                <p style="color:#666; font-style:italic;">Contenido verificado por equipo veterinario The Loyal Nest 🩺</p>
-                <button onclick="closeModal('articleModal')" class="btn-outline">Cerrar lectura</button>
-            </div>
-        </div>
-    `;
-
-    const modal = document.getElementById('articleModal');
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-}
-
-window.onclick = function(event) {
-    const modal = document.getElementById('articleModal');
-    if (event.target == modal) closeModal('articleModal');
-}
-// js/education.js
-
-// --- 1. BASE DE DATOS DE ARTÍCULOS ---
-const articlesDB = [
-    {
-        id: 1, category: "cuidados-basicos", title: "🥩 Nutrición: ¿Qué debe comer tu mascota?",
-        excerpt: "Guía completa sobre alimentación balanceada.",
-        image: "https://images.unsplash.com/photo-1589924691195-41432c84c161?auto=format&fit=crop&w=500&q=60",
-        content: `<h3>La base de una vida sana</h3><p>La nutrición es el pilar de la salud. Perros y gatos necesitan principalmente <strong>proteína animal</strong>.</p><h3>⚠️ Alimentos Prohibidos</h3><p>Nunca des: Chocolate, Cebolla, Uvas, Huesos cocidos o Alcohol.</p>`
-    },
-    {
-        id: 2, category: "cuidados-basicos", title: "🛁 Higiene y Baño",
-        excerpt: "¿Cada cuánto bañar a un perro?",
-        image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=500&q=60",
-        content: `<h3>Perros: Frecuencia</h3><p>Báñalo <strong>una vez al mes</strong>. Hacerlo seguido daña su piel.</p><h3>Gatos</h3><p>No, ellos se limpian solos.</p>`
-    },
-    {
-        id: 3, category: "salud-prevencion", title: "💉 Calendario de Vacunación",
-        excerpt: "Protege a tu mejor amigo.",
-        image: "https://images.unsplash.com/photo-1628009368231-760335298025?auto=format&fit=crop&w=500&q=60",
-        content: `<h3>Perros</h3><ul><li>6 semanas: Puppy</li><li>6 meses: Rabia</li></ul><h3>Gatos</h3><p>Triple Felina y Rabia son esenciales.</p>`
-    },
-    {
-        id: 4, category: "salud-prevencion", title: "❤️ Esterilización",
-        excerpt: "Beneficios médicos y de comportamiento.",
-        image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?auto=format&fit=crop&w=500&q=60",
-        content: `<h3>Beneficios</h3><p>Evita tumores, cáncer y controla la sobrepoblación.</p>`
-    },
-    {
-        id: 5, category: "entrenamiento", title: "🎓 Entrenamiento Positivo",
-        excerpt: "Educar sin castigos.",
-        image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=500&q=60",
-        content: `<h3>¿Cómo funciona?</h3><p>Premia lo bueno, ignora lo malo. Sé constante y ten paciencia.</p>`
-    },
-    {
-        id: 6, category: "adopcion-responsable", title: "🏠 Regla del 3-3-3",
-        excerpt: "Etapas de adaptación.",
-        image: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=500&q=60",
-        content: `<h3>3 Días</h3><p>Descompresión.</p><h3>3 Semanas</h3><p>Rutina.</p><h3>3 Meses</h3><p>Pertenencia.</p>`
-    }
-];
-
-// --- 2. RENDERIZADO INICIAL ---
+// --- RENDERIZADO ---
 document.addEventListener('DOMContentLoaded', () => {
     renderArticles();
     loadFeatured();
-    loadResources(); // <--- CARGAMOS LOS RECURSOS AQUÍ
 });
 
 function renderArticles() {
@@ -261,7 +121,9 @@ function renderArticles() {
 
 function loadFeatured() {
     const featured = document.getElementById('featuredArticles');
-    if(featured) articlesDB.slice(0, 3).forEach(a => featured.innerHTML += createCard(a));
+    if(featured) {
+        articlesDB.slice(0, 3).forEach(a => featured.innerHTML += createCard(a));
+    }
 }
 
 function createCard(article) {
@@ -277,80 +139,45 @@ function createCard(article) {
     `;
 }
 
-// --- 3. RECURSOS DESCARGABLES (SOLO 2 ARCHIVOS) ---
-function loadResources() {
-    const container = document.getElementById('resourcesGrid');
-    if(!container) return;
+// --- MODAL LIMPIO ---
+function openModalArticle(id) {
+    const article = articlesDB.find(a => a.id === id);
+    if (!article) return;
 
-    // AQUÍ ESTÁN TUS 2 ARCHIVOS QUE SÍ SE DESCARGAN
-    const resources = [
-        { title: "Guía de Cachorros", size: "2.4 MB", icon: "🐶", file: "guia_cachorros.txt" },
-        { title: "Lista de Alimentos Tóxicos", size: "0.5 MB", icon: "⚠️", file: "toxicos.txt" }
-    ];
+    const modalContent = document.getElementById('articleModalContent');
+    
+    // Contenido inyectado (Sin imagen gigante, solo texto limpio)
+    modalContent.innerHTML = `
+        <div class="modal-injected-content">
+            <div style="text-align: right; margin-bottom: 10px;">
+                <span class="tag" style="background:var(--primary); color:white; padding:4px 10px; border-radius:12px; font-size:0.8rem;">
+                    ${article.category.replace('-', ' ').toUpperCase()}
+                </span>
+            </div>
+            
+            <h2 style="font-size: 1.8rem; color: #333; margin-bottom: 20px;">${article.title}</h2>
+            
+            <div style="font-size: 1.1rem; line-height: 1.6; color: #444;">
+                ${article.content}
+            </div>
 
-    container.innerHTML = resources.map(res => `
-        <div class="resource-card">
-            <div style="font-size:3rem; margin-bottom:10px;">${res.icon}</div>
-            <h3 style="font-size:1.1rem; margin:0;">${res.title}</h3>
-            <p style="color:#666; font-size:0.9rem;">Formato PDF • ${res.size}</p>
-            <button class="btn-outline btn-small" style="margin-top:10px;" onclick="downloadMock('${res.title}', '${res.file}')">
-                ⬇ Descargar
-            </button>
+            <div style="margin-top: 30px; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
+                <button onclick="closeModal('articleModal')" class="btn-outline">Cerrar</button>
+            </div>
         </div>
-    `).join('');
-}
-
-// FUNCIÓN MÁGICA: Crea un archivo real al vuelo para que el profe lo descargue
-function downloadMock(title, filename) {
-    const textContent = `
-    THE LOYAL NEST - ${title.toUpperCase()}
-    ==========================================
-    Gracias por descargar este recurso.
-    
-    Este es un archivo de demostración para el proyecto escolar.
-    En la versión final, aquí se mostraría el PDF completo.
-    
-    Recuerda: ¡Adopta, no compres!
     `;
 
-    const blob = new Blob([textContent], { type: 'text/plain' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-}
-// --- RECURSOS DESCARGABLES (CON DESCARGA SIMULADA REAL) ---
-document.addEventListener('DOMContentLoaded', () => {
-    // ... tus otras cargas ...
-    loadResources(); 
-});
-
-function loadResources() {
-    const container = document.getElementById('resourcesGrid');
-    if(!container) return;
-
-    const resources = [
-        { title: "Guía de Cachorros", size: "2.4 MB", icon: "🐶", file: "guia_cachorros.txt" },
-        { title: "Cartilla de Vacunación", size: "1.1 MB", icon: "💉", file: "cartilla.txt" },
-        { title: "Manual de Adopción", size: "3.5 MB", icon: "🏠", file: "manual_adopcion.txt" },
-        { title: "Lista Alimentos Tóxicos", size: "0.5 MB", icon: "⚠️", file: "toxicos.txt" }
-    ];
-
-    container.innerHTML = resources.map(res => `
-        <div class="resource-card">
-            <div style="font-size:3rem; margin-bottom:10px;">${res.icon}</div>
-            <h3 style="font-size:1.1rem; margin:0;">${res.title}</h3>
-            <p style="color:#666; font-size:0.9rem;">Formato PDF • ${res.size}</p>
-            <button class="btn-outline btn-small" style="margin-top:10px;" onclick="downloadMock('${res.title}', '${res.file}')">
-                ⬇ Descargar
-            </button>
-        </div>
-    `).join('');
+    const modal = document.getElementById('articleModal');
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
 }
 
+function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
 
+window.onclick = function(e) {
+    const m = document.getElementById('articleModal');
+    if (e.target == m) closeModal('articleModal');
+}
