@@ -5,321 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Adoptante | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dashboard2.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body class="dashboard-page">
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <span class="logo-icon">🐕</span>
-                <span class="logo-text">The Loyal Nest</span>
-            </div>
-        </div>
-
-        <div class="sidebar-user">
-            <div class="user-avatar">👤</div>
-            <div class="user-info">
-                <span class="user-name">María González</span>
-                <span class="user-role">Adoptante</span>
-            </div>
-        </div>
-
-        <ul class="sidebar-menu">
-            <li class="menu-item active">
-                <a href="#inicio" class="menu-link" data-section="inicio">
-                    <span class="menu-icon">🏠</span>
-                    <span class="menu-text">Inicio</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="search-pets.html" class="menu-link" data-section="buscar">
-                    <span class="menu-icon">🔍</span>
-                    <span class="menu-text">Buscar Mascotas</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#solicitudes" class="menu-link" data-section="solicitudes">
-                    <span class="menu-icon">📋</span>
-                    <span class="menu-text">Mis Solicitudes</span>
-                    <span class="menu-badge">3</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#favoritos" class="menu-link" data-section="favoritos">
-                    <span class="menu-icon">❤️</span>
-                    <span class="menu-text">Favoritos</span>
-                    <span class="menu-badge">5</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#perfil" class="menu-link" data-section="perfil">
-                    <span class="menu-icon">👤</span>
-                    <span class="menu-text">Mi Perfil</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#configuracion" class="menu-link" data-section="configuracion">
-                    <span class="menu-icon">⚙️</span>
-                    <span class="menu-text">Configuración</span>
-                </a>
+<header class="header">
+    <nav class="nav">
+        <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+        <ul class="nav-links">
+            <li><a href="search-pets.html">Buscar</a></li>
+            <li><a href="adoption-requests.html">Solicitudes</a></li>
+            <li class="nav-user" style="display:none; gap:8px; align-items:center;">
+                <span class="nav-user-name"></span>
+                <button class="btn-outline" data-action="logout">Salir</button>
             </li>
         </ul>
-
-        <div class="sidebar-footer">
-            <button class="btn-logout" onclick="logout()">
-                <span class="logout-icon">🚪</span>
-                <span>Cerrar Sesión</span>
-            </button>
-        </div>
+        <button id="notificationBell" class="btn-notification" aria-label="Notificaciones">
+            🔔 <span id="notificationCount" class="notification-badge">0</span>
+        </button>
     </nav>
+</header>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Header -->
-        <header class="dashboard-header">
-            <div class="header-left">
-                <h1>¡Hola, María! 🐾</h1>
-                <p>Encuentra a tu nuevo mejor amigo</p>
-            </div>
-            <div class="header-actions">
-                <button class="btn-notification">
-                    <span class="notification-icon">🔔</span>
-                    <span class="notification-badge">2</span>
-                </button>
-                <div class="user-dropdown">
-                    <button class="btn-user">
-                        <span class="user-avatar-sm">👤</span>
-                        <span>María G.</span>
-                    </button>
-                </div>
+<main class="main-content" style="margin-top:90px;">
+    <section class="panel">
+        <header class="panel__header">
+            <div>
+                <p class="muted">Panel</p>
+                <h1>Bienvenido, adoptante</h1>
             </div>
         </header>
-
-        <!-- Stats Cards -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">📋</div>
-                <div class="stat-info">
-                    <span class="stat-number">3</span>
-                    <span class="stat-label">Solicitudes Activas</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">❤️</div>
-                <div class="stat-info">
-                    <span class="stat-number">5</span>
-                    <span class="stat-label">Favoritos</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">✅</div>
-                <div class="stat-info">
-                    <span class="stat-number">1</span>
-                    <span class="stat-label">Adopciones Completadas</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">👁️</div>
-                <div class="stat-info">
-                    <span class="stat-number">12</span>
-                    <span class="stat-label">Mascotas Vistas</span>
-                </div>
-            </div>
+            <div class="stat-card"><span class="stat-number" data-stat="saved">--</span><span class="stat-label">Favoritos</span></div>
+            <div class="stat-card"><span class="stat-number" data-stat="requests">--</span><span class="stat-label">Solicitudes</span></div>
+            <div class="stat-card"><span class="stat-number" data-stat="notifications">--</span><span class="stat-label">Alertas</span></div>
         </div>
+    </section>
 
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-            <h2>Acciones Rápidas</h2>
-            <div class="actions-grid">
-                <button class="action-card" onclick="navigateTo('buscar')">
-                    <span class="action-icon">🔍</span>
-                    <span class="action-text">Buscar Mascotas</span>
-                </button>
-                <button class="action-card" onclick="navigateTo('solicitudes')">
-                    <span class="action-icon">📋</span>
-                    <span class="action-text">Ver Solicitudes</span>
-                </button>
-                <button class="action-card" onclick="navigateTo('favoritos')">
-                    <span class="action-icon">❤️</span>
-                    <span class="action-text">Mis Favoritos</span>
-                </button>
-                <button class="action-card" onclick="navigateTo('perfil')">
-                    <span class="action-icon">👤</span>
-                    <span class="action-text">Completar Perfil</span>
-                </button>
-            </div>
-        </div>
+    <section class="panel" id="perfil">
+        <header class="panel__header"><h2>Mi perfil</h2></header>
+        <form class="form-grid" id="profileForm">
+            <label>Nombre<input name="name" required></label>
+            <label>Correo<input type="email" name="email" required></label>
+            <label>Teléfono<input name="phone"></label>
+            <label>Foto<input type="file" name="avatar" accept="image/*"></label>
+            <button class="btn-primary" type="submit">Guardar cambios</button>
+        </form>
+    </section>
 
-        <!-- Solicitudes de adopción -->
-        <section class="requests-section dashboard-section" id="solicitudes">
-            <div class="section-header">
-                <h2>Mis Solicitudes</h2>
-                <span class="section-subtitle">Estado: En Revisión</span>
-            </div>
-            <div class="requests-card">
-                <div id="requestsEmpty" class="empty-state" style="display:none;">
-                    <p>⚠️ Aún no has enviado solicitudes de adopción.</p>
-                </div>
-                <table class="table" id="requestsTable" style="width:100%;">
-                    <thead>
-                        <tr>
-                            <th>Mascota</th>
-                            <th>Fecha</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="requestsTableBody">
-                        <!-- Solicitudes dinámicas -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
+    <section class="panel" id="favoritos">
+        <header class="panel__header"><h2>Mascotas favoritas</h2></header>
+        <div id="petList" class="cards-grid"></div>
+    </section>
 
-        <!-- Recent Activity & Pets Grid -->
-        <div class="dashboard-grid">
-            <!-- Mascotas Recomendadas -->
-            <section class="pets-section">
-                <div class="section-header">
-                    <h2>Mascotas Recomendadas para Ti</h2>
-                    <a href="#ver-todas" class="see-all">Ver todas</a>
-                </div>
-                <div class="pets-grid">
-                    <!-- Pet Card 1 -->
-                    <div class="pet-card" data-pet-id="1">
-                        <div class="pet-image">
-                            <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=200&fit=crop" alt="Max">
-                            <button class="btn-favorite">❤️</button>
-                            <span class="pet-status available">Disponible</span>
-                        </div>
-                        <div class="pet-info">
-                            <h3>Max</h3>
-                            <div class="pet-details">
-                                <span>🐕 Labrador • 2 años</span>
-                                <span>📍 CDMX, Benito Juárez</span>
-                            </div>
-                            <div class="pet-actions">
-                                <button class="btn-outline btn-sm" data-view-details data-pet-id="1">Ver Detalles</button>
-                                <button class="btn-primary btn-sm" data-pet-id="1">Solicitar</button>
-                            </div>
-                        </div>
-                    </div>
+    <section class="panel" id="solicitudes">
+        <header class="panel__header"><h2>Solicitudes</h2></header>
+        <div id="adoptionRequests" class="cards-grid"></div>
+    </section>
+</main>
 
-                    <!-- Pet Card 2 -->
-                    <div class="pet-card" data-pet-id="2">
-                        <div class="pet-image">
-                            <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&h=200&fit=crop" alt="Luna">
-                            <button class="btn-favorite">❤️</button>
-                            <span class="pet-status available">Disponible</span>
-                        </div>
-                        <div class="pet-info">
-                            <h3>Luna</h3>
-                            <div class="pet-details">
-                                <span>🐈 Gato • 1 año</span>
-                                <span>📍 CDMX, Coyoacán</span>
-                            </div>
-                            <div class="pet-actions">
-                                <button class="btn-outline btn-sm" data-view-details data-pet-id="2">Ver Detalles</button>
-                                <button class="btn-primary btn-sm" data-pet-id="2">Solicitar</button>
-                            </div>
-                        </div>
-                    </div>
+<ul id="notificationList" class="notification-list"></ul>
 
-                    <!-- Pet Card 3 -->
-                    <div class="pet-card" data-pet-id="3">
-                        <div class="pet-image">
-                            <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&h=200&fit=crop" alt="Rocky">
-                            <button class="btn-favorite active">❤️</button>
-                            <span class="pet-status pending">En proceso</span>
-                        </div>
-                        <div class="pet-info">
-                            <h3>Rocky</h3>
-                            <div class="pet-details">
-                                <span>🐕 Bulldog • 3 años</span>
-                                <span>📍 CDMX, Miguel Hidalgo</span>
-                            </div>
-                            <div class="pet-actions">
-                                <button class="btn-outline btn-sm" data-view-details data-pet-id="3">Ver Detalles</button>
-                                <button class="btn-primary btn-sm" data-pet-id="3" disabled>En Proceso</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Actividad Reciente -->
-            <section class="activity-section">
-                <div class="section-header">
-                    <h2>Actividad Reciente</h2>
-                </div>
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon">✅</div>
-                        <div class="activity-content">
-                            <p><strong>Solicitud aprobada</strong> para "Bobby"</p>
-                            <span class="activity-time">Hace 2 días</span>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">📋</div>
-                        <div class="activity-content">
-                            <p><strong>Nueva solicitud</strong> enviada para "Luna"</p>
-                            <span class="activity-time">Hace 3 días</span>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">❤️</div>
-                        <div class="activity-content">
-                            <p>Agregaste <strong>"Max"</strong> a tus favoritos</p>
-                            <span class="activity-time">Hace 1 semana</span>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">👁️</div>
-                        <div class="activity-content">
-                            <p>Viste el perfil de <strong>"Simba"</strong></p>
-                            <span class="activity-time">Hace 1 semana</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Favoritos -->
-            <section class="dashboard-section" id="favoritos" style="display:none;">
-                <div class="section-header">
-                    <h2>Mis Favoritos</h2>
-                    <span class="section-subtitle">Accede rápido a tus mascotas guardadas</span>
-                </div>
-                <div class="requests-card">
-                    <div class="empty-state">
-                        <p>💛 Aún no has agregado mascotas a favoritos.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Perfil -->
-            <section class="dashboard-section" id="perfil" style="display:none;">
-                <div class="section-header">
-                    <h2>Mi Perfil</h2>
-                    <span class="section-subtitle">Actualiza tus datos para agilizar solicitudes</span>
-                </div>
-                <div class="requests-card">
-                    <div class="empty-state">
-                        <p>✏️ Próximamente podrás editar tu información desde aquí.</p>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <script src="js/script.js"></script>
-    <script src="js/session-manager.js"></script>
-    <script src="js/dashboard2.js"></script>
-    <script src="js/auth.js"></script>
+<script src="js/session.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/pets.js"></script>
+<script src="js/adoptions.js"></script>
+<script>
+    const user = requireAuth(['adoptante']);
+    if (user) {
+        const form = document.getElementById('profileForm');
+        if (form) {
+            form.name.value = user.name || '';
+            form.email.value = user.email || '';
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const data = new FormData(form);
+                await apiFetch(`/profiles/${user.id}`, { method: 'PUT', body: data });
+                alert('Perfil actualizado');
+            });
+        }
+    }
+</script>
 </body>
 </html>
-</body>
-</html>
-
-
-

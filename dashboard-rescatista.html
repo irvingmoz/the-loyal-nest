@@ -8,218 +8,98 @@
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body class="dashboard-page">
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <span class="logo-icon">🐕</span>
-                <span class="logo-text">The Loyal Nest</span>
-            </div>
-        </div>
-
-        <div class="sidebar-user">
-            <div class="user-avatar">🏠</div>
-            <div class="user-info">
-                <span class="user-name">Refugio Patitas Felices</span>
-                <span class="user-role">Rescatista</span>
-            </div>
-        </div>
-
-        <ul class="sidebar-menu">
-            <li class="menu-item active">
-                <a href="#inicio" class="menu-link">
-                    <span class="menu-icon">🏠</span>
-                    <span class="menu-text">Inicio</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#mascotas" class="menu-link">
-                    <span class="menu-icon">🐕</span>
-                    <span class="menu-text">Mis Mascotas</span>
-                    <span class="menu-badge">15</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#solicitudes" class="menu-link">
-                    <span class="menu-icon">📋</span>
-                    <span class="menu-text">Solicitudes</span>
-                    <span class="menu-badge">8</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#agregar" class="menu-link">
-                    <span class="menu-icon">➕</span>
-                    <span class="menu-text">Agregar Mascota</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#reportes" class="menu-link">
-                    <span class="menu-icon">📊</span>
-                    <span class="menu-text">Reportes</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#refugio" class="menu-link">
-                    <span class="menu-icon">🏠</span>
-                    <span class="menu-text">Mi Refugio</span>
-                </a>
+<header class="header">
+    <nav class="nav">
+        <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+        <ul class="nav-links">
+            <li><a href="search-pets.html">Buscar</a></li>
+            <li><a href="adoption-requests.html">Solicitudes</a></li>
+            <li class="nav-user" style="display:none; gap:8px; align-items:center;">
+                <span class="nav-user-name"></span>
+                <button class="btn-outline" data-action="logout">Salir</button>
             </li>
         </ul>
-
-        <div class="sidebar-footer">
-            <button class="btn-logout" onclick="logout()">
-                <span class="logout-icon">🚪</span>
-                <span>Cerrar Sesión</span>
-            </button>
-        </div>
+        <button id="notificationBell" class="btn-notification" aria-label="Notificaciones">
+            🔔 <span id="notificationCount" class="notification-badge">0</span>
+        </button>
     </nav>
+</header>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Header -->
-        <header class="dashboard-header">
-            <div class="header-left">
-                <h1>Bienvenido, Refugio Patitas 🏠</h1>
-                <p>Gestiona tus mascotas y solicitudes de adopción</p>
+<main class="main-content" style="margin-top:90px;">
+    <section class="panel">
+        <header class="panel__header">
+            <div>
+                <p class="muted">Panel</p>
+                <h1>Centro de Rescate</h1>
             </div>
-            <div class="header-actions">
-                <button class="btn-primary" onclick="navigateTo('agregar')">
-                    <span class="btn-icon">➕</span>
-                    <span>Agregar Mascota</span>
-                </button>
-                <button class="btn-notification">
-                    <span class="notification-icon">🔔</span>
-                    <span class="notification-badge">5</span>
-                </button>
+            <div class="panel__actions">
+                <a class="btn-primary" href="add-pet.html">Agregar mascota</a>
+                <a class="btn-outline" href="#perfil">Mi perfil</a>
             </div>
         </header>
-
-        <!-- Stats Cards -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">🐕</div>
-                <div class="stat-info">
-                    <span class="stat-number">15</span>
-                    <span class="stat-label">Mascotas Activas</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">📋</div>
-                <div class="stat-info">
-                    <span class="stat-number">8</span>
-                    <span class="stat-label">Solicitudes Nuevas</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">✅</div>
-                <div class="stat-info">
-                    <span class="stat-number">12</span>
-                    <span class="stat-label">Adopciones Este Mes</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">⚠️</div>
-                <div class="stat-info">
-                    <span class="stat-number">3</span>
-                    <span class="stat-label">Urgentes</span>
-                </div>
-            </div>
+            <div class="stat-card"><span class="stat-number" data-stat="pets">--</span><span class="stat-label">Mascotas activas</span></div>
+            <div class="stat-card"><span class="stat-number" data-stat="adoptions">--</span><span class="stat-label">Solicitudes</span></div>
+            <div class="stat-card"><span class="stat-number" data-stat="vaccines">--</span><span class="stat-label">Vacunas al día</span></div>
+            <div class="stat-card"><span class="stat-number" data-stat="alerts">--</span><span class="stat-label">Alertas</span></div>
         </div>
+    </section>
 
-        <!-- Urgent Pets -->
-        <section class="urgent-pets">
-            <div class="section-header">
-                <h2>🐾 Mascotas que Necesitan Hogar Urgente</h2>
-                <span class="urgent-badge">URGENTE</span>
+    <section class="panel" id="perfil">
+        <header class="panel__header"><h2>Perfil del refugio</h2></header>
+        <form class="form-grid" id="profileForm">
+            <label>Nombre del refugio<input name="name" required></label>
+            <label>Correo contacto<input type="email" name="email" required></label>
+            <label>Ubicación<input name="location"></label>
+            <label>Foto<br><input type="file" name="avatar" accept="image/*"></label>
+            <button class="btn-primary" type="submit">Guardar cambios</button>
+        </form>
+    </section>
+
+    <section class="panel" id="mascotas">
+        <header class="panel__header"><h2>Mis mascotas</h2></header>
+        <div id="petList" class="cards-grid"></div>
+    </section>
+
+    <section class="panel" id="solicitudes">
+        <header class="panel__header"><h2>Solicitudes de adopción</h2></header>
+        <div id="adoptionRequests" class="cards-grid"></div>
+    </section>
+
+    <section class="panel" id="reportes">
+        <header class="panel__header">
+            <h2>Reportes</h2>
+            <div class="panel__actions">
+                <button id="exportCsv" class="btn-outline">Exportar CSV</button>
             </div>
-            <div class="pets-grid">
-                <!-- Urgent Pet Card -->
-                <div class="pet-card urgent">
-                    <div class="pet-image">
-                        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=300&h=200&fit=crop" alt="Toby">
-                        <span class="pet-status urgent">Urgente</span>
-                    </div>
-                    <div class="pet-info">
-                        <h3>Toby</h3>
-                        <div class="pet-details">
-                            <span>🐕 Mixed • 4 años</span>
-                            <span>⏰ Tiempo limitado: 3 días</span>
-                        </div>
-                        <p class="pet-description">Toby necesita un hogar urgente debido a problemas de espacio en el refugio.</p>
-                        <div class="pet-actions">
-                            <button class="btn-primary btn-sm">Ver Solicitudes</button>
-                            <button class="btn-outline btn-sm">Compartir</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </header>
+        <canvas id="reportCanvas" height="180"></canvas>
+    </section>
+</main>
 
-        <!-- Recent Applications -->
-        <div class="dashboard-grid">
-            <section class="applications-section">
-                <div class="section-header">
-                    <h2>📋 Solicitudes Recientes</h2>
-                    <a href="#ver-todas" class="see-all">Ver todas</a>
-                </div>
-                <div class="applications-list">
-                    <!-- Application Item -->
-                    <div class="application-card">
-                        <div class="application-header">
-                            <div class="applicant-info">
-                                <div class="applicant-avatar">👤</div>
-                                <div>
-                                    <h4>Carlos Rodríguez</h4>
-                                    <span>Para: Luna 🐈</span>
-                                </div>
-                            </div>
-                            <span class="application-status new">Nueva</span>
-                        </div>
-                        <div class="application-details">
-                            <span>📅 Enviada: Hoy</span>
-                            <span>🏠 CDMX, Condesa</span>
-                        </div>
-                        <div class="application-actions">
-                            <button class="btn-outline btn-sm">Rechazar</button>
-                            <button class="btn-primary btn-sm">Ver Solicitud</button>
-                        </div>
-                    </div>
+<ul id="notificationList" class="notification-list"></ul>
 
-                    <!-- More application cards... -->
-                </div>
-            </section>
-
-            <!-- Quick Stats -->
-            <section class="quick-stats">
-                <div class="section-header">
-                    <h2>📊 Resumen Rápido</h2>
-                </div>
-                <div class="stats-cards">
-                    <div class="mini-stat">
-                        <span class="mini-stat-value">75%</span>
-                        <span class="mini-stat-label">Tasa de Éxito</span>
-                    </div>
-                    <div class="mini-stat">
-                        <span class="mini-stat-value">3d</span>
-                        <span class="mini-stat-label">Tiempo Promedio</span>
-                    </div>
-                    <div class="mini-stat">
-                        <span class="mini-stat-value">24</span>
-                        <span class="mini-stat-label">Total Adopciones</span>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <script src="js/script.js"></script>
-    <script src="js/session-manager.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/session.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/pets.js"></script>
+<script src="js/adoptions.js"></script>
+<script src="js/reports.js"></script>
+<script>
+    const user = requireAuth(['rescatista', 'rescuer']);
+    if (user) {
+        const profileForm = document.getElementById('profileForm');
+        if (profileForm) {
+            profileForm.name.value = user.name || '';
+            profileForm.email.value = user.email || '';
+            profileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const data = new FormData(profileForm);
+                await apiFetch(`/profiles/${user.id}`, { method: 'PUT', body: data });
+                alert('Perfil actualizado');
+            });
+        }
+    }
+</script>
 </body>
 </html>
-</body>
-</html>
-
-
-
