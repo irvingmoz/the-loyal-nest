@@ -1,545 +1,220 @@
-// Education Module JavaScript
-document.addEventListener('DOMContentLoaded', function() {
-    loadFeaturedArticles();
-    loadCategoryArticles();
-    loadExperts();
-    loadFAQ();
-    loadResources();
-    setupEventListeners();
-});
+// js/education.js
 
-// Datos de artículos educativos
-const educationArticles = {
-    featured: [
-        {
-            id: 1,
-            title: "Guía Completa para Primerizos: Todo sobre la Tenencia Responsable",
-            excerpt: "Aprende los fundamentos esenciales para ser un dueño responsable desde el primer día.",
-            category: "Adopción Responsable",
-            readTime: "8 min",
-            author: "Dra. Martínez",
-            authorInitials: "DM",
-            image: "📝",
-            content: `
-                <h2>¿Qué es la Tenencia Responsable?</h2>
-                <p>La tenencia responsable va más allá de simplemente tener una mascota. Es un compromiso de vida que incluye:</p>
-                
-                <h3>Compromisos Básicos</h3>
-                <ul>
-                    <li><strong>Cuidado de por vida:</strong> Las mascotas no son objetos temporales</li>
-                    <li><strong>Atención veterinaria:</strong> Vacunas, desparasitación y chequeos regulares</li>
-                    <li><strong>Alimentación adecuada:</strong> Según especie, edad y condición de salud</li>
-                    <li><strong>Espacio y ambiente:</strong> Entorno seguro y enriquecido</li>
-                </ul>
-
-                <div class="article-tips">
-                    <h4>💡 Tip Importante</h4>
-                    <p>Antes de adoptar, evalúa tu estilo de vida, espacio disponible y recursos económicos. Una mascota es una responsabilidad de 10-15 años.</p>
-                </div>
-
-                <h2>Preparación del Hogar</h2>
-                <p>Prepara tu casa antes de llevar a tu nueva mascota:</p>
-                <ul>
-                    <li>Área de descanso cómoda</li>
-                    <li>Zona de alimentación e hidratación</li>
-                    <li>Juguetes y enriquecimiento ambiental</li>
-                    <li>Espacio seguro libre de peligros</li>
-                </ul>
-
-                <div class="article-warning">
-                    <h4>⚠️ Advertencia</h4>
-                    <p>Nunca regales mascotas como sorpresa. La decisión de adoptar debe ser consciente y consensuada por toda la familia.</p>
-                </div>
-            `
-        },
-        {
-            id: 2,
-            title: "Señales de Alerta: Cómo Identificar Problemas de Salud en tu Mascota",
-            excerpt: "Aprende a reconocer las señales tempranas de enfermedades comunes en perros y gatos.",
-            category: "Salud y Prevención",
-            readTime: "6 min",
-            author: "Dr. González",
-            authorInitials: "DG",
-            image: "🩺",
-            content: "Contenido completo del artículo..."
-        },
-        {
-            id: 3,
-            title: "Entrenamiento Positivo: Guía Paso a Paso para Educar a tu Perro",
-            excerpt: "Métodos efectivos y humanos para el entrenamiento basado en refuerzo positivo.",
-            category: "Entrenamiento",
-            readTime: "10 min",
-            author: "Lic. Rodríguez",
-            authorInitials: "LR",
-            image: "🎓",
-            content: "Contenido completo del artículo..."
-        }
-    ],
-    cuidados: [
-        {
-            id: 4,
-            title: "Alimentación Balanceada: ¿Qué Debe Comer tu Mascota?",
-            excerpt: "Guía completa sobre nutrición canina y felina según edad y condición.",
-            category: "Cuidados Básicos",
-            readTime: "7 min",
-            author: "Nut. Sánchez",
-            authorInitials: "NS",
-            image: "🍖"
-        },
-        {
-            id: 5,
-            title: "Higiene y Aseo: Mantén a tu Mascota Limpia y Saludable",
-            excerpt: "Técnicas de baño, cepillado y cuidado dental para perros y gatos.",
-            category: "Cuidados Básicos",
-            readTime: "5 min",
-            author: "Dra. López",
-            authorInitials: "DL",
-            image: "🛁"
-        }
-    ],
-    salud: [
-        {
-            id: 6,
-            title: "Calendario de Vacunación: Protege a tu Mascota de Enfermedades",
-            excerpt: "Programa completo de vacunas para perros y gatos desde cachorros.",
-            category: "Salud y Prevención",
-            readTime: "5 min",
-            author: "Dra. Martínez",
-            authorInitials: "DM",
-            image: "💉"
-        },
-        {
-            id: 7,
-            title: "Esterilización: Beneficios y Mitos Comunes",
-            excerpt: "Todo lo que necesitas saber sobre la esterilización responsable.",
-            category: "Salud y Prevención",
-            readTime: "6 min",
-            author: "Dr. Hernández",
-            authorInitials: "DH",
-            image: "💊"
-        }
-    ],
-    entrenamiento: [
-        {
-            id: 8,
-            title: "Socialización: Cómo Presentar tu Mascota a Otras Animales",
-            excerpt: "Técnicas para una socialización segura y efectiva.",
-            category: "Entrenamiento",
-            readTime: "8 min",
-            author: "Lic. Rodríguez",
-            authorInitials: "LR",
-            image: "👥"
-        },
-        {
-            id: 9,
-            title: "Solucionando Problemas de Conducta Comunes",
-            excerpt: "Cómo manejar ladridos excesivos, ansiedad por separación y más.",
-            category: "Entrenamiento",
-            readTime: "9 min",
-            author: "Lic. García",
-            authorInitials: "LG",
-            image: "🎯"
-        }
-    ],
-    adopcion: [
-        {
-            id: 10,
-            title: "Proceso de Adaptación: Los Primeros Días en Casa",
-            excerpt: "Guía para facilitar la transición de tu nueva mascota a su hogar.",
-            category: "Adopción Responsable",
-            readTime: "7 min",
-            author: "Psic. Animal",
-            authorInitials: "PA",
-            image: "🏠"
-        },
-        {
-            id: 11,
-            title: "Checklist Pre-Adopción: ¿Estás Listo para una Mascota?",
-            excerpt: "Lista de verificación esencial antes de tomar la decisión de adoptar.",
-            category: "Adopción Responsable",
-            readTime: "4 min",
-            author: "Equipo TLN",
-            authorInitials: "ET",
-            image: "✅"
-        }
-    ]
-};
-
-// Datos de expertos
-const experts = [
+// --- BASE DE DATOS DE ARTÍCULOS (Contenido Real) ---
+const articlesDB = [
+    // 1. CUIDADOS BÁSICOS
     {
         id: 1,
-        name: "Dra. Ana Martínez",
-        specialty: "Veterinaria Especialista",
-        bio: "Más de 15 años de experiencia en medicina veterinaria y tenencia responsable. Directora del Centro Veterinario Animal Safe.",
-        articles: 24,
-        experience: "15 años",
-        avatar: "👩‍⚕️"
+        category: "cuidados-basicos",
+        title: "Nutrición: ¿Qué debe comer tu mascota?",
+        excerpt: "Guía completa sobre alimentación balanceada, croquetas vs comida casera y alimentos prohibidos.",
+        image: "https://images.unsplash.com/photo-1589924691195-41432c84c161?auto=format&fit=crop&w=500&q=60",
+        content: `
+            <h3>La base de una vida sana</h3>
+            <p>La nutrición es el pilar de la salud de tu mascota. Tanto perros como gatos son carnívoros (los gatos estrictos, los perros facultativos), por lo que su dieta debe basarse principalmente en <strong>proteína animal</strong> de alta calidad.</p>
+            
+            <h3>¿Croquetas o Comida Casera?</h3>
+            <ul>
+                <li><strong>Croquetas (Pienso):</strong> Son prácticas y están formuladas para ser completas. Busca marcas donde el primer ingrediente sea carne (pollo, res, pescado) y no cereales (maíz, trigo).</li>
+                <li><strong>Dieta BARF/Casera:</strong> Puede ser excelente si está supervisada por un veterinario nutricionista. Dar solo "sobras" no es nutritivo y puede causar obesidad.</li>
+            </ul>
+
+            <h3>⚠️ Alimentos Prohibidos</h3>
+            <p>Nunca des a tu mascota: Chocolate (tóxico), Cebolla/Ajo (dañan glóbulos rojos), Uvas/Pasas (fallo renal), Huesos cocidos (se astillan) o Alcohol.</p>
+        `
     },
     {
         id: 2,
-        name: "Lic. Carlos Rodríguez",
-        specialty: "Especialista en Conducta Animal",
-        bio: "Certificado en etología canina y felina. Fundador del programa 'Entrenamiento Positivo México'.",
-        articles: 18,
-        experience: "12 años",
-        avatar: "👨‍🎓"
+        category: "cuidados-basicos",
+        title: "Higiene y Baño: Mitos y Realidades",
+        excerpt: "¿Cada cuánto bañar a un perro? ¿Los gatos se bañan? Todo sobre la limpieza.",
+        image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=500&q=60",
+        content: `
+            <h3>Perros: Frecuencia de Baño</h3>
+            <p>Bañar a un perro demasiado seguido puede dañar la capa de grasa natural de su piel. Lo recomendable es hacerlo <strong>una vez cada 3 o 4 semanas</strong>, o cuando esté visiblemente sucio. Usa siempre champú para perros (el pH humano es diferente).</p>
+            
+            <h3>Gatos: ¿Se bañan?</h3>
+            <p>Generalmente, no. Los gatos son extremadamente limpios y se acicalan solos. Bañarlos les genera mucho estrés. Solo hazlo si es estrictamente necesario (por ejemplo, si se manchó con algo tóxico) o si es una raza sin pelo como el Sphynx.</p>
+
+            <h3>Cepillado y Dientes</h3>
+            <p>El cepillado diario es más importante que el baño, ya que elimina pelo muerto y suciedad. Además, intenta cepillar sus dientes 2-3 veces por semana para evitar sarro y mal aliento.</p>
+        `
     },
+
+    // 2. SALUD Y PREVENCIÓN
     {
         id: 3,
-        name: "Dr. Miguel González",
-        specialty: "Cirujano Veterinario",
-        bio: "Especialista en cirugía de tejidos blandos y ortopedia. Miembro de la Asociación Mexicana de Veterinarios.",
-        articles: 32,
-        experience: "20 años",
-        avatar: "👨‍⚕️"
-    }
-];
+        category: "salud-prevencion",
+        title: "Calendario de Vacunación Esencial",
+        excerpt: "Protege a tu mejor amigo de enfermedades mortales como el Parvovirus y el Moquillo.",
+        image: "https://images.unsplash.com/photo-1628009368231-760335298025?auto=format&fit=crop&w=500&q=60",
+        content: `
+            <h3>Cachorros (Perros)</h3>
+            <ul>
+                <li><strong>6 semanas:</strong> Puppy (Parvovirus/Moquillo).</li>
+                <li><strong>8-10 semanas:</strong> Refuerzo Polivalente.</li>
+                <li><strong>12 semanas:</strong> Refuerzo + Bordetella.</li>
+                <li><strong>4-6 meses:</strong> Rabia (Obligatoria por ley).</li>
+            </ul>
 
-// Preguntas frecuentes
-const faqData = [
-    {
-        question: "¿Cuál es la edad ideal para adoptar una mascota?",
-        answer: "La edad ideal depende de tu estilo de vida. Los cachorros requieren más tiempo y paciencia para entrenamiento, mientras que los adultos suelen ser más tranquilos y con personalidad definida. Considera tu disponibilidad de tiempo antes de decidir."
-    },
-    {
-        question: "¿Cuánto cuesta mensualmente mantener una mascota?",
-        answer: "El costo varía según el tamaño y especie. En promedio: Alimentación $500-$1000, veterinario $200-$500, accesorios $200-$400. Siempre considera un fondo de emergencia para imprevistos médicos."
-    },
-    {
-        question: "¿Es mejor adoptar un perro o gato para departamento?",
-        answer: "Ambas especies pueden adaptarse a departamentos. Los gatos son más independientes, mientras que perros pequeños o de baja energía pueden ser excelentes compañeros. Considera el espacio vertical para gatos y las salidas para perros."
-    },
-    {
-        question: "¿Cómo introducir una nueva mascota a otras que ya tengo?",
-        answer: "La introducción debe ser gradual: 1) Separación inicial, 2) Intercambio de olores, 3) Contacto visual controlado, 4) Encuentros supervisados. La paciencia es clave y puede tomar de días a semanas."
-    },
-    {
-        question: "¿Qué vacunas son obligatorias para perros y gatos?",
-        answer: "Para perros: Moquillo, Parvovirus, Hepatitis, Rabia. Para gatos: Panleucopenia, Calicivirus, Rinotraqueitis, Rabia. Consulta con tu veterinario para un calendario personalizado."
-    }
-];
+            <h3>Gatos</h3>
+            <p>Deben recibir la <strong>Triple Felina</strong> (Rinotraqueitis, Calicivirus, Panleucopenia) y la de Rabia. Si salen a la calle, considera la vacuna contra la Leucemia Felina.</p>
 
-// Recursos descargables
-const resources = [
-    {
-        id: 1,
-        title: "Checklist de Adopción Responsable",
-        description: "Lista de verificación completa antes, durante y después de la adopción",
-        type: "PDF",
-        size: "2.1 MB",
-        icon: "📋",
-        downloadUrl: "#"
-    },
-    {
-        id: 2,
-        title: "Guía de Primeros Auxilios para Mascotas",
-        description: "Procedimientos básicos de emergencia que todo dueño debe conocer",
-        type: "PDF",
-        size: "3.4 MB",
-        icon: "🆘",
-        downloadUrl: "#"
-    },
-    {
-        id: 3,
-        title: "Calendario de Vacunación 2024",
-        description: "Programa completo de vacunas para perros y gatos",
-        type: "Imagen",
-        size: "1.5 MB",
-        icon: "📅",
-        downloadUrl: "#"
+            <p><em>Recuerda: Los adultos necesitan refuerzos anuales de la Polivalente y la Rabia toda su vida.</em></p>
+        `
     },
     {
         id: 4,
-        title: "Guía de Alimentación por Edades",
-        description: "Recomendaciones nutricionales según etapa de vida",
-        type: "PDF",
-        size: "2.8 MB",
-        icon: "🍽️",
-        downloadUrl: "#"
+        category: "salud-prevencion",
+        title: "Esterilización: Un Acto de Amor",
+        excerpt: "Desmentimos los mitos sobre la esterilización y explicamos sus beneficios médicos.",
+        image: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?auto=format&fit=crop&w=500&q=60",
+        content: `
+            <h3>Beneficios Médicos</h3>
+            <ul>
+                <li><strong>Hembras:</strong> Elimina el riesgo de piometra (infección uterina mortal) y reduce drásticamente la probabilidad de tumores mamarios.</li>
+                <li><strong>Machos:</strong> Previene el cáncer de testículos y reduce problemas de próstata.</li>
+            </ul>
+
+            <h3>Beneficios de Comportamiento</h3>
+            <p>Reduce el marcaje con orina dentro de casa, la agresividad por competencia sexual y el instinto de escaparse para buscar pareja, lo que evita atropellamientos y peleas.</p>
+
+            <h3>Mito Común</h3>
+            <p>"Deben tener una camada primero". <strong>Falso.</strong> No hay beneficio médico ni emocional en que tengan crías antes de operar. Al contrario, esterilizar antes del primer celo ofrece la mayor protección contra el cáncer.</p>
+        `
+    },
+
+    // 3. ENTRENAMIENTO
+    {
+        id: 5,
+        category: "entrenamiento",
+        title: "Entrenamiento en Positivo",
+        excerpt: "Cómo educar sin castigos y lograr un vínculo de confianza inquebrantable.",
+        image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=500&q=60",
+        content: `
+            <h3>¿Qué es el Refuerzo Positivo?</h3>
+            <p>Consiste en premiar las conductas que queremos que se repitan, en lugar de castigar las que no. Si tu perro se sienta, le das un premio. Si ladra, lo ignoras (no le gritas). El cerebro aprende más rápido buscando la recompensa.</p>
+
+            <h3>Reglas de Oro</h3>
+            <ol>
+                <li><strong>Timing:</strong> Premia en el instante exacto (tienes 1-2 segundos) para que asocie la acción con el premio.</li>
+                <li><strong>Consistencia:</strong> Si no quieres que suba al sofá, nunca lo dejes subir. Si a veces lo dejas y a veces lo regañas, lo confundirás.</li>
+                <li><strong>Paciencia:</strong> Aprender toma tiempo. Sesiones cortas de 5-10 minutos son mejores que una hora larga y frustrante.</li>
+            </ol>
+        `
+    },
+
+    // 4. ADOPCIÓN
+    {
+        id: 6,
+        category: "adopcion-responsable",
+        title: "La Regla del 3-3-3 en Adopción",
+        excerpt: "Entiende las etapas emocionales por las que pasa un perro rescatado al llegar a casa.",
+        image: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=500&q=60",
+        content: `
+            <h3>3 Días: Descompresión</h3>
+            <p>El perro puede estar asustado, no querer comer o esconderse. No es que no te quiera, está abrumado. Dale espacio y no lo obligues a interactuar.</p>
+
+            <h3>3 Semanas: Rutina</h3>
+            <p>Empieza a entender su nueva vida. Puede empezar a "probar límites" o mostrar su verdadera personalidad. Es el momento clave para establecer horarios de paseo y comida.</p>
+
+            <h3>3 Meses: Pertenencia</h3>
+            <p>Ya se siente en casa. Confía en ti y ha creado un vínculo. Es cuando verás al perro en su mejor versión, relajado y feliz.</p>
+            
+            <p><strong>Consejo:</strong> La paciencia es la clave. Muchos perros son devueltos en las primeras semanas porque los dueños no conocen este proceso natural de adaptación.</p>
+        `
     }
 ];
 
-// Cargar artículos destacados
-function loadFeaturedArticles() {
-    const container = document.getElementById('featuredArticles');
-    if (!container) return;
+// --- RENDERIZADO EN EL HTML ---
+document.addEventListener('DOMContentLoaded', () => {
+    renderArticles();
+    loadFeaturedArticles(); // Cargar destacados (los primeros 3)
+});
 
-    container.innerHTML = educationArticles.featured.map(article => `
-        <div class="article-card" onclick="openArticle(${article.id})">
-            <div class="article-image">
-                ${article.image}
-            </div>
+function renderArticles() {
+    // Recorremos la base de datos y colocamos cada artículo en su sección
+    articlesDB.forEach(article => {
+        const cardHTML = createCardHTML(article);
+        
+        // Identificar en qué div va según su categoría
+        let containerId = "";
+        if (article.category === 'cuidados-basicos') containerId = 'cuidadosArticles';
+        else if (article.category === 'salud-prevencion') containerId = 'saludArticles';
+        else if (article.category === 'entrenamiento') containerId = 'entrenamientoArticles';
+        else if (article.category === 'adopcion-responsable') containerId = 'adopcionArticles';
+
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.innerHTML += cardHTML;
+        }
+    });
+}
+
+function loadFeaturedArticles() {
+    const featuredContainer = document.getElementById('featuredArticles');
+    if(featuredContainer) {
+        // Tomamos los primeros 3 artículos como destacados
+        const featured = articlesDB.slice(0, 3);
+        featured.forEach(article => {
+            featuredContainer.innerHTML += createCardHTML(article);
+        });
+    }
+}
+
+function createCardHTML(article) {
+    return `
+        <article class="article-card">
+            <div class="article-img" style="background-image: url('${article.image}');"></div>
             <div class="article-content">
-                <div class="article-meta">
-                    <span class="article-category">${article.category}</span>
-                    <span class="article-read-time">⏱️ ${article.readTime}</span>
-                </div>
                 <h3 class="article-title">${article.title}</h3>
                 <p class="article-excerpt">${article.excerpt}</p>
-                <div class="article-actions">
-                    <div class="article-author">
-                        <div class="author-avatar">${article.authorInitials}</div>
-                        <span>${article.author}</span>
-                    </div>
-                    <button class="btn-outline btn-small">Leer más</button>
-                </div>
+                <button class="btn-primary btn-full" onclick="openArticleModal(${article.id})">Leer Artículo</button>
             </div>
-        </div>
-    `).join('');
+        </article>
+    `;
 }
 
-// Cargar artículos por categoría
-function loadCategoryArticles() {
-    const categories = ['cuidados', 'salud', 'entrenamiento', 'adopcion'];
-    
-    categories.forEach(category => {
-        const container = document.getElementById(`${category}Articles`);
-        if (container && educationArticles[category]) {
-            container.innerHTML = educationArticles[category].map(article => `
-                <div class="article-card" onclick="openArticle(${article.id})">
-                    <div class="article-image">
-                        ${article.image}
-                    </div>
-                    <div class="article-content">
-                        <div class="article-meta">
-                            <span class="article-category">${article.category}</span>
-                            <span class="article-read-time">⏱️ ${article.readTime}</span>
-                        </div>
-                        <h3 class="article-title">${article.title}</h3>
-                        <p class="article-excerpt">${article.excerpt}</p>
-                        <div class="article-actions">
-                            <div class="article-author">
-                                <div class="author-avatar">${article.authorInitials}</div>
-                                <span>${article.author}</span>
-                            </div>
-                            <button class="btn-outline btn-small">Leer más</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-    });
-}
-
-// Cargar expertos
-function loadExperts() {
-    const container = document.getElementById('expertsGrid');
-    if (!container) return;
-
-    container.innerHTML = experts.map(expert => `
-        <div class="expert-card">
-            <div class="expert-avatar">${expert.avatar}</div>
-            <h3 class="expert-name">${expert.name}</h3>
-            <div class="expert-specialty">${expert.specialty}</div>
-            <p class="expert-bio">${expert.bio}</p>
-            <div class="expert-stats">
-                <div class="expert-stat">
-                    <span class="expert-stat-number">${expert.articles}</span>
-                    <span class="expert-stat-label">Artículos</span>
-                </div>
-                <div class="expert-stat">
-                    <span class="expert-stat-number">${expert.experience}</span>
-                    <span class="expert-stat-label">Experiencia</span>
-                </div>
-            </div>
-            <button class="btn-outline btn-small" onclick="contactExpert(${expert.id})">
-                Contactar
-            </button>
-        </div>
-    `).join('');
-}
-
-// Cargar preguntas frecuentes
-function loadFAQ() {
-    const container = document.getElementById('faqList');
-    if (!container) return;
-
-    container.innerHTML = faqData.map((faq, index) => `
-        <div class="faq-item" onclick="toggleFAQ(${index})">
-            <div class="faq-question">
-                <span>${faq.question}</span>
-                <span class="faq-toggle">▼</span>
-            </div>
-            <div class="faq-answer">
-                <p>${faq.answer}</p>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Cargar recursos
-function loadResources() {
-    const container = document.getElementById('resourcesGrid');
-    if (!container) return;
-
-    container.innerHTML = resources.map(resource => `
-        <div class="resource-card">
-            <div class="resource-icon">${resource.icon}</div>
-            <h3 class="resource-title">${resource.title}</h3>
-            <p class="resource-description">${resource.description}</p>
-            <div class="resource-meta">
-                <span>📄 ${resource.type}</span>
-                <span>💾 ${resource.size}</span>
-            </div>
-            <button class="btn-primary" onclick="downloadResource(${resource.id})">
-                📥 Descargar
-            </button>
-        </div>
-    `).join('');
-}
-
-// Configurar event listeners
-function setupEventListeners() {
-    // Smooth scroll para navegación interna
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-}
-
-// Abrir artículo en modal
-function openArticle(articleId) {
-    // Buscar artículo en todas las categorías
-    let article = null;
-    
-    for (const category in educationArticles) {
-        const found = educationArticles[category].find(a => a.id === articleId);
-        if (found) {
-            article = found;
-            break;
-        }
-    }
-
+// --- LÓGICA DEL MODAL ---
+function openArticleModal(id) {
+    const article = articlesDB.find(a => a.id === id);
     if (!article) return;
 
     const modalContent = document.getElementById('articleModalContent');
     modalContent.innerHTML = `
-        <div class="article-modal-header">
-            <div class="article-modal-meta">
-                <span class="article-category">${article.category}</span>
-                <span class="article-read-time">⏱️ ${article.readTime} de lectura</span>
-                <div class="article-author">
-                    <div class="author-avatar">${article.authorInitials}</div>
-                    <span>${article.author}</span>
-                </div>
+        <img src="${article.image}" style="width:100%; height:300px; object-fit:cover; border-radius:12px 12px 0 0;">
+        <div style="padding: 30px;">
+            <span class="tag" style="background:var(--primary); color:white; padding:5px 10px; border-radius:15px; font-size:0.8rem;">${article.category.replace('-', ' ').toUpperCase()}</span>
+            <h2 style="margin: 15px 0; color:var(--dark); font-size:2rem;">${article.title}</h2>
+            <div style="line-height: 1.8; color:#444; font-size:1.1rem;">
+                ${article.content}
             </div>
-            <h1 class="article-modal-title">${article.title}</h1>
-        </div>
-        <div class="article-content">
-            ${article.content || `
-                <p>${article.excerpt}</p>
-                <p>Este artículo está en desarrollo. Pronto tendrás acceso a contenido completo y detallado.</p>
-                <div class="article-tips">
-                    <h4>💡 Mientras tanto...</h4>
-                    <p>Puedes consultar nuestras <a href="#faq-section">preguntas frecuentes</a> o contactar a uno de nuestros expertos para resolver tus dudas específicas.</p>
-                </div>
-            `}
-        </div>
-        <div class="article-modal-actions">
-            <button class="btn-outline" onclick="shareArticle(${article.id})">
-                📤 Compartir artículo
-            </button>
-            <button class="btn-primary" onclick="saveArticle(${article.id})">
-                💾 Guardar para después
-            </button>
+            <hr style="margin:30px 0; border:0; border-top:1px solid #eee;">
+            <div style="text-align:center;">
+                <p style="color:#666; font-style:italic;">Contenido verificado por equipo veterinario The Loyal Nest 🩺</p>
+                <button onclick="closeModal('articleModal')" class="btn-outline">Cerrar lectura</button>
+            </div>
         </div>
     `;
 
-    openModal('articleModal');
+    const modal = document.getElementById('articleModal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Bloquear scroll
 }
 
-// Alternar FAQ
-function toggleFAQ(index) {
-    const faqItems = document.querySelectorAll('.faq-item');
-    const clickedItem = faqItems[index];
-    
-    // Cerrar otros items abiertos
-    faqItems.forEach(item => {
-        if (item !== clickedItem) {
-            item.classList.remove('active');
-        }
-    });
-    
-    // Alternar el item clickeado
-    clickedItem.classList.toggle('active');
-}
-
-// Contactar experto
-function contactExpert(expertId) {
-    const expert = experts.find(e => e.id === expertId);
-    if (!expert) return;
-
-    if (confirm(`¿Te gustaría contactar a ${expert.name}? Serás redirigido a nuestro formulario de contacto.`)) {
-        window.location.href = `contact.html?expert=${expertId}`;
+// Función global para cerrar modales (ya debes tenerla en script.js, pero por si acaso)
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
     }
 }
 
-// Descargar recurso
-function downloadResource(resourceId) {
-    const resource = resources.find(r => r.id === resourceId);
-    if (!resource) return;
-
-    // Simular descarga
-    showNotification(`📥 Descargando "${resource.title}"...`, 'info');
-    
-    setTimeout(() => {
-        showNotification(`✅ "${resource.title}" descargado exitosamente`, 'success');
-    }, 2000);
-}
-
-// Compartir artículo
-function shareArticle(articleId) {
-    const article = getAllArticles().find(a => a.id === articleId);
-    if (!article) return;
-
-    if (navigator.share) {
-        navigator.share({
-            title: article.title,
-            text: article.excerpt,
-            url: window.location.href + `?article=${articleId}`
-        });
-    } else {
-        // Fallback para navegadores que no soportan Web Share API
-        navigator.clipboard.writeText(window.location.href + `?article=${articleId}`);
-        showNotification('🔗 Enlace copiado al portapapeles', 'success');
+// Cerrar al dar clic fuera
+window.onclick = function(event) {
+    const modal = document.getElementById('articleModal');
+    if (event.target == modal) {
+        closeModal('articleModal');
     }
-}
-
-// Guardar artículo
-function saveArticle(articleId) {
-    // En una implementación real, esto guardaría en la base de datos del usuario
-    showNotification('💾 Artículo guardado en tus favoritos', 'success');
-}
-
-// Utilidades
-function getAllArticles() {
-    let allArticles = [];
-    for (const category in educationArticles) {
-        allArticles = allArticles.concat(educationArticles[category]);
-    }
-    return allArticles;
-}
-
-function showNotification(message, type = 'info') {
-    // Reutilizar función de notificación existente
-    if (typeof window.showNotification === 'function') {
-        window.showNotification(message, type);
-    } else {
-        // Notificación básica
-        alert(message);
-    }
-}
-
-// Navegación
-function navigateTo(url) {
-    window.location.href = url;
 }
