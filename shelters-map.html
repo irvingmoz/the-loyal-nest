@@ -4,300 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa de Refugios | The Loyal Nest</title>
-
-
+    
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/map.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
-    <!-- Header -->
+
     <header class="header">
         <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-            </div>
+            <a href="index.html" class="logo">🐕 The Loyal Nest</a>
             <ul class="nav-links">
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="search-pets.html">Buscar Mascotas</a></li>
-                <li><a href="shelters-map.html" class="active">Refugios</a></li>
-                <li><a href="education.html">📚 Educación</a></li>
-
-                <!-- Botones de autenticación -->
-                <li class="nav-auth">
-                    <button class="btn-outline" id="loginBtn">Iniciar Sesión</button>
-                    <button class="btn-primary" id="registerBtn">Registrarse</button>
-                </li>
-
-                <!-- Menú de usuario cuando hay sesión -->
-                <li id="userMenu" class="nav-user" style="display:none;">
-                    <span class="user-info">
-                        <strong id="userName">Mi cuenta</strong>
-                    </span>
-                    <div class="user-menu">
-                        <a href="#" id="userDashboardLink" class="menu-item">Ir a mi panel</a>
-                        <button type="button" class="menu-item logout" onclick="sessionManager.logout()">Cerrar sesión</button>
-                    </div>
-                </li>
             </ul>
-            <div class="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
         </nav>
     </header>
 
-    <!-- Main Content -->
-    <main class="map-container">
-        <div class="container">
-            <!-- Encabezado de la sección -->
-            <div class="map-header">
-                <div class="header-content">
-                    <h1>🗺️ Encuentra Refugios Cercanos</h1>
-                    <p>Descubre refugios y centros de adopción cerca de ti en Iztapalapa y CDMX.</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn-primary" onclick="locateUser()">
-                        📍 Mi Ubicación
-                    </button>
-                    <button class="btn-outline" onclick="showAllShelters()">
-                        🏠 Ver Todos
-                    </button>
-                </div>
+    <div class="map-container">
+        
+        <div class="map-header">
+            <div class="header-content">
+                <h1>🗺️ Refugios Cercanos</h1>
             </div>
-
-            <!-- Layout principal: filtros + mapa + lista -->
-            <div class="map-layout">
-                <!-- Sidebar de filtros -->
-                <aside class="filters-sidebar">
-                    <div class="filters-header">
-                        <h3>🔍 Filtros de Búsqueda</h3>
-                        <button class="btn-text" onclick="clearFilters()">Limpiar</button>
-                    </div>
-
-                    <!-- Filtro de distancia -->
-                    <div class="filter-group">
-                        <label for="distanceFilter">Distancia máxima</label>
-                        <select id="distanceFilter" onchange="filterByDistance()">
-                            <option value="5">5 km</option>
-                            <option value="10" selected>10 km</option>
-                            <option value="15">15 km</option>
-                            <option value="25">25 km</option>
-                            <option value="50">50 km</option>
-                        </select>
-                    </div>
-
-                    <!-- Filtro de especies -->
-                    <div class="filter-group">
-                        <label>Especies disponibles</label>
-                        <div class="checkbox-filters">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="species" value="perro" checked onchange="filterShelters()">
-                                <span>🐕 Perros</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="species" value="gato" checked onchange="filterShelters()">
-                                <span>🐈 Gatos</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Filtro de calificación -->
-                    <div class="filter-group">
-                        <label for="ratingFilter">Calificación mínima</label>
-                        <select id="ratingFilter" onchange="filterShelters()">
-                            <option value="3">3+ estrellas</option>
-                            <option value="4" selected>4+ estrellas</option>
-                            <option value="4.5">4.5+ estrellas</option>
-                        </select>
-                    </div>
-
-                    <!-- Filtro de servicios -->
-                    <div class="filter-group">
-                        <label>Servicios disponibles</label>
-                        <div class="checkbox-filters">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="services" value="adopcion" checked onchange="filterShelters()">
-                                <span>🏠 Adopción</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="services" value="esterilizacion" onchange="filterShelters()">
-                                <span>💊 Esterilización</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="services" value="vacunacion" onchange="filterShelters()">
-                                <span>💉 Vacunación</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="services" value="urgencias" onchange="filterShelters()">
-                                <span>🚑 Urgencias</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Conteo de refugios -->
-                    <div class="shelters-count">
-                        <div class="count-badge">
-                            <span class="count-number" id="sheltersCount">0</span>
-                            <span class="count-label">refugios encontrados</span>
-                        </div>
-                    </div>
-                </aside>
-
-                <!-- Contenido de mapa + resultados -->
-                <section class="map-content">
-                    <!-- Mapa -->
-                    <div class="map-wrapper">
-                        <div id="sheltersMap"></div>
-                        <div class="map-controls">
-                            <button class="map-control-btn" onclick="locateUser()" title="Mi ubicación">
-                                📍
-                            </button>
-                            <button class="map-control-btn" onclick="zoomToAll()" title="Ver todos">
-                                🏠
-                            </button>
-                            <button class="map-control-btn" onclick="toggleSatellite()" title="Vista satélite">
-                                🛰️
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Lista de resultados -->
-                    <aside class="results-sidebar">
-                        <div class="results-header">
-                            <h3>🏠 Refugios Cercanos</h3>
-                            <div class="results-sort">
-                                <select id="sortResults" onchange="sortShelters()">
-                                    <option value="distance">Más cercanos</option>
-                                    <option value="rating">Mejor calificados</option>
-                                    <option value="pets">Más mascotas</option>
-                                    <option value="name">Orden alfabético</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="results-list" id="sheltersList">
-                            <!-- Los refugios se cargan dinámicamente -->
-                        </div>
-                    </aside>
-                </section>
+            <div>
+                <button class="btn-primary" onclick="locateUser()">📍 Mi Ubicación</button>
             </div>
+        </div>
 
-            <!-- Sección de estadísticas -->
-            <section class="map-statistics">
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-icon">🏠</div>
-                        <div class="stat-content">
-                            <div class="stat-number">42</div>
-                            <div class="stat-label">Refugios registrados</div>
-                        </div>
+        <div class="map-layout">
+            
+            <aside class="filters-sidebar">
+                <h3>Filtros</h3>
+                <div class="filter-group">
+                    <label>Distancia</label>
+                    <select id="distanceFilter" onchange="filterShelters()">
+                        <option value="10" selected>10 km</option>
+                        <option value="50">50 km</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Especies</label>
+                    <div class="checkbox-filters">
+                        <label class="checkbox-item"><input type="checkbox" name="species" value="perro" checked onchange="filterShelters()"> Perros</label>
+                        <label class="checkbox-item"><input type="checkbox" name="species" value="gato" checked onchange="filterShelters()"> Gatos</label>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-icon">🐕</div>
-                        <div class="stat-content">
-                            <div class="stat-number">568</div>
-                            <div class="stat-label">Mascotas en adopción</div>
-                        </div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-icon">⭐</div>
-                        <div class="stat-content">
-                            <div class="stat-number">4.8</div>
-                            <div class="stat-label">Calificación promedio</div>
-                        </div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-icon">🏆</div>
-                        <div class="stat-content">
-                            <div class="stat-number">289</div>
-                            <div class="stat-label">Adopciones exitosas</div>
-                        </div>
-                    </div>
+                </div>
+                <p id="sheltersCount" style="text-align:center; font-weight:bold; margin-top:20px;">Cargando...</p>
+            </aside>
+
+            <section class="map-content">
+                <div class="map-wrapper">
+                    <div id="sheltersMap"></div> 
                 </div>
             </section>
-        </div>
-    </main>
 
-    <!-- Modal de detalles del refugio -->
-    <div class="modal" id="shelterModal">
-        <div class="modal-content large">
-            <span class="close" onclick="closeModal('shelterModal')">&times;</span>
-            <div class="shelter-modal-content" id="shelterModalContent">
-                <!-- El contenido del refugio se carga aquí -->
-            </div>
+            <aside class="results-sidebar">
+                <div class="results-header">Resultados</div>
+                <div class="results-list" id="sheltersList"></div>
+            </aside>
+
         </div>
     </div>
 
-    <!-- Modal de permiso de ubicación -->
-    <div class="modal" id="locationModal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('locationModal')">&times;</span>
-            <div class="location-modal-content">
-                <h3>📍 Permiso de Ubicación</h3>
-                <p>Para mostrarte refugios cercanos, necesitamos acceso a tu ubicación.</p>
-                <p>¿Permites que The Loyal Nest use tu ubicación?</p>
-                <div class="modal-actions">
-                    <button class="btn-outline" onclick="closeModal('locationModal')">No permitir</button>
-                    <button class="btn-primary" onclick="requestLocationPermission()">Permitir ubicación</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de login reutilizable -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('loginModal')">&times;</span>
-            <h2>Bienvenido a The Loyal Nest</h2>
-            <p>Para continuar, inicia sesión o crea una cuenta nueva.</p>
-            <div class="auth-actions">
-                <a href="auth.html" class="btn-primary btn-full">Iniciar Sesión</a>
-                <a href="register.html" class="btn-outline btn-full">Registrarme</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>🐕 The Loyal Nest</h3>
-                    <p>Conectando corazones con patitas desde 2024</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Enlaces Rápidos</h4>
-                    <ul>
-                        <li><a href="search-pets.html">Buscar Mascotas</a></li>
-                        <li><a href="shelters-map.html">Mapa de Refugios</a></li>
-                        <li><a href="education.html">Educación</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>¿Eres un refugio?</h4>
-                    <p>Únete a nuestra plataforma y ayuda a más mascotas a encontrar hogar.</p>
-                    <a href="register.html?type=rescatista" class="btn-outline btn-small">Registrar Refugio</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 The Loyal Nest. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- Scripts comunes -->
-    <script src="js/script.js"></script>
-    <script src="js/session-manager.js"></script>
-
-    <!-- Lógica del mapa -->
     <script src="js/map.js"></script>
+
 </body>
 </html>
-
