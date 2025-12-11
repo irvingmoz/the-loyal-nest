@@ -353,43 +353,4 @@ function loadResources() {
     `).join('');
 }
 
-// ESTA FUNCIÓN HACE LA MAGIA
-function downloadMock(title, filename) {
-    // 1. Creamos el contenido del archivo "al vuelo"
-    const textContent = `
-    THE LOYAL NEST - ${title.toUpperCase()}
-    ==========================================
-    
-    Gracias por descargar este recurso educativo.
-    
-    Este es un archivo de demostración para el proyecto escolar.
-    En una versión real, aquí verías el contenido completo del manual en PDF.
-    
-    Recuerda:
-    - Vacuna a tu mascota.
-    - Adopta, no compres.
-    - Esteriliza.
-    
-    Atte: El equipo de The Loyal Nest.
-    `;
-
-    // 2. Creamos un "Blob" (un archivo en memoria)
-    const blob = new Blob([textContent], { type: 'text/plain' });
-    
-    // 3. Creamos una URL temporal para ese archivo
-    const url = window.URL.createObjectURL(blob);
-    
-    // 4. Creamos un enlace invisible, le damos clic y lo borramos
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = filename; // El nombre con el que se bajará
-    
-    document.body.appendChild(a);
-    a.click();
-    
-    // 5. Limpieza
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-}
 
