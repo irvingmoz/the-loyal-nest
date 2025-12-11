@@ -3,340 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar Mascotas | The Loyal Nest</title>
+    <title>Buscar mascotas | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/search-pets.css">
 </head>
 <body>
-    <header class="header">
-        <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="search-pets.html" class="active">Buscar Mascotas</a></li>
-                <li><a href="shelters-map.html">Refugios</a></li>
-                <li><a href="education.html">📚 Educación</a></li>
+<header class="header">
+    <nav class="nav">
+        <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+        <ul class="nav-links">
+            <li><a href="education.html">Recursos</a></li>
+            <li class="nav-user" style="display:none; gap:8px; align-items:center;">
+                <span class="nav-user-name"></span>
+                <button class="btn-outline" data-action="logout">Salir</button>
+            </li>
+        </ul>
+    </nav>
+</header>
 
-                <!-- Botones de autenticación -->
-                <li class="nav-auth">
-                    <button class="btn-outline" id="loginBtn">Iniciar Sesión</button>
-                    <button class="btn-primary" id="registerBtn">Registrarse</button>
-                </li>
-
-                <!-- Menú de usuario cuando hay sesión -->
-                <li id="userMenu" class="nav-user" style="display: none;">
-                    <span class="user-info">
-                        <strong id="userName">Mi cuenta</strong>
-                    </span>
-                    <div class="user-menu">
-                        <a href="#" id="userDashboardLink" class="menu-item">Ir a mi panel</a>
-                        <button type="button" class="menu-item logout" onclick="sessionManager.logout()">Cerrar sesión</button>
-                    </div>
-                </li>
-            </ul>
-            <div class="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
+<main class="container" style="margin-top:110px; max-width:1100px;">
+    <header class="panel__header">
+        <div>
+            <p class="muted">Explorar</p>
+            <h1>Encuentra tu compañero ideal</h1>
+        </div>
     </header>
 
-    <main class="search-page">
-        <!-- Hero de Búsqueda -->
-        <section class="search-hero">
-            <div class="container">
-                <h1>Encuentra a tu compañero ideal</h1>
-                <p>Busca entre cientos de mascotas que esperan un hogar lleno de amor</p>
-                
-                <!-- Barra de búsqueda principal -->
-                <div class="search-bar">
-                    <div class="search-input-group">
-                        <span class="search-icon">🔍</span>
-                        <input 
-                            type="text" 
-                            id="mainSearchInput" 
-                            placeholder="Busca por nombre, raza o características..."
-                        >
-                    </div>
-                    <button class="btn-primary search-btn" id="mainSearchBtn">
-                        Buscar
-                    </button>
-                </div>
+    <form id="searchForm" class="form-grid">
+        <label>Especie<select name="species"><option value="">Todas</option><option value="Perro">Perro</option><option value="Gato">Gato</option></select></label>
+        <label>Tamaño<select name="size"><option value="">Cualquiera</option><option value="Chico">Chico</option><option value="Mediano">Mediano</option><option value="Grande">Grande</option></select></label>
+        <label>Ubicación<input name="location" placeholder="Ciudad"></label>
+        <label>Edad mínima<input type="number" name="ageMin" min="0"></label>
+        <label>Edad máxima<input type="number" name="ageMax" min="0"></label>
+        <button class="btn-primary" type="submit">Buscar</button>
+        <div class="form-status muted"></div>
+    </form>
 
-                <!-- Filtros rápidos -->
-                <div class="quick-filters">
-                    <button class="chip" data-type="perro">🐕 Perros</button>
-                    <button class="chip" data-type="gato">🐈 Gatos</button>
-                    <button class="chip" data-type="cachorro">🐾 Cachorros</button>
-                    <button class="chip" data-type="adulto">✨ Adultos</button>
-                    <button class="chip" data-type="especial">💖 Casos Especiales</button>
-                </div>
-            </div>
-        </section>
+    <section class="panel">
+        <div id="searchResults" class="cards-grid"></div>
+        <div id="searchPagination" class="pagination"></div>
+    </section>
+</main>
 
-        <!-- Contenido principal -->
-        <div class="container search-layout">
-            <!-- Panel de filtros -->
-            <aside class="filters-panel">
-                <div class="filters-header">
-                    <h2>Filtros</h2>
-                    <button class="btn-text" id="clearFiltersBtn">Limpiar filtros</button>
-                </div>
-
-                <!-- Filtro por ubicación -->
-                <div class="filter-group">
-                    <h4>📍 Ubicación</h4>
-                    <select id="filterLocation" class="filter-select">
-                        <option value="">Todas las ubicaciones</option>
-                        <option value="cdmx">Ciudad de México</option>
-                        <option value="edomex">Estado de México</option>
-                        <option value="jalisco">Jalisco</option>
-                        <option value="nuevo-leon">Nuevo León</option>
-                    </select>
-                </div>
-
-                <!-- Filtro por tipo -->
-                <div class="filter-group">
-                    <h4>🐾 Tipo de Mascota</h4>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="type" value="perro" checked>
-                            <span>Perros</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="type" value="gato" checked>
-                            <span>Gatos</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="type" value="otro">
-                            <span>Otros</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Filtro por edad -->
-                <div class="filter-group">
-                    <h4>⏳ Edad</h4>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="age" value="cachorro" checked>
-                            <span>Cachorros (0-1 año)</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="age" value="joven" checked>
-                            <span>Jóvenes (1-5 años)</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="age" value="adulto">
-                            <span>Adultos (5+ años)</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Filtro por tamaño -->
-                <div class="filter-group">
-                    <h4>📏 Tamaño</h4>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="size" value="pequeno" checked>
-                            <span>Pequeño</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="size" value="mediano" checked>
-                            <span>Mediano</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="size" value="grande">
-                            <span>Grande</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Filtro por características -->
-                <div class="filter-group">
-                    <h4>⭐ Características</h4>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="feature" value="ninos">
-                            <span>Bueno con niños</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="feature" value="otros-perros">
-                            <span>Convive con otros perros</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="feature" value="gatos">
-                            <span>Convive con gatos</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="feature" value="departamento">
-                            <span>Apto para departamento</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Orden -->
-                <div class="filter-group">
-                    <h4>Ordenar por</h4>
-                    <select id="sortBy" class="filter-select">
-                        <option value="recientes">Más recientes</option>
-                        <option value="edad-asc">Edad: menor a mayor</option>
-                        <option value="edad-desc">Edad: mayor a menor</option>
-                    </select>
-                </div>
-
-                <!-- CTA extra -->
-                <div class="filter-cta">
-                    <h4>¿Eres rescatista?</h4>
-                    <p>Publica mascotas desde tu panel y encuentra familias ideales.</p>
-                    <a href="register.html?type=rescatista" class="btn-outline btn-full">
-                        Publicar mascotas
-                    </a>
-                </div>
-            </aside>
-
-            <!-- Resultados -->
-            <section class="results-panel">
-                <div class="results-header">
-                    <div>
-                        <h2>Mascotas Disponibles</h2>
-                        <p id="resultsCount">Mostrando 0 resultados</p>
-                    </div>
-                    <div class="view-toggle">
-                        <button class="view-btn active" data-view="grid">🔳 Vista de tarjetas</button>
-                        <button class="view-btn" data-view="list">📋 Vista de lista</button>
-                    </div>
-                </div>
-
-                <!-- Contenedor de resultados -->
-                <div id="petsResults" class="pets-grid">
-                    <!-- Tarjetas generadas por JS -->
-                </div>
-
-                <!-- Paginación -->
-                <div class="pagination" id="pagination">
-                    <button class="pagination-btn" id="prevBtn" onclick="changePage(-1)">← Anterior</button>
-                    <span class="pagination-info" id="pageInfo">Página 1 de 1</span>
-                    <button class="pagination-btn" id="nextBtn" onclick="changePage(1)">Siguiente →</button>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- Modal de login reutilizable -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Bienvenido a The Loyal Nest</h2>
-            <p>Para continuar, inicia sesión o crea una cuenta nueva.</p>
-            <div class="auth-actions">
-                <a href="auth.html" class="btn-primary btn-full">Iniciar Sesión</a>
-                <a href="register.html" class="btn-outline btn-full">Registrarme</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>🐕 The Loyal Nest</h3>
-                    <p>Conectando corazones con patitas desde 2024.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Explorar</h4>
-                    <ul>
-                        <li><a href="auth.html">Iniciar Sesión</a></li>
-                        <li><a href="register.html">Registrarse</a></li>
-                        <li><a href="education.html">Cómo Funciona</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="#privacidad">Privacidad</a></li>
-                        <li><a href="#terminos">Términos</a></li>
-                        <li><a href="#cookies">Cookies</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts comunes -->
-    <script src="js/script.js"></script>
-    <script src="js/session-manager.js"></script>
-
-    <!-- Script específico de búsqueda -->
-    <script src="js/search-pets.js"></script>
-
-    <script src="js/pets.js"></script>
-<script>
-  const petsContainer = document.getElementById("pets-container");
-  const filtroEspecie = document.getElementById("filtro-especie");
-  const filtroEdad = document.getElementById("filtro-edad");
-
-  // Mostrar todas las mascotas al inicio
-  mostrarMascotas(pets);
-
-  function mostrarMascotas(lista) {
-    petsContainer.innerHTML = "";
-
-    if (lista.length === 0) {
-      petsContainer.innerHTML = "<p>No hay resultados para esos filtros.</p>";
-      return;
-    }
-
-    lista.forEach(pet => {
-      const card = document.createElement("div");
-      card.className = "pet-card";
-
-      card.innerHTML = `
-        <img src="${pet.imagen}" alt="${pet.nombre}">
-        <h3>${pet.nombre}</h3>
-        <p><strong>Especie:</strong> ${pet.especie}</p>
-        <p><strong>Edad:</strong> ${pet.edadCategoria}</p>
-        <p><strong>Tamaño:</strong> ${pet.tamano}</p>
-        <button onclick="verPerfil(${pet.id})">Ver Perfil</button>
-      `;
-
-      petsContainer.appendChild(card);
-    });
-  }
-
-  // Filtros
-  function filtrar() {
-    const especie = filtroEspecie.value;
-    const edad = filtroEdad.value;
-
-    let filtrados = pets;
-
-    if (especie !== "Todos") {
-      filtrados = filtrados.filter(p => p.especie === especie);
-    }
-
-    if (edad !== "Todos") {
-      filtrados = filtrados.filter(p => p.edadCategoria === edad);
-    }
-
-    mostrarMascotas(filtrados);
-  }
-
-  filtroEspecie.addEventListener("change", filtrar);
-  filtroEdad.addEventListener("change", filtrar);
-
-  // Acción del botón
-  function verPerfil(id) {
-    window.location.href = `pet-profile.html?id=${id}`;
-  }
-    <script src="js/auth.js"></script>
-</script>
-
+<script src="js/session.js"></script>
+<script src="js/search.js"></script>
 </body>
 </html>
-
-

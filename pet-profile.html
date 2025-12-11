@@ -3,288 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de Mascota | The Loyal Nest</title>
+    <title>Perfil de mascota | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/pet-profile.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Header -->
-     <header class="header">
-        <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="search-pets.html">Buscar Mascotas</a></li>
-                <li><a href="shelters-map.html">Refugios</a></li>
-                <li><a href="education.html" class="active">📚 Educación</a></li>
-                <li class="nav-auth">
-                    <button class="btn-outline" onclick="openModal('loginModal')">Iniciar Sesión</button>
-                    <button class="btn-primary" onclick="openModal('loginModal')">Registrarse</button>
-                </li>
-            </ul>
-            <div class="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
-    </header>
+<header class="header">
+    <nav class="nav">
+        <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+        <ul class="nav-links">
+            <li><a href="search-pets.html">Buscar</a></li>
+            <li class="nav-user" style="display:none; gap:8px; align-items:center;">
+                <span class="nav-user-name"></span>
+                <button class="btn-outline" data-action="logout">Salir</button>
+            </li>
+        </ul>
+    </nav>
+</header>
 
-    <!-- Breadcrumb -->
-    <section class="breadcrumb">
-        <div class="container">
-            <a href="index.html" class="breadcrumb-link">Inicio</a>
-            <span class="breadcrumb-separator">/</span>
-            <a href="search-pets.html" class="breadcrumb-link">Buscar Mascotas</a>
-            <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current" id="breadcrumbName">Mascota</span>
-        </div>
+<main class="container" style="margin-top:110px; max-width:1100px;">
+    <section class="panel" id="petProfileCard">
+        <header class="panel__header">
+            <div>
+                <p class="muted">Ficha de mascota</p>
+                <h1 data-field="name">Mascota</h1>
+                <p class="muted" data-field="meta"></p>
+            </div>
+            <span class="status" data-field="status">disponible</span>
+        </header>
+        <p data-field="description">Descripción pendiente</p>
+        <p><strong>Refugio / contacto:</strong> <span data-field="owner">-</span></p>
+        <button class="btn-primary" data-hide-role="rescatista,rescuer" onclick="document.getElementById('adoptionModal').showModal()">Solicitar adopción</button>
     </section>
 
-    <!-- Pet Profile Main -->
-    <main class="pet-profile">
-        <div class="container">
-            <div class="profile-header">
-                <button class="btn-back" onclick="history.back()">
-                    ← Volver a resultados
-                </button>
-                <h1 class="pet-title" id="petTitle">Mascota <span class="pet-badge available" id="petStatus">Disponible</span></h1>
-            </div>
+    <section class="panel">
+        <header class="panel__header"><h2>Historial médico</h2></header>
+        <table class="table">
+            <thead><tr><th>Tipo</th><th>Fecha</th><th>Notas</th><th>Próxima</th></tr></thead>
+            <tbody id="medicalHistory"></tbody>
+        </table>
+        <form id="medicalForm" class="form-grid" data-require-role="rescatista,rescuer">
+            <label>Tipo<select name="type"><option>Vacuna</option><option>Desparasitación</option><option>Cita</option></select></label>
+            <label>Fecha<input type="date" name="date" required></label>
+            <label>Notas<textarea name="notes"></textarea></label>
+            <label>Próxima fecha<input type="date" name="nextDate"></label>
+            <button class="btn-outline" type="submit">Agregar entrada</button>
+        </form>
+    </section>
 
-            <div class="profile-content">
-                <!-- Left Column - Gallery & Basic Info -->
-                <div class="profile-left">
-                    <div class="pet-gallery">
-                        <div class="gallery-main">
-                            <img src="" alt="Mascota" class="main-image" id="mainImage">
-                        </div>
-                        <div class="gallery-thumbs" id="galleryThumbs">
-                            <!-- Miniaturas dinámicas -->
-                        </div>
-                    </div>
+    <section class="panel">
+        <header class="panel__header"><h2>Timeline de solicitudes</h2></header>
+        <div id="adoptionRequests" class="cards-grid"></div>
+    </section>
+</main>
 
-                    <div class="basic-info-card">
-                        <h3>📋 Información Básica</h3>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <span class="info-label">Especie:</span>
-                                <span class="info-value" id="petSpecies">—</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Raza:</span>
-                                <span class="info-value" id="petBreed">—</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Edad:</span>
-                                <span class="info-value" id="petAge">—</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Sexo:</span>
-                                <span class="info-value" id="petSex">—</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Tamaño:</span>
-                                <span class="info-value" id="petSize">—</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Peso:</span>
-                                <span class="info-value" id="petWeight">—</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<dialog id="adoptionModal">
+    <form id="adoptionRequestForm" class="form-grid" method="dialog">
+        <h3>Solicitar adopción</h3>
+        <label>Mensaje<textarea name="message" required></textarea></label>
+        <input type="hidden" name="petId" value="">
+        <button class="btn-primary" type="submit">Enviar</button>
+        <div id="adoptionStatus" class="muted"></div>
+    </form>
+    <button class="btn-text" onclick="document.getElementById('adoptionModal').close()">Cerrar</button>
+</dialog>
 
-                <!-- Right Column - Detailed Info -->
-                <div class="profile-right">
-                    <!-- Shelter Info -->
-                    <div class="shelter-card">
-                        <div class="shelter-header">
-                            <div class="shelter-info">
-                                <h3>🏠 Refugio Esperanza</h3>
-                                <div class="shelter-meta">
-                                    <span class="shelter-rating">⭐ 4.8 (124 reviews)</span>
-                                    <span class="shelter-distance">📍 1.2 km de ti</span>
-                                </div>
-                            </div>
-                            <div class="shelter-actions">
-                                <button class="btn-outline btn-small">📞 Contactar</button>
-                                <button class="btn-secondary btn-small">🗺️ Ver mapa</button>
-                            </div>
-                        </div>
-                        <div class="shelter-contact">
-                            <p>📞 55-1234-5678</p>
-                            <p>📧 contacto@refugioesperanza.mx</p>
-                            <p>📍 Av. Central 123, Iztapalapa, CDMX</p>
-                        </div>
-                    </div>
-
-                    <!-- Medical History -->
-                    <div class="medical-card">
-                        <h3>🏥 Historial Médico</h3>
-                        <div class="medical-timeline">
-                            <div class="medical-event">
-                                <div class="event-icon">💉</div>
-                                <div class="event-details">
-                                    <span class="event-title">Vacuna múltiple</span>
-                                    <span class="event-date">15 de Agosto, 2024</span>
-                                </div>
-                                <div class="event-status completed">Completado</div>
-                            </div>
-                            <div class="medical-event">
-                                <div class="event-icon">🐛</div>
-                                <div class="event-details">
-                                    <span class="event-title">Desparasitación</span>
-                                    <span class="event-date">1 de Septiembre, 2024</span>
-                                </div>
-                                <div class="event-status completed">Completado</div>
-                            </div>
-                            <div class="medical-event upcoming">
-                                <div class="event-icon">💉</div>
-                                <div class="event-details">
-                                    <span class="event-title">Próxima vacuna</span>
-                                    <span class="event-date">15 de Noviembre, 2024</span>
-                                </div>
-                                <div class="event-status pending">Próximo</div>
-                            </div>
-                        </div>
-                        <div class="medical-summary">
-                            <div class="summary-item">
-                                <span class="summary-label">Esterilizado:</span>
-                                <span class="summary-value yes">Sí</span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Microchip:</span>
-                                <span class="summary-value yes">Sí</span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Enfermedades:</span>
-                                <span class="summary-value no">Ninguna</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Description -->
-                    <div class="description-card">
-                        <h3 id="descriptionTitle">📝 Sobre la mascota</h3>
-                        <p id="descriptionText">Cargando información de la mascota...</p>
-                        
-                        <div class="personality-traits">
-                            <span class="trait positive">😊 Cariñoso</span>
-                            <span class="trait positive">🎾 Juguetón</span>
-                            <span class="trait positive">🏠 Tranquilo en casa</span>
-                            <span class="trait neutral">🐶 Necesita entrenamiento</span>
-                        </div>
-                    </div>
-
-                    <!-- Compatibility -->
-                    <div class="compatibility-card">
-                        <h3>👨‍👩‍👧‍👦 Compatibilidad</h3>
-                        <div class="compatibility-grid">
-                            <div class="compat-item compatible">
-                                <span class="compat-icon">✅</span>
-                                <span class="compat-text">Con niños</span>
-                            </div>
-                            <div class="compat-item compatible">
-                                <span class="compat-icon">✅</span>
-                                <span class="compat-text">Con otros perros</span>
-                            </div>
-                            <div class="compat-item not-compatible">
-                                <span class="compat-icon">❌</span>
-                                <span class="compat-text">Con gatos</span>
-                            </div>
-                            <div class="compat-item compatible">
-                                <span class="compat-icon">✅</span>
-                                <span class="compat-text">En apartamento</span>
-                            </div>
-                            <div class="compat-item compatible">
-                                <span class="compat-icon">✅</span>
-                                <span class="compat-text">Dueños primerizos</span>
-                            </div>
-                            <div class="compat-item neutral">
-                                <span class="compat-icon">⚠️</span>
-                                <span class="compat-text">Ejercicio diario</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Adoption CTA -->
-                    <div class="adoption-cta">
-                        <div class="cta-content">
-                            <h3 id="adoptionPrompt">¿Listo para darle un hogar?</h3>
-                            <p>Actualmente tiene <strong id="adoptionRequestsCount">0 solicitudes</strong> de adopción. ¡No esperes demasiado!</p>
-                            <div class="cta-actions">
-                                <button class="btn-primary btn-large" id="adoptBtn">
-                                    ❤️ Enviar Solicitud de Adopción
-                                </button>
-                                <button class="btn-outline btn-large">
-                                    💾 Guardar para después
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Related Pets -->
-            <section class="related-pets">
-                <h2>🐾 Más mascotas de Refugio Esperanza</h2>
-                <div class="pets-grid" id="relatedPetsGrid">
-                    <!-- Las mascotas relacionadas se cargan aquí -->
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>🐕 The Loyal Nest</h3>
-                    <p>Conectando corazones con patitas desde 2024</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Enlaces Rápidos</h4>
-                    <ul>
-                        <li><a href="search.html">Buscar Mascotas</a></li>
-                        <li><a href="shelters.html">Refugios</a></li>
-                        <li><a href="education.html">Educación</a></li>
-                        <li><a href="#">Sobre Nosotros</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contacto</h4>
-                    <ul>
-                        <li>📧 hola@theloyalnest.mx</li>
-                        <li>📞 55-1234-5678</li>
-                        <li>📍 Iztapalapa, CDMX</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 The Loyal Nest. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Adoption Modal -->
-    <div class="modal" id="adoptionModal">
-        <div class="modal-content large">
-            <span class="close">&times;</span>
-            <h2 id="adoptionModalTitle">📋 Solicitud de Adopción</h2>
-            <div class="adoption-form">
-                <!-- El formulario se cargará aquí dinámicamente -->
-            </div>
-        </div>
-    </div>
-<script src="js/auth.js"></script>
-    <script src="js/script.js"></script>
-    <script src="js/session-manager.js"></script>
-    <script src="js/pet-profile.js"></script>
+<script src="js/session.js"></script>
+<script src="js/pets.js"></script>
+<script src="js/medical.js"></script>
+<script src="js/adoptions.js"></script>
+<script>
+    const petIdParam = new URLSearchParams(window.location.search).get('id');
+    const requestForm = document.getElementById('adoptionRequestForm');
+    if (requestForm && petIdParam) requestForm.petId.value = petIdParam;
+</script>
 </body>
 </html>
-
-

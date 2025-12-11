@@ -1,208 +1,105 @@
-// js/auth.js - GESTIÓN TOTAL (Diseño de Pasos + Seguridad)
+// js/auth.js
+// Registro/Login/Logout con validación, tokens y redirección por rol
+
+function ensureSessionModule() {
+    if (typeof persistSession !== 'function') {
+        console.warn('session.js debe cargarse antes de auth.js');
+    }
+}
+ensureSessionModule();
 
 document.addEventListener('DOMContentLoaded', () => {
-    actualizarNavbar();
-
-    // REGISTRO
     const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Prevenir recarga
-            registrarUsuario();
-        });
-    }
-
-    // LOGIN
     const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Prevenir recarga
-            iniciarSesion();
-        });
-    }
+    const roleSelector = document.querySelectorAll('[data-role-select]');
+
+    if (registerForm) registerForm.addEventListener('submit', handleRegister);
+    if (loginForm) loginForm.addEventListener('submit', handleLogin);
+    roleSelector.forEach((btn) => btn.addEventListener('click', () => selectRole(btn.dataset.roleSelect)));
 });
 
-// --- INTERFAZ: CAMBIO DE PASOS (TARJETAS -> FORMULARIO) ---
-function selectUserType(tipo) {
-    const stepSelection = document.getElementById('stepSelection');
-    const stepForm = document.getElementById('stepForm');
-    const tipoInput = document.getElementById('tipo');
-
-    // Cambiar vista
-    if (stepSelection && stepForm) {
-        stepSelection.style.display = 'none';
-        stepForm.style.display = 'block';
-    }
-    
-    // Guardar tipo
-    if (tipoInput) tipoInput.value = tipo;
-
-    // Configurar campos según el tipo
-    const formTitle = document.getElementById('formTitle');
-    const refugioField = document.getElementById('refugioField');
-    const adminField = document.getElementById('adminField');
-    const nombreRefugio = document.getElementById('nombreRefugio');
-    const razonAdmin = document.getElementById('razonAdmin');
-
-    // Ocultar todo primero
-    if(refugioField) refugioField.style.display = 'none';
-    if(adminField) adminField.style.display = 'none';
-    if(nombreRefugio) nombreRefugio.required = false;
-    if(razonAdmin) razonAdmin.required = false;
-
-    // Mostrar lo necesario
-    if (tipo === 'rescatista') {
-        if(formTitle) formTitle.innerText = 'Registro de Refugio';
-        if(refugioField) refugioField.style.display = 'block';
-        if(nombreRefugio) nombreRefugio.required = true;
-    } 
-    else if (tipo === 'administrador') {
-        if(formTitle) formTitle.innerText = 'Solicitud de Admin';
-        if(adminField) adminField.style.display = 'block';
-        if(razonAdmin) razonAdmin.required = true;
-    } 
-    else {
-        if(formTitle) formTitle.innerText = 'Registro de Adoptante';
-    }
+function selectRole(role) {
+    const roleInput = document.getElementById('role');
+    if (roleInput) roleInput.value = role;
 }
 
-function goBack() {
-    document.getElementById('stepForm').style.display = 'none';
-    document.getElementById('stepSelection').style.display = 'block';
-    document.getElementById('registerForm').reset();
+function setLoading(form, isLoading) {
+    const submit = form.querySelector('button[type="submit"]');
+    if (submit) submit.disabled = isLoading;
+    form.querySelectorAll('input, select').forEach((el) => { el.disabled = isLoading; });
 }
 
-// --- VALIDACIÓN DE SEGURIDAD (RF01) ---
-function esContrasenaSegura(password) {
-    // Si quieres probar rápido usa una contraseña como: "HolaMundo123!"
-    if (password.length < 12) {
-        alert("⚠️ Contraseña insegura: Debe tener al menos 12 caracteres.");
-        return false;
-    }
-    if (!/[A-Z]/.test(password)) {
-        alert("⚠️ Contraseña insegura: Falta una letra MAYÚSCULA.");
-        return false;
-    }
-    if (!/[0-9]/.test(password)) {
-        alert("⚠️ Contraseña insegura: Falta un NÚMERO.");
-        return false;
-    }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-        alert("⚠️ Contraseña insegura: Falta un SÍMBOLO (! @ # $).");
-        return false;
-    }
-    return true;
+function validatePassword(password) {
+    const rules = [/.{8,}/, /[A-Z]/, /[0-9]/, /[!@#$%^&*()_+\-={}\[\]:;"'`~<>,.?/]/];
+    return rules.every((r) => r.test(password));
 }
 
-// --- LÓGICA DE REGISTRO ---
-function registrarUsuario() {
-    const nombre = document.getElementById('nombre').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const tipo = document.getElementById('tipo').value;
-
-    // 1. Validar Seguridad
-    if (!esContrasenaSegura(password)) {
-        return; // Se detiene si la contraseña es débil
-    }
-
-    // 2. Personalizar nombre si es necesario
-    let nombreFinal = nombre;
-    if (tipo === 'rescatista') {
-        const ref = document.getElementById('nombreRefugio').value;
-        nombreFinal = `${nombre} (${ref})`;
-    }
-
-    // 3. Verificar duplicados
-    const usuarios = JSON.parse(localStorage.getItem('usuarios_db')) || [];
-    if (usuarios.find(u => u.email === email)) {
-        alert('❌ Este correo ya está registrado.');
+async function handleRegister(event) {
+    event.preventDefault();
+    const form = event.target;
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (!validatePassword(data.password)) {
+        showFormError(form, 'La contraseña debe tener 8 caracteres, una mayúscula, un número y un símbolo.');
         return;
     }
-
-    // 4. Guardar
-    const nuevoUsuario = { id: Date.now(), nombre: nombreFinal, email, password, tipo };
-    usuarios.push(nuevoUsuario);
-    localStorage.setItem('usuarios_db', JSON.stringify(usuarios));
-    localStorage.setItem('usuario_activo', JSON.stringify(nuevoUsuario));
-    
-    alert('✅ ¡Cuenta creada exitosamente!');
-    window.location.href = 'index.html';
-}
-
-// --- LÓGICA DE LOGIN ---
-function iniciarSesion() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    const usuarios = JSON.parse(localStorage.getItem('usuarios_db')) || [];
-    const usuario = usuarios.find(u => u.email === email && u.password === password);
-
-    if (usuario) {
-        localStorage.setItem('usuario_activo', JSON.stringify(usuario));
-        alert(`👋 Bienvenido de nuevo, ${usuario.nombre}`);
-        window.location.replace('index.html');
-    } else {
-        alert('❌ Credenciales incorrectas.');
+    try {
+        setLoading(form, true);
+        const res = await fetch('/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: data.name,
+                email: data.email,
+                password: data.password,
+                role: data.role || 'adoptante'
+            })
+        });
+        if (!res.ok) throw new Error('Registro fallido');
+        const payload = await res.json();
+        persistSession({ token: payload.token, user: payload.user, expiresIn: payload.expiresIn });
+        redirectToDashboard(payload.user.role);
+    } catch (error) {
+        console.error(error);
+        showFormError(form, 'No se pudo crear la cuenta.');
+    } finally {
+        setLoading(form, false);
     }
 }
 
-// --- RECUPERAR CONTRASEÑA ---
-function recuperarContra(e) {
-    if(e) e.preventDefault();
-    const correo = prompt("Ingresa tu correo para recuperar contraseña:");
-    if (correo && correo.includes('@')) {
-        alert("✅ Enlace de recuperación enviado (Simulado).");
+async function handleLogin(event) {
+    event.preventDefault();
+    const form = event.target;
+    const data = Object.fromEntries(new FormData(form).entries());
+    try {
+        setLoading(form, true);
+        const res = await fetch('/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: data.email, password: data.password })
+        });
+        if (!res.ok) throw new Error('Login fallido');
+        const payload = await res.json();
+        persistSession({ token: payload.token, user: payload.user, expiresIn: payload.expiresIn });
+        redirectToDashboard(payload.user.role);
+    } catch (error) {
+        console.error(error);
+        showFormError(form, 'Credenciales incorrectas o servidor no disponible.');
+    } finally {
+        setLoading(form, false);
     }
 }
 
-// --- SESIÓN Y MENÚ ---
-function cerrarSesion() {
-    localStorage.removeItem('usuario_activo');
-    window.location.href = 'index.html';
+function logout() {
+    clearSession();
+    window.location.href = 'auth.html';
 }
 
-function actualizarNavbar() {
-    const usuario = JSON.parse(localStorage.getItem('usuario_activo'));
-    const navAuth = document.querySelector('.nav-auth');
-    const navUser = document.getElementById('userMenu');
-    const userNameSpan = document.getElementById('userName');
-
-    if (usuario) {
-        if(navAuth) navAuth.style.display = 'none';
-        if(navUser) {
-            navUser.style.display = 'flex';
-            if(userNameSpan) userNameSpan.textContent = usuario.nombre;
-        }
-    } else {
-        if(navAuth) navAuth.style.display = 'flex';
-        if(navUser) navUser.style.display = 'none';
+function showFormError(form, message) {
+    let box = form.querySelector('.form-error');
+    if (!box) {
+        box = document.createElement('div');
+        box.className = 'form-error';
+        form.prepend(box);
     }
-}
-// --- LÓGICA DE SESIÓN PERSISTENTE (Pegar al final de js/auth.js) ---
-
-document.addEventListener("DOMContentLoaded", function() {
-    // 1. Revisar si hay un usuario guardado en el navegador
-    const usuarioGuardado = localStorage.getItem("usuarioLogueado"); // Asegúrate que esta clave coincida con la que usas al guardar
-
-    // Referencias a los botones del Navbar (Asegúrate de ponerle estos ID a tu HTML)
-    const btnIniciarSesion = document.getElementById("nav-login"); // El botón de "Iniciar Sesión"
-    const menuUsuario = document.getElementById("nav-user");       // El área de "Mi Cuenta / Cerrar Sesión"
-
-    if (usuarioGuardado) {
-        // SI HAY SESIÓN:
-        console.log("Usuario detectado, ajustando Navbar...");
-        if(btnIniciarSesion) btnIniciarSesion.style.display = "none"; // Oculta "Iniciar Sesión"
-        if(menuUsuario) menuUsuario.style.display = "block";          // Muestra "Mi Cuenta"
-    } else {
-        // NO HAY SESIÓN:
-        if(btnIniciarSesion) btnIniciarSesion.style.display = "block"; // Muestra "Iniciar Sesión"
-        if(menuUsuario) menuUsuario.style.display = "none";            // Oculta "Mi Cuenta"
-    }
-});
-
-// Función para Cerrar Sesión (conéctala a tu botón de salir)
-function cerrarSesion() {
-    localStorage.removeItem("usuarioLogueado");
-    window.location.href = "auth.html"; // Te regresa al login
+    box.textContent = message;
 }
