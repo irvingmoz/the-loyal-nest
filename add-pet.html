@@ -4,377 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Mascota | The Loyal Nest</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/forms-addpet.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="dashboard-rescuer.html">🏠 Mi Panel</a></li>
-                <li><a href="search.html">Buscar Mascotas</a></li>
-                <li><a href="shelters.html">Refugios</a></li>
-                <li><a href="education.html">Educación</a></li>
-                <li class="nav-user">
-                    <span>🏠 Refugio Esperanza</span>
-                    <div class="user-menu">
-                        <button class="btn-outline btn-small">👤 Mi Perfil</button>
-                        <button class="btn-outline btn-small">🚪 Cerrar Sesión</button>
-                    </div>
-                </li>
-            </ul>
-        </nav>
-    </header>
+<header class="header">
+    <nav class="nav">
+        <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+        <ul class="nav-links">
+            <li><a href="dashboard-rescatista.html">Dashboard</a></li>
+            <li class="nav-user" style="display:none; gap:8px; align-items:center;">
+                <span class="nav-user-name"></span>
+                <button class="btn-outline" data-action="logout">Cerrar sesión</button>
+            </li>
+        </ul>
+    </nav>
+</header>
 
-    <!-- Main Content -->
-    <main class="form-container">
-        <div class="container">
-            <div class="form-header">
-                <a href="dashboard-rescuer.html" class="btn-back">← Volver al Panel</a>
-                <h1>🐕 Agregar Nueva Mascota</h1>
-                <p>Completa toda la información requerida para publicar a la mascota en adopción</p>
-            </div>
+<main class="container" style="margin-top:120px; max-width:960px;">
+    <h1>Registrar mascota</h1>
+    <p>Completa la información básica y adjunta una foto. Podrás editarla desde tu panel.</p>
+    <form id="addPetForm" class="form-grid">
+        <label>Nombre<input name="name" required></label>
+        <label>Especie<select name="species"><option value="Perro">Perro</option><option value="Gato">Gato</option></select></label>
+        <label>Edad<input name="age" placeholder="2 años"></label>
+        <label>Tamaño<select name="size"><option value="Chico">Chico</option><option value="Mediano">Mediano</option><option value="Grande">Grande</option></select></label>
+        <label>Estado<select name="status"><option value="disponible">Disponible</option><option value="en_proceso">En proceso</option><option value="adoptado">Adoptado</option></select></label>
+        <label>Descripción<textarea name="description" rows="3"></textarea></label>
+        <label>Foto<input type="file" name="image" accept="image/*"></label>
+        <label>Refugio<input id="petOwner" name="shelter" placeholder="Nombre del refugio"></label>
+        <button class="btn-primary" type="submit">Guardar</button>
+        <div id="formStatus" class="muted"></div>
+    </form>
+</main>
 
-            <form class="pet-form" id="addPetForm">
-                <!-- Sección 1: Información Básica -->
-                <div class="form-section">
-                    <h2>📋 Información Básica</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="petName">Nombre de la mascota *</label>
-                            <input type="text" id="petName" name="petName" required placeholder="Ej: Max, Luna, Rocky">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="petSpecies">Especie *</label>
-                            <select id="petSpecies" name="petSpecies" required>
-                                <option value="">Seleccionar especie</option>
-                                <option value="perro">🐕 Perro</option>
-                                <option value="gato">🐈 Gato</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="petBreed">Raza o tipo *</label>
-                            <input type="text" id="petBreed" name="petBreed" required placeholder="Ej: Labrador Mix, Siamés, Mestizo">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="petAge">Edad *</label>
-                            <div class="age-input">
-                                <input type="number" id="petAge" name="petAge" required placeholder="0" min="0" max="30">
-                                <select id="petAgeUnit" name="petAgeUnit" required>
-                                    <option value="meses">Meses</option>
-                                    <option value="años">Años</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="petSex">Sexo *</label>
-                            <select id="petSex" name="petSex" required>
-                                <option value="">Seleccionar sexo</option>
-                                <option value="macho">Macho</option>
-                                <option value="hembra">Hembra</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="petSize">Tamaño *</label>
-                            <select id="petSize" name="petSize" required>
-                                <option value="">Seleccionar tamaño</option>
-                                <option value="pequeno">Pequeño (1-10 kg)</option>
-                                <option value="mediano">Mediano (11-25 kg)</option>
-                                <option value="grande">Grande (26+ kg)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="petHealthStatus">Estado de salud general *</label>
-                        <textarea id="petHealthStatus" name="petHealthStatus" required placeholder="Describe el estado de salud general de la mascota. Ej: Buen estado de salud, necesita tratamiento para..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="petHistory">Historia y background *</label>
-                        <textarea id="petHistory" name="petHistory" required placeholder="Cuenta la historia de la mascota. ¿Cómo llegó al refugio? ¿Tiene algún background especial?"></textarea>
-                    </div>
-                </div>
-
-                <!-- Sección 2: Fotos -->
-                <div class="form-section">
-                    <h2>🖼️ Fotos de la Mascota</h2>
-                    <div class="photo-upload">
-                        <div class="upload-area" id="uploadArea">
-                            <div class="upload-placeholder">
-                                <span class="upload-icon">📷</span>
-                                <p>Arrastra las fotos aquí o haz clic para seleccionar</p>
-                                <small>Mínimo 1 foto, máximo 6 fotos. Formatos: JPG, PNG</small>
-                            </div>
-                            <input type="file" id="petPhotos" name="petPhotos" multiple accept="image/*" style="display: none;">
-                        </div>
-                        <div class="photo-preview" id="photoPreview"></div>
-                    </div>
-                </div>
-
-                <!-- Sección 3: Comportamiento y Compatibilidad -->
-                <div class="form-section">
-                    <h2>😊 Comportamiento y Compatibilidad</h2>
-                    
-                    <div class="form-group">
-                        <label>Personalidad (selecciona todas las que apliquen)</label>
-                        <div class="checkbox-grid">
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="personality" value="cariñoso">
-                                <span>😊 Cariñoso</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="personality" value="jugueton">
-                                <span>🎾 Juguetón</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="personality" value="tranquilo">
-                                <span>🧘 Tranquilo</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="personality" value="activo">
-                                <span>⚡ Activo</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="personality" value="timido">
-                                <span>😔 Tímido</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="personality" value="protector">
-                                <span>🛡️ Protector</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="personality" value="independiente">
-                                <span>🐾 Independiente</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="personality" value="sociable">
-                                <span>👥 Sociable</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Compatibilidad *</label>
-                        <div class="compatibility-grid">
-                            <div class="compat-option">
-                                <label>👶 Con niños</label>
-                                <select name="kidsCompatible" required>
-                                    <option value="">Seleccionar</option>
-                                    <option value="si">✅ Sí</option>
-                                    <option value="no">❌ No</option>
-                                    <option value="supervision">⚠️ Con supervisión</option>
-                                </select>
-                            </div>
-                            <div class="compat-option">
-                                <label>🐕 Con otros perros</label>
-                                <select name="dogsCompatible" required>
-                                    <option value="">Seleccionar</option>
-                                    <option value="si">✅ Sí</option>
-                                    <option value="no">❌ No</option>
-                                    <option value="supervision">⚠️ Con supervisión</option>
-                                </select>
-                            </div>
-                            <div class="compat-option">
-                                <label>🐈 Con gatos</label>
-                                <select name="catsCompatible" required>
-                                    <option value="">Seleccionar</option>
-                                    <option value="si">✅ Sí</option>
-                                    <option value="no">❌ No</option>
-                                    <option value="supervision">⚠️ Con supervisión</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="energyLevel">Nivel de energía *</label>
-                            <select id="energyLevel" name="energyLevel" required>
-                                <option value="">Seleccionar nivel</option>
-                                <option value="bajo">🔋 Bajo (poco activo)</option>
-                                <option value="medio">⚡ Medio (activo normal)</option>
-                                <option value="alto">🔥 Alto (muy activo)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="trainingNeeded">Entrenamiento necesario *</label>
-                            <select id="trainingNeeded" name="trainingNeeded" required>
-                                <option value="">Seleccionar</option>
-                                <option value="ninguno">✅ Ninguno</option>
-                                <option value="basico">📚 Básico (house training)</option>
-                                <option value="intermedio">🎓 Intermedio (obediencia)</option>
-                                <option value="avanzado">🏆 Avanzado (especializado)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="apartmentAdapt">Adaptación a apartamento *</label>
-                            <select id="apartmentAdapt" name="apartmentAdapt" required>
-                                <option value="">Seleccionar</option>
-                                <option value="excelente">🏢 Excelente</option>
-                                <option value="buena">🏠 Buena</option>
-                                <option value="regular">⚠️ Regular (necesita espacio)</option>
-                                <option value="mala">❌ No recomendable</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sección 4: Historial Médico -->
-                <div class="form-section">
-                    <h2>🏥 Historial Médico</h2>
-                    
-                    <!-- Vacunas -->
-                    <div class="medical-section">
-                        <h3>💉 Vacunas</h3>
-                        <div class="dynamic-list" id="vaccinesList">
-                            <div class="list-item template">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <input type="text" placeholder="Tipo de vacuna (Ej: Rabia, Múltiple)" name="vaccineType[]">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="date" name="vaccineDate[]">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="date" name="vaccineNextDate[]" placeholder="Próxima dosis">
-                                    </div>
-                                    <button type="button" class="btn-remove">🗑️</button>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-add" onclick="addVaccine()">+ Agregar Vacuna</button>
-                    </div>
-
-                    <!-- Desparasitaciones -->
-                    <div class="medical-section">
-                        <h3>🐛 Desparasitaciones</h3>
-                        <div class="dynamic-list" id="dewormingsList">
-                            <div class="list-item template">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <input type="text" placeholder="Tipo (Ej: Interna, Externa)" name="dewormingType[]">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="date" name="dewormingDate[]">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" placeholder="Producto usado" name="dewormingProduct[]">
-                                    </div>
-                                    <button type="button" class="btn-remove">🗑️</button>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-add" onclick="addDeworming()">+ Agregar Desparasitación</button>
-                    </div>
-
-                    <!-- Tratamientos -->
-                    <div class="medical-section">
-                        <h3>🩺 Tratamientos y Condiciones</h3>
-                        <div class="dynamic-list" id="treatmentsList">
-                            <div class="list-item template">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <input type="text" placeholder="Descripción del tratamiento" name="treatmentDesc[]">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="date" name="treatmentDate[]">
-                                    </div>
-                                    <div class="form-group">
-                                        <select name="treatmentStatus[]">
-                                            <option value="completado">Completado</option>
-                                            <option value="en-proceso">En proceso</option>
-                                            <option value="pendiente">Pendiente</option>
-                                        </select>
-                                    </div>
-                                    <button type="button" class="btn-remove">🗑️</button>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-add" onclick="addTreatment()">+ Agregar Tratamiento</button>
-                    </div>
-
-                    <!-- Comprobantes -->
-                    <div class="form-group">
-                        <label for="medicalProof">Comprobantes médicos (PDF o imágenes)</label>
-                        <input type="file" id="medicalProof" name="medicalProof" multiple accept=".pdf,.jpg,.jpeg,.png">
-                        <small>Puedes subir archivos PDF o imágenes de comprobantes médicos</small>
-                    </div>
-
-                    <!-- Recordatorios -->
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="enableReminders" checked>
-                            <span>🔔 Activar recordatorios automáticos para próximas vacunas y tratamientos</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Sección 5: Estado de Adopción -->
-                <div class="form-section">
-                    <h2>📊 Estado de Adopción</h2>
-                    <div class="form-group">
-                        <label for="adoptionStatus">Estado actual *</label>
-                        <select id="adoptionStatus" name="adoptionStatus" required>
-                            <option value="disponible">✅ Disponible</option>
-                            <option value="en-proceso">🔄 En proceso de adopción</option>
-                            <option value="adoptado">🏠 Adoptado</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Botones de acción -->
-                <div class="form-actions">
-                    <button type="button" class="btn-outline btn-large" onclick="saveDraft()">
-                        💾 Guardar borrador
-                    </button>
-                    <button type="submit" class="btn-primary btn-large">
-                        🐕 Publicar Mascota
-                    </button>
-                </div>
-            </form>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>🐕 The Loyal Nest</h3>
-                    <p>Conectando corazones con patitas desde 2024</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Enlaces Rápidos</h4>
-                    <ul>
-                        <li><a href="search.html">Buscar Mascotas</a></li>
-                        <li><a href="shelters.html">Refugios</a></li>
-                        <li><a href="education.html">Educación</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 The Loyal Nest. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="js/main.js"></script>
-    <script src="js/forms.js"></script>
-    <script src="js/auth.js"></script>
+<script src="js/session.js"></script>
+<script src="js/pets.js"></script>
+<script>
+    requireAuth(['rescatista', 'rescuer']);
+</script>
 </body>
 </html>
-
-

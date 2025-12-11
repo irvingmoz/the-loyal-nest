@@ -3,203 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitudes de Adopción | The Loyal Nest</title>
+    <title>Solicitudes de adopción | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/adoption-requests.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="dashboard-rescuer.html">🏠 Mi Panel</a></li>
-                <li><a href="adoption-requests.html" class="active">📋 Solicitudes</a></li>
-               
-                <li><a href="shelters-map.html">Refugios</a></li>
-                <li class="nav-user">
-                    <span class="user-info">
-                        <strong>🏠 Refugio Esperanza</strong>
-                        <small>Rescatista</small>
-                    </span>
-                    <div class="user-menu">
-                        <a href="profile-rescuer.html" class="menu-item">👤 Mi Perfil</a>
-                        <a href="settings.html" class="menu-item">⚙️ Configuración</a>
-                        <button class="menu-item logout">🚪 Cerrar Sesión</button>
-                    </div>
-                </li>
-            </ul>
-        </nav>
+<header class="header">
+    <nav class="nav">
+        <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+        <ul class="nav-links">
+            <li><a href="dashboard-adoptante.html">Dashboard</a></li>
+            <li class="nav-user" style="display:none; gap:8px; align-items:center;">
+                <span class="nav-user-name"></span>
+                <button class="btn-outline" data-action="logout">Salir</button>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main class="container" style="margin-top:110px; max-width:1000px;">
+    <header class="panel__header">
+        <div>
+            <p class="muted">Solicitudes</p>
+            <h1>Mis solicitudes de adopción</h1>
+        </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="adoption-requests">
-        <div class="container">
-            <!-- Header -->
-            <div class="requests-header">
-                <div class="header-content">
-                    <h1>📋 Solicitudes de Adopción</h1>
-                    <p>Gestiona y revisa todas las solicitudes de adopción de tus mascotas</p>
-                </div>
-                <div class="header-stats">
-                    <div class="stat-badge new">
-                        <span class="stat-number" id="pendingCount">8</span>
-                        <span class="stat-label">Pendientes</span>
-                    </div>
-                    <div class="stat-badge">
-                        <span class="stat-number" id="totalCount">42</span>
-                        <span class="stat-label">Total</span>
-                    </div>
-                </div>
-            </div>
+    <section class="panel">
+        <div id="adoptionRequests" class="cards-grid"></div>
+    </section>
+</main>
 
-            <!-- Filtros y Búsqueda -->
-            <div class="requests-filters">
-                <div class="filter-group">
-                    <label for="statusFilter">Filtrar por estado:</label>
-                    <select id="statusFilter">
-                        <option value="all">Todas las solicitudes</option>
-                        <option value="pending">⏳ Pendientes</option>
-                        <option value="approved">✅ Aprobadas</option>
-                        <option value="rejected">❌ Rechazadas</option>
-                        <option value="interview">🗣️ En entrevista</option>
-                        <option value="completed">🏠 Completadas</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="petFilter">Filtrar por mascota:</label>
-                    <select id="petFilter">
-                        <option value="all">Todas las mascotas</option>
-                        <option value="max">🐕 Max</option>
-                        <option value="luna">🐈 Luna</option>
-                        <option value="rocky">🐕 Rocky</option>
-                        <option value="bella">🐈 Bella</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="dateFilter">Ordenar por:</label>
-                    <select id="dateFilter">
-                        <option value="newest">Más recientes primero</option>
-                        <option value="oldest">Más antiguas primero</option>
-                    </select>
-                </div>
-
-                <div class="search-group">
-                    <input type="text" id="searchRequests" placeholder="🔍 Buscar por nombre de adoptante...">
-                </div>
-            </div>
-
-            <!-- Lista de Solicitudes -->
-            <div class="requests-container">
-                <!-- Columna: Pendientes -->
-                <div class="requests-column">
-                    <div class="column-header">
-                        <h3>⏳ Pendientes</h3>
-                        <span class="column-count" id="pendingColumnCount">5</span>
-                    </div>
-                    <div class="requests-list" id="pendingRequests">
-                        <!-- Solicitudes pendientes se cargan aquí -->
-                    </div>
-                </div>
-
-                <!-- Columna: En Proceso -->
-                <div class="requests-column">
-                    <div class="column-header">
-                        <h3>🗣️ En Entrevista</h3>
-                        <span class="column-count" id="interviewColumnCount">3</span>
-                    </div>
-                    <div class="requests-list" id="interviewRequests">
-                        <!-- Solicitudes en entrevista se cargan aquí -->
-                    </div>
-                </div>
-
-                <!-- Columna: Aprobadas -->
-                <div class="requests-column">
-                    <div class="column-header">
-                        <h3>✅ Aprobadas</h3>
-                        <span class="column-count" id="approvedColumnCount">8</span>
-                    </div>
-                    <div class="requests-list" id="approvedRequests">
-                        <!-- Solicitudes aprobadas se cargan aquí -->
-                    </div>
-                </div>
-
-                <!-- Columna: Completadas -->
-                <div class="requests-column">
-                    <div class="column-header">
-                        <h3>🏠 Completadas</h3>
-                        <span class="column-count" id="completedColumnCount">12</span>
-                    </div>
-                    <div class="requests-list" id="completedRequests">
-                        <!-- Adopciones completadas se cargan aquí -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Empty State -->
-            <div class="empty-state" id="emptyState" style="display: none;">
-                <div class="empty-icon">📋</div>
-                <h3>No hay solicitudes</h3>
-                <p>No se encontraron solicitudes que coincidan con los filtros aplicados.</p>
-                <button class="btn-primary" onclick="clearFilters()">Limpiar filtros</button>
-            </div>
-        </div>
-    </main>
-
-    <!-- Modal para revisar solicitud -->
-    <div class="modal" id="requestModal">
-        <div class="modal-content large">
-            <span class="close">&times;</span>
-            <div class="modal-header">
-                <h2>📋 Revisar Solicitud de Adopción</h2>
-                <div class="request-meta" id="requestMeta">
-                    <!-- Meta información se carga aquí -->
-                </div>
-            </div>
-            <div class="modal-body" id="requestDetails">
-                <!-- Detalles de la solicitud se cargan aquí -->
-            </div>
-            <div class="modal-actions" id="modalActions">
-                <!-- Acciones se cargan aquí -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>🐕 The Loyal Nest</h3>
-                    <p>Conectando corazones con patitas desde 2024</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Enlaces Rápidos</h4>
-                    <ul>
-                        <li><a href="search.html">Buscar Mascotas</a></li>
-                        <li><a href="shelters.html">Refugios</a></li>
-                        <li><a href="education.html">Educación</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 The Loyal Nest. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="js/script.js"></script>
-    <script src="js/session-manager.js"></script>
-    <script src="js/adoption-requests.js"></script>
-    <script src="js/auth.js"></script>
+<script src="js/session.js"></script>
+<script src="js/adoptions.js"></script>
+<script>
+    requireAuth(['adoptante', 'rescatista', 'rescuer', 'administrador']);
+</script>
 </body>
 </html>
-</body>
-</html>
-
-
