@@ -102,7 +102,8 @@ async function deletePet(id) {
     }
 }
 
-async function loadPetProfile() {
+// 🔁 RENOMBRADAS para no chocar con pet-profile.js
+async function loadPetProfileCard() {
     const params = new URLSearchParams(window.location.search);
     const petId = params.get('id');
     if (!petId) return;
@@ -110,13 +111,13 @@ async function loadPetProfile() {
         const res = await apiFetch(`/pets/${petId}`);
         if (!res.ok) throw new Error('No se pudo cargar la mascota');
         const pet = await res.json();
-        renderPetProfile(pet);
+        renderPetProfileCard(pet);
     } catch (error) {
         console.error(error);
     }
 }
 
-function renderPetProfile(pet) {
+function renderPetProfileCard(pet) {
     const card = document.getElementById('petProfileCard');
     if (!card) return;
     card.querySelector('[data-field="name"]').textContent = pet.name;
@@ -128,4 +129,5 @@ function renderPetProfile(pet) {
     if (status) status.textContent = pet.status || 'disponible';
 }
 
-document.addEventListener('DOMContentLoaded', loadPetProfile);
+// Sólo se ejecuta en páginas donde exista #petProfileCard
+document.addEventListener('DOMContentLoaded', loadPetProfileCard);
