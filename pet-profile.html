@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de mascota | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
-    <!-- Si el CSS de pet profile está en un archivo separado, asegúrate de tener algo como:
-    <link rel="stylesheet" href="css/pet-profile.css">
-    -->
 </head>
+
 <body>
 <header class="header">
     <nav class="nav">
@@ -23,229 +21,94 @@
     </nav>
 </header>
 
-<!-- Migas de pan -->
-<section class="breadcrumb">
-    <div class="container">
-        <a href="search-pets.html" class="breadcrumb-link">Buscar mascotas</a>
-        <span class="breadcrumb-separator">/</span>
-        <span class="breadcrumb-current" id="breadcrumbName">Perfil de mascota</span>
-    </div>
-</section>
+<main class="container" style="margin-top:110px; max-width:1100px;">
 
-<main class="container" style="max-width: 1100px; margin-top: 20px; margin-bottom: 4rem;">
-    <!-- Todo el perfil vive dentro de petProfileCard para que pets.js lo pueda manipular -->
-    <section id="petProfileCard">
-        <!-- Encabezado del perfil -->
-        <header class="profile-header">
-            <button class="btn-back" type="button" onclick="history.back()">
-                ← Volver
-            </button>
-
-            <h1 class="pet-title">
-                <span data-field="name">Mascota</span>
-                <!-- badge de estado, pets.js actualiza el texto -->
-                <span class="pet-badge available" data-field="status">disponible</span>
-            </h1>
-            <p class="muted" data-field="meta">Especie · Tamaño · Edad</p>
+    <!-- SECCIÓN PERFIL -->
+    <section class="panel" id="petProfileCard">
+        <header class="panel__header">
+            <div>
+                <p class="muted">Ficha de mascota</p>
+                <h1 data-field="name">Mascota</h1>
+                <p class="muted" data-field="meta"></p>
+            </div>
+            <span class="status" data-field="status">disponible</span>
         </header>
 
-        <!-- Contenido principal en dos columnas -->
-        <section class="profile-content">
-            <!-- Columna izquierda: galería + descripción -->
-            <div>
-                <!-- Galería -->
-                <div class="pet-gallery">
-                    <div class="gallery-main">
-                        <img
-                            id="mainImage"
-                            class="main-image"
-                            src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=300&fit=crop"
-                            alt="Mascota en adopción"
-                        >
-                    </div>
-                    <div class="gallery-thumbs" id="galleryThumbs">
-                        <!-- Miniaturas de ejemplo (puedes luego hacerlas dinámicas) -->
-                        <div class="thumb active">
-                            <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=100&h=75&fit=crop" alt="Foto 1">
-                        </div>
-                        <div class="thumb">
-                            <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=100&h=75&fit=crop" alt="Foto 2">
-                        </div>
-                        <div class="thumb">
-                            <img src="https://images.unsplash.com/photo-1560743641-3914f2c45636?w=100&h=75&fit=crop" alt="Foto 3">
-                        </div>
-                        <div class="thumb">
-                            <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=100&h=75&fit=crop" alt="Foto 4">
-                        </div>
-                    </div>
-                </div>
+        <p data-field="description">Descripción pendiente</p>
+        <p><strong>Refugio / contacto:</strong> <span data-field="owner">-</span></p>
 
-                <!-- Descripción -->
-                <article class="description-card">
-                    <h3>📝 Sobre <span data-field="name">Mascota</span></h3>
-                    <p data-field="description">Descripción pendiente</p>
-                </article>
-            </div>
-
-            <!-- Columna derecha: info básica, refugio, CTA adopción -->
-            <div>
-                <!-- Información básica -->
-                <article class="basic-info-card">
-                    <h3>💡 Información básica</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">Especie</span>
-                            <span class="info-value" data-field="species">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Raza</span>
-                            <span class="info-value" data-field="breed">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Edad</span>
-                            <span class="info-value" data-field="age">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Sexo</span>
-                            <span class="info-value" data-field="sex">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Tamaño</span>
-                            <span class="info-value" data-field="size">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Peso</span>
-                            <span class="info-value" data-field="weight">-</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Refugio / contacto -->
-                <article class="shelter-card">
-                    <h3>🏠 Refugio / contacto</h3>
-                    <div class="shelter-contact">
-                        <p><strong>Refugio / responsable:</strong> <span data-field="owner">-</span></p>
-                        <p class="muted" style="margin-top: 0.25rem;">
-                            La información de contacto detallada se muestra al rescatista desde el panel de administración.
-                        </p>
-                    </div>
-                </article>
-
-                <!-- CTA adopción -->
-                <article class="adoption-cta">
-                    <h3 id="adoptionPrompt">¿Listo para darle un hogar a esta mascota?</h3>
-                    <p>
-                        <span id="adoptionRequestsCount">Timeline de solicitudes disponible más abajo.</span>
-                    </p>
-                    <div class="cta-actions">
-                        <button
-                            class="btn-light"
-                            type="button"
-                            data-hide-role="rescatista,rescuer"
-                            onclick="document.getElementById('adoptionModal').showModal()"
-                        >
-                            Solicitar adopción
-                        </button>
-                        <a href="search-pets.html" class="btn-outline">Seguir buscando</a>
-                    </div>
-                </article>
-            </div>
-        </section>
-
-        <!-- Historial médico (usa IDs que medical.js necesita) -->
-        <section class="medical-card">
-            <h3>📋 Historial médico</h3>
-            <div class="table-wrapper">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Tipo</th>
-                            <th>Fecha</th>
-                            <th>Notas</th>
-                            <th>Próxima</th>
-                        </tr>
-                    </thead>
-                    <tbody id="medicalHistory">
-                        <!-- medical.js rellena esto -->
-                    </tbody>
-                </table>
-            </div>
-
-            <form
-                id="medicalForm"
-                class="form-grid"
-                data-require-role="rescatista,rescuer"
-            >
-                <label>
-                    Tipo
-                    <select name="type">
-                        <option>Vacuna</option>
-                        <option>Desparasitación</option>
-                        <option>Cita</option>
-                    </select>
-                </label>
-                <label>
-                    Fecha
-                    <input type="date" name="date" required>
-                </label>
-                <label>
-                    Notas
-                    <textarea name="notes"></textarea>
-                </label>
-                <label>
-                    Próxima fecha
-                    <input type="date" name="nextDate">
-                </label>
-                <button class="btn-outline" type="submit">Agregar entrada</button>
-            </form>
-        </section>
-
-        <!-- Timeline de solicitudes (lo usa js/adoptions.js) -->
-        <section class="basic-info-card">
-            <h3>📨 Timeline de solicitudes</h3>
-            <div id="adoptionRequests" class="cards-grid">
-                <!-- adoptions.js renderiza aquí -->
-            </div>
-        </section>
-
-        <!-- Mascotas relacionadas (opcional, para futuro) -->
-        <section class="related-pets">
-            <h2>Mascotas relacionadas</h2>
-            <div id="relatedPetsGrid" class="cards-grid">
-                <!-- Aquí podrías renderizar otras mascotas similares si después lo conectas -->
-            </div>
-        </section>
+        <button class="btn-primary" data-hide-role="rescatista,rescuer"
+            onclick="document.getElementById('adoptionModal').showModal()">
+            Solicitar adopción
+        </button>
     </section>
+
+    <!-- SECCIÓN HISTORIAL MÉDICO -->
+    <section class="panel">
+        <header class="panel__header"><h2>Historial médico</h2></header>
+
+        <table class="table">
+            <thead>
+                <tr><th>Tipo</th><th>Fecha</th><th>Notas</th><th>Próxima</th></tr>
+            </thead>
+            <tbody id="medicalHistory"></tbody>
+        </table>
+
+        <!-- Esto solo lo ven roles de refugio -->
+        <form id="medicalForm" class="form-grid" data-require-role="rescatista,rescuer">
+            <label>Tipo
+                <select name="type">
+                    <option>Vacuna</option>
+                    <option>Desparasitación</option>
+                    <option>Cita</option>
+                </select>
+            </label>
+
+            <label>Fecha <input type="date" name="date" required></label>
+            <label>Notas <textarea name="notes"></textarea></label>
+            <label>Próxima fecha <input type="date" name="nextDate"></label>
+
+            <button class="btn-outline" type="submit">Agregar entrada</button>
+        </form>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="panel">
+        <header class="panel__header"><h2>Timeline de solicitudes</h2></header>
+        <div id="adoptionRequests" class="cards-grid"></div>
+    </section>
+
 </main>
 
-<!-- Modal de adopción (lo usa js/adoptions.js) -->
+<!-- MODAL -->
 <dialog id="adoptionModal">
     <form id="adoptionRequestForm" class="form-grid" method="dialog">
         <h3>Solicitar adopción</h3>
-        <label>
-            Mensaje
-            <textarea name="message" required placeholder="Cuéntanos por qué quieres adoptarla y cómo sería su vida contigo."></textarea>
+
+        <label>Mensaje
+            <textarea name="message" required></textarea>
         </label>
+
         <input type="hidden" name="petId" value="">
-        <button class="btn-primary" type="submit">Enviar solicitud</button>
+        <button class="btn-primary" type="submit">Enviar</button>
+
         <div id="adoptionStatus" class="muted"></div>
     </form>
-    <button class="btn-text" type="button" onclick="document.getElementById('adoptionModal').close()">
+
+    <button class="btn-text" onclick="document.getElementById('adoptionModal').close()">
         Cerrar
     </button>
 </dialog>
 
+<!-- SCRIPTS CORRECTOS -->
 <script src="js/session.js"></script>
-<script src="js/pets.js"></script>
-<script src="js/medical.js"></script>
-script src="js/adoptions.js"></script>
+<script src="js/pet-profile.js"></script>  <!-- ESTE ES EL CORRECTO -->
+<script src="js/adoptions.js"></script>     <!-- Opcional -->
 <script>
-    // Asignar el petId al hidden del formulario de adopción
-    const petIdParam = new URLSearchParams(window.location.search).get('id');
+    const idParam = new URLSearchParams(window.location.search).get('id');
     const requestForm = document.getElementById('adoptionRequestForm');
-    if (requestForm && petIdParam) {
-        requestForm.petId.value = petIdParam;
-    }
+    if (requestForm && idParam) requestForm.petId.value = idParam;
 </script>
+
 </body>
 </html>
