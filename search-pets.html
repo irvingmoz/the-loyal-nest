@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- ESTILOS VISUALES (Tema Naranja) --- */
+        /* --- ESTILOS GENERALES --- */
         :root {
             --primary: #e67e22; /* NARANJA */
             --primary-dark: #d35400;
@@ -19,20 +19,81 @@
 
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--light); color: #333; }
         
-        /* Navbar */
-        nav { background: var(--white); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 10px; }
-        .nav-links { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--secondary); font-weight: 500; }
-        .btn-outline { border: 2px solid var(--primary); color: var(--primary); padding: 5px 15px; border-radius: 20px; background: none; cursor: pointer; font-weight: bold; }
-        .btn-outline:hover { background: var(--primary); color: white; }
+        /* --- NAVBAR (Igual a Refugios) --- */
+        nav { 
+            background: var(--white); 
+            padding: 1rem 2rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: var(--shadow); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+        }
 
-        /* Hero / Cabecera */
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            color: var(--primary); 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+
+        /* Enlaces del Centro */
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+
+        /* Clase para resaltar la página actual */
+        .nav-menu a.active {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Botones de Sesión (Derecha) */
+        .nav-auth {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-outline { 
+            border: 2px solid var(--primary); 
+            color: var(--primary); 
+            padding: 8px 20px; 
+            border-radius: 20px; 
+            background: none; 
+            cursor: pointer; 
+            font-weight: bold; 
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline:hover { 
+            background: var(--primary); 
+            color: white; 
+        }
+
+        /* --- HERO & FILTROS --- */
         .hero { text-align: center; padding: 60px 20px; background: white; margin-bottom: 20px; }
         .hero h1 { font-size: 2.5rem; color: var(--secondary); margin-bottom: 10px; }
         .hero p { color: #7f8c8d; font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px; }
 
-        /* Barra de Filtros (Estilo "Top Bar") */
         .filters-container {
             max-width: 1000px;
             margin: 0 auto 40px;
@@ -55,7 +116,6 @@
             outline: none;
         }
         
-        /* Botones de Especie (Pills) */
         .species-pills { display: flex; gap: 10px; }
         .pill {
             padding: 8px 20px;
@@ -75,7 +135,7 @@
             transform: scale(1.05);
         }
 
-        /* Grid de Mascotas */
+        /* --- GRID & CARDS --- */
         .pets-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -85,7 +145,6 @@
             padding: 0 20px;
         }
 
-        /* Tarjeta de Mascota */
         .pet-card {
             background: white;
             border-radius: 15px;
@@ -127,20 +186,34 @@
         }
         .btn-view:hover { background: var(--primary-dark); }
 
+        /* Responsivo para el Navbar */
+        @media (max-width: 768px) {
+            nav { flex-direction: column; gap: 15px; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; }
+        }
+
     </style>
 </head>
 <body>
 
     <nav>
         <a href="index.html" class="logo"><i class="fas fa-paw"></i> The Loyal Nest</a>
-        <ul class="nav-links">
-            <li><a href="education.html">Recursos</a></li>
-            <li id="nav-login"><a href="auth.html">Iniciar Sesión</a></li>
-            <li id="nav-user" style="display:none; gap:10px; align-items:center;">
-                <span>Mi Cuenta</span>
-                <button class="btn-outline" onclick="cerrarSesion()">Salir</button>
-            </li>
-        </ul>
+        
+        <div class="nav-menu">
+            <a href="index.html">Inicio</a>
+            <a href="search-pets.html" class="active">Buscar Mascotas</a>
+            <a href="shelters-map.html">Refugios</a>
+            <a href="education.html">Educación</a>
+        </div>
+
+        <div class="nav-auth">
+            <a href="auth.html" id="nav-login" class="btn-outline">Iniciar Sesión</a>
+            
+            <div id="nav-user" style="display:none; gap:10px; align-items:center;">
+                <span style="font-weight: 500;">Mi Cuenta</span>
+                <button class="btn-outline" onclick="cerrarSesion()" style="border: 1px solid #ccc; color: #555;">Salir</button>
+            </div>
+        </div>
     </nav>
 
     <section class="hero">
@@ -174,7 +247,7 @@
 
     <script src="js/auth.js"></script>
     <script>
-        // --- BASE DE DATOS DE MASCOTAS (Más Gatos Agregados) ---
+        // DATOS DE PRUEBA
         const petsData = [
             // PERROS
             { id: 1, name: "Bruno", species: "perro", breed: "Golden Retriever", size: "grande", age: "2 años", tags: ["Juguetón", "Noble"], img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&q=80" },
@@ -183,7 +256,7 @@
             { id: 4, name: "Coco", species: "perro", breed: "Poodle", size: "pequeño", age: "2 años", tags: ["Cariñoso", "Listo"], img: "https://images.unsplash.com/photo-1591769225440-811ad7d6eca6?w=500&q=80" },
             { id: 5, name: "Lola", species: "perro", breed: "Chihuahua", size: "pequeño", age: "5 meses", tags: ["Nerviosa", "Tierna"], img: "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=500&q=80" },
             
-            // GATOS (¡NUEVOS!)
+            // GATOS
             { id: 6, name: "Mila", species: "gato", breed: "Siamés", size: "pequeño", age: "1 año", tags: ["Elegante", "Vocal"], img: "https://images.unsplash.com/photo-1513245543132-31f507417b26?w=500&q=80" },
             { id: 7, name: "Simba", species: "gato", breed: "Persa", size: "mediano", age: "3 años", tags: ["Peludo", "Rey"], img: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=500&q=80" },
             { id: 8, name: "Luna", species: "gato", breed: "Negro Mestizo", size: "pequeño", age: "2 años", tags: ["Misteriosa", "Ágil"], img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500&q=80" },
@@ -193,7 +266,7 @@
             { id: 12, name: "Griselo", species: "gato", breed: "Azul Ruso", size: "grande", age: "5 años", tags: ["Independiente", "Fuerte"], img: "https://images.unsplash.com/photo-1511044568932-338cba0fb803?w=500&q=80" }
         ];
 
-        // --- LÓGICA DE FILTROS ---
+        // LÓGICA DE FILTROS
         const container = document.getElementById('petsContainer');
         let currentSpecies = "";
         let currentSize = "";
@@ -225,7 +298,6 @@
                             <h3 class="pet-name">${pet.name}</h3>
                             <p class="pet-breed">${pet.breed} • ${pet.age}</p>
                             <div class="tags">${tagsHTML}</div>
-                            
                             <a href="pet-profile.html?id=${pet.id}" class="btn-view">Ver Perfil</a>
                         </div>
                     </article>
@@ -234,7 +306,7 @@
             });
         }
 
-        // Listeners
+        // LISTENERS
         document.querySelectorAll('.pill').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
@@ -254,7 +326,7 @@
             renderPets();
         });
 
-        // Inicio
+        // INICIALIZAR
         renderPets();
     </script>
 </body>
