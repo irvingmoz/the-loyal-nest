@@ -9,7 +9,7 @@
     <style>
         /* --- ESTILOS GENERALES --- */
         :root {
-            --primary: #e67e22; /* Naranja Principal */
+            --primary: #e67e22;
             --secondary: #2c3e50;
             --text-dark: #333;
             --bg-light: #f9f9f9;
@@ -17,59 +17,75 @@
 
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--bg-light); color: var(--text-dark); }
         
-        /* --- NAVBAR --- */
-        nav { 
-            background: #ffffff; 
-            padding: 15px 40px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            box-shadow: none; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
+        /* --- HEADER & NAV (IGUAL AL MAPA) --- */
+        .header {
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        /* LOGO MODIFICADO (Con subrayado y emoji) */
-        .logo { 
-            font-size: 1.8rem; 
-            font-weight: 800; 
-            color: var(--primary);      /* Color Naranja */
-            text-decoration: underline; /* SUBRAYADO */
-            display: flex; align-items: center; gap: 10px; 
+        .nav {
+            display: flex;
+            justify-content: space-between; /* Logo a un lado, Links al otro */
+            align-items: center;
+            padding: 15px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .nav-center { display: flex; gap: 35px; align-items: center; }
-        
-        .nav-link {
-            text-decoration: none; 
-            color: #555; 
-            font-weight: 600; 
-            font-size: 1.15rem; 
+        /* Logo */
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: underline; /* Subrayado como pediste */
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* Lista de Links (Alineada a la derecha) */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 600;
+            font-size: 1.05rem;
             transition: color 0.2s;
         }
-        .nav-link:hover { color: var(--primary); }
-        .nav-link.active { color: var(--primary); font-weight: 700; }
 
-        /* BOTÓN SESIÓN (Estilo Fantasma) */
-        .btn-login {
-            text-decoration: none; 
-            padding: 10px 28px; 
-            background: transparent; 
-            border: 2px solid #ccc; /* Borde gris inicial */
-            color: #777;            /* Texto gris inicial */
-            border-radius: 50px;
-            font-size: 1.05rem; 
-            font-weight: 700; 
-            transition: all 0.3s ease; 
-            cursor: pointer;
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a.active { color: var(--primary); font-weight: 700; }
+
+        /* Estilo específico para el Auth (Botón) */
+        .nav-auth {
+            margin-left: 15px; /* Un poco de separación extra */
         }
-        
-        .btn-login:hover {
-            border-color: var(--primary); /* Borde Naranja */
-            color: var(--primary);        /* Texto Naranja */
-            background: transparent;      /* Fondo transparente */
-            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.15);
+
+        /* Botón Fantasma (Gris -> Naranja) */
+        .btn-outline {
+            padding: 8px 24px;
+            background: transparent;
+            border: 2px solid #ccc; /* Borde gris */
+            color: #666;            /* Texto gris */
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.2);
         }
 
         /* --- HERO & FILTROS --- */
@@ -137,33 +153,37 @@
         .btn-action:hover { background: #219150; }
 
         @media (max-width: 900px) {
-            nav { flex-direction: column; gap: 20px; padding: 25px; }
-            .nav-center { flex-wrap: wrap; justify-content: center; gap: 20px; }
-            .hero h1 { font-size: 2rem; }
+            .nav { flex-direction: column; gap: 20px; }
+            .nav-links { flex-direction: column; gap: 15px; width: 100%; }
+            .nav-auth { margin-left: 0; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-        
-        <div class="nav-center">
-            <a href="index.html" class="nav-link">Inicio</a>
-            <a href="search-pets.html" class="nav-link active">Buscar Mascotas</a>
-            <a href="shelters-map.html" class="nav-link">Refugios</a>
-            <a href="education.html" class="nav-link"><i class="fas fa-book-open" style="font-size:1rem;"></i> Educación</a>
-        </div>
-
-        <div id="auth-section">
-            <a href="auth.html" id="nav-login" class="btn-login">Iniciar Sesión</a>
-            
-            <div id="nav-user" style="display:none; gap:10px; align-items:center;">
-                <span style="font-weight:700; color:#555; font-size:1.1rem;">Mi Cuenta</span>
-                <button class="btn-login" onclick="cerrarSesion()">Salir</button>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
             </div>
-        </div>
-    </nav>
+            
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="search-pets.html" class="active">Buscar Mascotas</a></li>
+                <li><a href="shelters-map.html">Refugios</a></li>
+                <li><a href="education.html">Educación</a></li>
+                
+                <li class="nav-auth">
+                    <a href="auth.html" id="nav-login" class="btn-outline">Iniciar Sesión</a>
+                    
+                    <div id="nav-user" style="display:none; gap:10px; align-items:center;">
+                        <span style="font-weight:700; color:#555;">Mi Cuenta</span>
+                        <button class="btn-outline" onclick="cerrarSesion()" style="border:1px solid #ccc; font-size:0.9rem;">Salir</button>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
 
     <section class="hero">
         <h1>Encuentra a tu compañero ideal <i class="fas fa-paw" style="color:#555; font-size:2rem;"></i></h1>
@@ -225,7 +245,6 @@
 
             filtered.forEach(pet => {
                 const tagsHTML = pet.tags.map(tag => `<span class="tag"><i class="fas fa-tag" style="font-size:0.8rem;"></i> ${tag}</span>`).join('');
-                
                 const card = `
                     <article class="pet-card">
                         <div class="pet-img-container">
