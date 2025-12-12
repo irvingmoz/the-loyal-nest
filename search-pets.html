@@ -18,33 +18,32 @@
             --bg-light: #f9f9f9;
         }
 
-        /* HERO (El cuadro principal actualizado para ser más chico) */
+        /* HERO UPDATE: Limpio y sin extras */
         .hero {
             text-align: center;
-            padding: 30px 20px; /* Padding reducido (antes 60px) */
-            background: transparent; /* Fondo transparente para que se vea el del container */
+            padding: 30px 20px;
+            background: transparent;
             margin-bottom: 20px;
         }
 
-        /* NUEVO: Contenedor interno para limitar el ancho y dar estilo de cuadro */
         .hero-container {
-            max-width: 900px; /* Ancho máximo restringido */
-            margin: 0 auto;   /* Centrado horizontalmente */
-            background: #fff; /* Fondo blanco del cuadro */
-            padding: 40px;    /* Espacio interno */
-            border-radius: 24px; /* Bordes redondeados */
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06); /* Sombra suave */
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 40px;
-            text-align: left; /* Texto alineado a la izquierda dentro del cuadro */
+            text-align: left;
         }
 
         .hero-content { flex: 1; }
 
         .hero h1 {
-            font-size: 2.2rem; /* Un poco más pequeño */
+            font-size: 2.2rem;
             color: #2c3e50;
             margin-bottom: 15px;
             font-weight: 800;
@@ -57,11 +56,11 @@
             margin-bottom: 25px;
         }
 
-        /* Ajuste para la imagen del hero */
         .hero-image-container {
             flex: 1;
             max-width: 400px;
             position: relative;
+            /* Se quitó el badge flotante aquí */
         }
         
         .hero-image {
@@ -71,30 +70,15 @@
             object-fit: cover;
         }
         
-        .floating-badge {
-            position: absolute;
-            bottom: 20px;
-            left: -20px;
-            background: #27ae60;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-
-        /* Botones del Hero */
-        .hero-buttons {
-            display: flex;
-            gap: 15px;
-        }
-        .btn-primary { background: var(--primary); color: white; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: 600; }
-        .btn-secondary { background: #eee; color: #333; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: 600; }
+        /* Botón único del Hero */
+        .hero-buttons { display: flex; }
+        .btn-primary { background: var(--primary); color: white; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: 700; display: inline-block; }
+        .btn-primary:hover { opacity: 0.9; }
 
 
         /* FILTROS */
         .filters-container {
-            max-width: 950px; margin: 30px auto; /* Margen superior ajustado */
+            max-width: 950px; margin: 30px auto;
             display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;
         }
 
@@ -119,10 +103,14 @@
         .search-wrapper i { position: absolute; left: 15px; color: #aaa; font-size: 1rem; }
         .modern-input { padding-left: 40px; width: 220px; }
 
-        /* GRID RESULTADOS */
+        /* --- GRID Y FICHAS MÁS PEQUEÑAS --- */
         .pets-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px; max-width: 1200px; margin: 40px auto; padding: 0 20px;
+            display: grid;
+            /* CAMBIO: Ancho mínimo reducido a 240px para que sean más chicas */
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px; /* Gap un poco menor */
+            max-width: 1100px; /* Ancho total un poco menor */
+            margin: 40px auto; padding: 0 20px;
         }
 
         .pet-card {
@@ -131,34 +119,35 @@
         }
         .pet-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
 
-        .pet-img-container { height: 250px; position: relative; }
+        /* CAMBIO: Altura de imagen reducida */
+        .pet-img-container { height: 200px; position: relative; }
         .pet-img { width: 100%; height: 100%; object-fit: cover; }
         
         .badge {
-            position: absolute; top: 15px; right: 15px;
-            background: rgba(255,255,255,0.95); padding: 6px 14px; border-radius: 20px;
-            font-size: 0.85rem; font-weight: 700; color: var(--primary);
+            position: absolute; top: 12px; right: 12px;
+            background: rgba(255,255,255,0.95); padding: 5px 12px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 700; color: var(--primary);
         }
 
-        .pet-info { padding: 25px; text-align: center; }
-        .pet-name { font-size: 1.5rem; margin: 0 0 5px; font-weight: 700; color: #2c3e50; }
-        .pet-meta { color: #888; font-size: 0.95rem; margin-bottom: 20px; }
+        /* CAMBIO: Padding y tamaños de fuente reducidos para la ficha compacta */
+        .pet-info { padding: 20px; text-align: center; }
+        .pet-name { font-size: 1.35rem; margin: 0 0 5px; font-weight: 700; color: #2c3e50; }
+        .pet-meta { color: #888; font-size: 0.9rem; margin-bottom: 15px; }
         
-        .tags { display: flex; gap: 8px; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }
-        .tag { color: #666; font-size: 0.85rem; background: #f5f5f5; padding: 5px 10px; border-radius: 6px; }
+        .tags { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .tag { color: #666; font-size: 0.8rem; background: #f5f5f5; padding: 4px 10px; border-radius: 6px; }
 
         .btn-action {
-            display: inline-block; width: 100%; padding: 12px 0;
+            display: inline-block; width: 100%; padding: 10px 0; /* Botón un poco más delgado */
             background: #27ae60; color: white; text-decoration: none;
             border-radius: 12px; font-weight: 600; transition: background 0.2s;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif; font-size: 0.95rem;
         }
         .btn-action:hover { background: #219150; }
 
         @media (max-width: 900px) {
             .hero-container { flex-direction: column-reverse; text-align: center; padding: 30px 20px; }
             .hero-image-container { max-width: 100%; }
-            .floating-badge { left: 50%; transform: translateX(-50%); bottom: -15px; width: max-content; }
             .hero-buttons { justify-content: center; }
         }
     </style>
@@ -193,14 +182,12 @@
                 <h1>Adopta con confianza y enamórate del catálogo</h1>
                 <p>Explora perros y gatos listos para un hogar. Filtra por especie, raza o tamaño y envía tu solicitud sin salir de esta página.</p>
                 <div class="hero-buttons">
-                    <a href="#petsContainer" class="btn-primary">Ver catálogo</a>
-                    <a href="#" class="btn-secondary">Panel administrador</a>
+                    <a href="#petsContainer" class="btn-primary">Ver catálogo completo</a>
                 </div>
              </div>
              <div class="hero-image-container">
                  <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&q=80" alt="Perro feliz" class="hero-image">
-                 <div class="floating-badge">Catálogo curado ✨</div>
-             </div>
+                 </div>
          </div>
     </section>
 
@@ -226,6 +213,7 @@
 
     <script src="js/auth.js"></script> 
     <script>
+        // Mismos datos, solo para probar que las fichas se ven bien
         const petsData = [
             { id: 1, name: "Bruno", species: "perro", breed: "Labrador", size: "grande", age: "3 años", desc: "Bruno es un labrador ideal para familias activas.", tags: ["juguetón", "sociable"], img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&q=80" },
             { id: 2, name: "Maya", species: "perro", breed: "Corgi", size: "pequeño", age: "9 meses", desc: "Pequeña pero con mucha personalidad. Ama los trucos.", tags: ["tierna", "curiosa"], img: "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=500&q=80" },
@@ -267,7 +255,7 @@
                         <div class="pet-info">
                             <h3 class="pet-name">${pet.name}</h3>
                             <div class="pet-meta">${pet.breed} · ${pet.age}</div>
-                            <p style="font-size:0.95rem; color:#666; margin-bottom:20px; min-height:50px;">${pet.desc}</p>
+                            <p style="font-size:0.9rem; color:#666; margin-bottom:15px; min-height:45px;">${pet.desc}</p>
                             <div class="tags">${tagsHTML}</div>
                             <a href="pet-profile.html?id=${pet.id}" class="btn-action">Ver Perfil / Adoptar</a>
                         </div>
