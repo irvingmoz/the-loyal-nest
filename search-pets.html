@@ -30,11 +30,12 @@
             z-index: 1000; 
         }
 
+        /* LOGO MODIFICADO (Con subrayado y emoji) */
         .logo { 
             font-size: 1.8rem; 
             font-weight: 800; 
-            color: var(--primary); 
-            text-decoration: none; 
+            color: var(--primary);      /* Color Naranja */
+            text-decoration: underline; /* SUBRAYADO */
             display: flex; align-items: center; gap: 10px; 
         }
 
@@ -50,16 +51,13 @@
         .nav-link:hover { color: var(--primary); }
         .nav-link.active { color: var(--primary); font-weight: 700; }
 
-        /* --- BOTÓN INICIAR SESIÓN (SOLO CONTORNO) --- */
+        /* BOTÓN SESIÓN (Estilo Fantasma) */
         .btn-login {
             text-decoration: none; 
             padding: 10px 28px; 
             background: transparent; 
-            
-            /* ESTADO NORMAL: Gris */
-            border: 2px solid #ccc; 
-            color: #777; 
-            
+            border: 2px solid #ccc; /* Borde gris inicial */
+            color: #777;            /* Texto gris inicial */
             border-radius: 50px;
             font-size: 1.05rem; 
             font-weight: 700; 
@@ -67,12 +65,11 @@
             cursor: pointer;
         }
         
-        /* ESTADO HOVER: Se pone naranja SOLO EL CONTORNO y TEXTO */
         .btn-login:hover {
-            border-color: var(--primary); /* El borde cambia a naranja */
-            color: var(--primary);        /* La letra cambia a naranja */
-            background: transparent;      /* El fondo sigue transparente */
-            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.15); /* Sombra suavecita */
+            border-color: var(--primary); /* Borde Naranja */
+            color: var(--primary);        /* Texto Naranja */
+            background: transparent;      /* Fondo transparente */
+            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.15);
         }
 
         /* --- HERO & FILTROS --- */
@@ -149,7 +146,7 @@
 <body>
 
     <nav>
-        <a href="index.html" class="logo"><i class="fas fa-paw"></i> The Loyal Nest</a>
+        <a href="index.html" class="logo">🐕 The Loyal Nest</a>
         
         <div class="nav-center">
             <a href="index.html" class="nav-link">Inicio</a>
@@ -196,7 +193,6 @@
     <script src="js/auth.js"></script> 
     
     <script>
-        // --- 1. BASE DE DATOS ---
         const petsData = [
             { id: 1, name: "Bruno", species: "perro", breed: "Labrador", size: "grande", age: "3 años", desc: "Bruno es un labrador ideal para familias activas.", tags: ["juguetón", "sociable"], img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&q=80" },
             { id: 2, name: "Maya", species: "perro", breed: "Corgi", size: "pequeño", age: "9 meses", desc: "Pequeña pero con mucha personalidad. Ama los trucos.", tags: ["tierna", "curiosa"], img: "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=500&q=80" },
@@ -208,16 +204,13 @@
             { id: 8, name: "Nieve", species: "gato", breed: "Blanco", size: "pequeño", age: "2 años", desc: "Tímida al principio pero muy dulce.", tags: ["dulce", "tímida"], img: "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=500&q=80" }
         ];
 
-        // --- 2. VARIABLES Y ELEMENTOS ---
         const container = document.getElementById('petsContainer');
         let currentSpecies = "";
         let currentSize = "";
         let currentSearch = "";
 
-        // --- 3. FUNCIONES DE RENDERIZADO ---
         function renderPets() {
             container.innerHTML = "";
-            
             const filtered = petsData.filter(pet => {
                 const matchSpecies = currentSpecies === "" || pet.species === currentSpecies;
                 const matchSize = currentSize === "" || pet.size === currentSize;
@@ -252,8 +245,6 @@
             });
         }
 
-        // --- 4. FUNCIONES DE INTERACCIÓN (FILTROS) ---
-        
         function filtrarEspecie(boton, especie) {
             document.querySelectorAll('.pill').forEach(btn => btn.classList.remove('active'));
             boton.classList.add('active');
@@ -271,7 +262,6 @@
             renderPets();
         });
 
-        // --- 5. SEGURIDAD DE RESPALDO ---
         if (typeof cerrarSesion === 'undefined') {
             window.cerrarSesion = function() {
                 localStorage.removeItem("usuarioLogueado");
