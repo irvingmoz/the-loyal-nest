@@ -50,12 +50,13 @@
         .nav-link:hover { color: var(--primary); }
         .nav-link.active { color: var(--primary); font-weight: 700; }
 
-        /* --- BOTÓN INICIAR SESIÓN (CAMBIO A GRIS -> NARANJA) --- */
+        /* --- BOTÓN INICIAR SESIÓN (SOLO CONTORNO) --- */
         .btn-login {
             text-decoration: none; 
             padding: 10px 28px; 
             background: transparent; 
-            /* 1. Estado Normal: GRIS */
+            
+            /* ESTADO NORMAL: Gris */
             border: 2px solid #ccc; 
             color: #777; 
             
@@ -66,12 +67,12 @@
             cursor: pointer;
         }
         
-        /* 2. Estado Mouse Encima: NARANJA */
+        /* ESTADO HOVER: Se pone naranja SOLO EL CONTORNO y TEXTO */
         .btn-login:hover {
-            border-color: var(--primary);
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.4);
+            border-color: var(--primary); /* El borde cambia a naranja */
+            color: var(--primary);        /* La letra cambia a naranja */
+            background: transparent;      /* El fondo sigue transparente */
+            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.15); /* Sombra suavecita */
         }
 
         /* --- HERO & FILTROS --- */
