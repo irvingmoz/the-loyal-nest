@@ -1,485 +1,153 @@
-/* Search Page Styles */
-.search-page {
-    min-height: 100vh;
-    background: var(--gray-lighter);
+// --- 1. BASE DE DATOS (Array de Mascotas) ---
+const petsData = [
+    { id: 1, name: "Bruno", species: "perro", breed: "Golden Retriever", size: "grande", age: "2 años", personality: "Juguetón", img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&q=80", badge: "Nuevo" },
+    { id: 2, name: "Mila", species: "gato", breed: "Siamés", size: "pequeño", age: "1 año", personality: "Tranquilo", img: "https://images.unsplash.com/photo-1513245543132-31f507417b26?w=500&q=80", badge: "Urgente" },
+    { id: 3, name: "Rocky", species: "perro", breed: "Bulldog", size: "mediano", age: "4 años", personality: "Dormilón", img: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=500&q=80", badge: "" },
+    { id: 4, name: "Luna", species: "gato", breed: "Mestizo", size: "pequeño", age: "3 meses", personality: "Curiosa", img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500&q=80", badge: "Cachorro" },
+    { id: 5, name: "Max", species: "perro", breed: "Pastor Alemán", size: "grande", age: "5 años", personality: "Protector", img: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=500&q=80", badge: "" },
+    { id: 6, name: "Coco", species: "perro", breed: "Poodle", size: "pequeño", age: "2 años", personality: "Cariñoso", img: "https://images.unsplash.com/photo-1591769225440-811ad7d6eca6?w=500&q=80", badge: "" },
+    { id: 7, name: "Simba", species: "gato", breed: "Persa", size: "mediano", age: "3 años", personality: "Elegante", img: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=500&q=80", badge: "Urgente" },
+    { id: 8, name: "Nala", species: "perro", breed: "Labrador", size: "grande", age: "1 año", personality: "Energética", img: "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=500&q=80", badge: "Nuevo" },
+    { id: 9, name: "Garfield", species: "gato", breed: "Tabby", size: "grande", age: "6 años", personality: "Glotón", img: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=500&q=80", badge: "" },
+    { id: 10, name: "Lola", species: "perro", breed: "Chihuahua", size: "pequeño", age: "5 meses", personality: "Nerviosa", img: "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=500&q=80", badge: "Cachorro" }
+];
+
+// Variables de Estado
+let currentSpecies = ""; 
+let currentSize = "";
+let currentSearch = "";
+let currentBreed = "";
+
+// Elementos del DOM
+const grid = document.getElementById('searchResults');
+const speciesButtons = document.querySelectorAll('#speciesFilters .filter-chip'); // OJO: cambié la clase a .filter-chip
+const sizeSelect = document.getElementById('filterSize');
+const breedSelect = document.getElementById('filterBreed');
+const searchInput = document.getElementById('filterSearch');
+const countLabel = document.getElementById('countResults');
+
+// --- 2. FUNCIONES ---
+
+function init() {
+    populateBreeds();
+    renderPets();
+    setupListeners();
 }
 
-/* Search Hero */
-.search-hero {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: var(--white);
-    padding: 120px 2rem 3rem;
-    text-align: center;
+function populateBreeds() {
+    const breeds = [...new Set(petsData.map(p => p.breed))].sort();
+    breedSelect.innerHTML = '<option value="">Todas las razas</option>';
+    breeds.forEach(breed => {
+        breedSelect.innerHTML += `<option value="${breed}">${breed}</option>`;
+    });
 }
 
-.search-hero h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
-.search-hero p {
-    font-size: 1.25rem;
-    opacity: 0.9;
-    margin-bottom: 2rem;
-}
-
-/* Search Bar */
-.search-bar {
-    max-width: 600px;
-    margin: 0 auto 2rem;
-}
-
-.search-input-group {
-    display: flex;
-    background: var(--white);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
-}
-
-.search-icon {
-    padding: 1rem;
-    color: var(--gray);
-    font-size: 1.25rem;
-}
-
-.search-input-group input {
-    flex: 1;
-    border: none;
-    padding: 1rem;
-    font-size: 1rem;
-    outline: none;
-}
-
-.search-input-group button {
-    border-radius: 0;
-    white-space: nowrap;
-}
-
-/* Quick Filters */
-.quick-filters {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 1.5rem;
-}
-
-.filter-chip {
-    background: rgba(255, 255, 255, 0.2);
-    color: var(--white);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.875rem;
-    backdrop-filter: blur(10px);
-}
-
-.filter-chip:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
-}
-
-.filter-chip.active {
-    background: var(--white);
-    color: var(--primary);
-    font-weight: 600;
-}
-
-/* Search Container */
-.search-container {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-}
-
-/* Filters Sidebar */
-.filters-sidebar {
-    background: var(--white);
-    border-radius: var(--radius-xl);
-    padding: 1.5rem;
-    box-shadow: var(--shadow);
-    height: fit-content;
-    position: sticky;
-    top: 100px;
-}
-
-.filters-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--gray-light);
-}
-
-.filters-header h3 {
-    color: var(--dark);
-    font-size: 1.25rem;
-}
-
-.btn-text {
-    background: none;
-    border: none;
-    color: var(--primary);
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.btn-text:hover {
-    text-decoration: underline;
-}
-
-/* Filter Groups */
-.filter-group {
-    margin-bottom: 2rem;
-}
-
-.filter-group h4 {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    color: var(--dark);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.filter-select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--gray-light);
-    border-radius: var(--radius);
-    font-size: 0.875rem;
-    background: var(--white);
-}
-
-/* Checkbox Groups */
-.checkbox-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-    color: var(--gray-dark);
-    transition: color 0.3s ease;
-}
-
-.checkbox-label:hover {
-    color: var(--dark);
-}
-
-.checkbox-label input {
-    display: none;
-}
-
-.checkmark {
-    width: 18px;
-    height: 18px;
-    border: 2px solid var(--gray);
-    border-radius: 3px;
-    position: relative;
-    transition: all 0.3s ease;
-}
-
-.checkbox-label input:checked + .checkmark {
-    background: var(--primary);
-    border-color: var(--primary);
-}
-
-.checkbox-label input:checked + .checkmark::after {
-    content: '✓';
-    position: absolute;
-    color: white;
-    font-size: 12px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-/* Results Section */
-.search-results {
-    flex: 1;
-}
-
-.results-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow);
-}
-
-.results-info h3 {
-    color: var(--dark);
-    margin-bottom: 0.25rem;
-}
-
-.results-info span {
-    color: var(--gray);
-    font-size: 0.875rem;
-}
-
-.sort-options {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.sort-options label {
-    color: var(--gray);
-    font-size: 0.875rem;
-}
-
-.sort-options select {
-    padding: 0.5rem;
-    border: 1px solid var(--gray-light);
-    border-radius: var(--radius);
-    background: var(--white);
-}
-
-/* Pets Grid */
-.pets-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.pet-card {
-    background: var(--white);
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.pet-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-}
-
-.pet-image {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-}
-
-.pet-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.pet-card:hover .pet-image img {
-    transform: scale(1.05);
-}
-
-.pet-badges {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    display: flex;
-    gap: 0.5rem;
-}
-
-.pet-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: white;
-}
-
-.badge-urgent { background: var(--danger); }
-.badge-new { background: var(--success); }
-.badge-senior { background: var(--warning); }
-
-.btn-favorite {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.25rem;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-.btn-favorite:hover {
-    background: var(--white);
-    transform: scale(1.1);
-}
-
-.btn-favorite.active {
-    color: var(--danger);
-}
-
-.pet-info {
-    padding: 1.5rem;
-}
-
-.pet-info h4 {
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-    color: var(--dark);
-}
-
-.pet-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    color: var(--gray);
-    font-size: 0.875rem;
-}
-
-.pet-description {
-    color: var(--gray);
-    font-size: 0.875rem;
-    line-height: 1.4;
-    margin-bottom: 1.5rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.pet-actions {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
-}
-
-/* Loading State */
-.loading-state {
-    text-align: center;
-    padding: 3rem;
-    display: none;
-}
-
-.loading-state.show {
-    display: block;
-}
-
-.loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid var(--gray-light);
-    border-top: 4px solid var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Pagination */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-.pagination-btn {
-    padding: 0.75rem 1.5rem;
-    border: 1px solid var(--gray-light);
-    background: var(--white);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.pagination-btn:hover:not(:disabled) {
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-.pagination-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.pagination-info {
-    color: var(--gray);
-    font-size: 0.875rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .search-container {
-        grid-template-columns: 1fr;
-        padding: 1rem;
-    }
+// ESTA FUNCIÓN ES LA CLAVE PARA QUE SE VEA COMO EN TU FOTO
+function renderPets() {
+    grid.innerHTML = "";
     
-    .filters-sidebar {
-        position: static;
+    // Filtrar
+    const filtered = petsData.filter(pet => {
+        const matchSpecies = currentSpecies === "" || pet.species === currentSpecies;
+        const matchSize = currentSize === "" || pet.size === currentSize;
+        const matchSearch = pet.name.toLowerCase().includes(currentSearch) || 
+                            pet.personality.toLowerCase().includes(currentSearch);
+        const matchBreed = currentBreed === "" || pet.breed === currentBreed;
+        
+        return matchSpecies && matchSize && matchSearch && matchBreed;
+    });
+
+    if (countLabel) countLabel.innerText = `${filtered.length} Resultados`;
+
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 2rem;"><h3>No encontramos mascotas con esos filtros 😢</h3><p>Intenta limpiar los filtros.</p></div>';
+        return;
     }
-    
-    .results-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-    
-    .pets-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .search-input-group {
-        flex-direction: column;
-    }
-    
-    .search-input-group button {
-        border-radius: 0 0 var(--radius) var(--radius);
-    }
+
+    // Crear HTML usando las clases de TU CSS
+    filtered.forEach(pet => {
+        const badgeHTML = pet.badge ? `<span class="pet-badge badge-new">${pet.badge}</span>` : '';
+        
+        const card = document.createElement('article');
+        card.className = 'pet-card'; // Clase principal del CSS
+        
+        card.innerHTML = `
+            <div class="pet-image">
+                <img src="${pet.img}" alt="${pet.name}">
+                <div class="pet-badges">
+                    ${badgeHTML}
+                    <span class="pet-badge badge-senior">${pet.species}</span>
+                </div>
+                <button class="btn-favorite"><i class="far fa-heart"></i></button>
+            </div>
+            
+            <div class="pet-info">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h4>${pet.name}</h4>
+                    <span style="color:var(--primary); font-weight:bold;">${pet.breed}</span>
+                </div>
+                
+                <div class="pet-details">
+                    <span><i class="far fa-clock"></i> ${pet.age}</span>
+                    <span><i class="fas fa-ruler"></i> ${pet.size}</span>
+                </div>
+                
+                <p class="pet-description">
+                    Personalidad: ${pet.personality}. ¡Listo para encontrar un hogar y darte mucho amor!
+                </p>
+                
+                <div class="pet-actions">
+                    <a href="pet-profile.html?id=${pet.id}" class="btn-primary btn-sm" style="flex:1; text-align:center; text-decoration:none;">Ver Perfil</a>
+                    <button class="btn-outline btn-sm" style="flex:1;">Adoptar</button>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
 }
 
-@media (max-width: 480px) {
-    .search-hero {
-        padding: 100px 1rem 2rem;
-    }
-    
-    .search-hero h1 {
-        font-size: 2rem;
-    }
-    
-    .quick-filters {
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding-bottom: 0.5rem;
-    }
+function setupListeners() {
+    // Botones de Especie (Chips)
+    speciesButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            speciesButtons.forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentSpecies = e.target.dataset.species;
+            renderPets();
+        });
+    });
+
+    sizeSelect.addEventListener('change', (e) => {
+        currentSize = e.target.value;
+        renderPets();
+    });
+
+    breedSelect.addEventListener('change', (e) => {
+        currentBreed = e.target.value;
+        renderPets();
+    });
+
+    searchInput.addEventListener('input', (e) => {
+        currentSearch = e.target.value.toLowerCase();
+        renderPets();
+    });
 }
+
+function resetFilters() {
+    currentSpecies = "";
+    currentSize = "";
+    currentSearch = "";
+    currentBreed = "";
+    
+    speciesButtons.forEach(b => b.classList.remove('active'));
+    speciesButtons[0].classList.add('active'); // Activar "Todos"
+    
+    sizeSelect.value = "";
+    breedSelect.value = "";
+    searchInput.value = "";
+    
+    renderPets();
+}
+
+// Iniciar
+document.addEventListener('DOMContentLoaded', init);
