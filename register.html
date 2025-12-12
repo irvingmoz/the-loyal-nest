@@ -3,150 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro | The Loyal Nest</title>
+    <title>Registro Completo | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
     <style>
+        /* Estilos base (igual que antes) */
         :root { --primary: #e67e22; --primary-hover: #d35400; --text-dark: #333; --bg-light: #f9f9f9; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-light); margin: 0; color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; }
-
-        /* NAVBAR ESTILO COMPLETO (Igual a Educación) */
         .header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1200px; margin: 0 auto; }
         .nav-brand .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); text-decoration: none; }
-        
-        /* Enlaces del menú central */
         .nav-list { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
         .nav-list li a { text-decoration: none; color: #555; font-weight: 500; transition: color 0.3s; }
         .nav-list li a:hover { color: var(--primary); }
-        
-        /* Botón Iniciar Sesión */
         .btn-outline { padding: 8px 20px; border: 1px solid #ccc; border-radius: 50px; text-decoration: none; color: #333; font-weight: 500; transition: 0.3s; }
-        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-
-        /* CONTENEDOR CENTRAL */
-        .auth-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-        }
-
-        /* TARJETA BLANCA */
-        .auth-card {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
-        }
-
-        .auth-card h1 { color: var(--primary); margin-bottom: 10px; font-size: 1.8rem; margin-top: 0; }
-        .auth-card p { color: #666; margin-bottom: 30px; font-size: 0.95rem; }
-
-        /* FORMULARIO */
-        .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #444; }
         
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            box-sizing: border-box; 
-            font-family: inherit;
-            background-color: #fff;
-        }
-        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1); }
-
-        /* Estilo Select */
-        select.form-control { cursor: pointer; }
-
-        /* BOTÓN NARANJA */
-        .btn-full { 
-            width: 100%; padding: 14px; background-color: var(--primary); color: white; border: none; border-radius: 8px; 
-            font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s; margin-top: 10px;
-        }
+        /* Formulario Layout */
+        .auth-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
+        .auth-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 500px; } /* Un poco más ancho */
+        .auth-card h1 { color: var(--primary); margin-bottom: 10px; font-size: 1.8rem; text-align: center; }
+        .form-row { display: flex; gap: 15px; } /* Para poner campos lado a lado */
+        .form-group { margin-bottom: 15px; text-align: left; flex: 1; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: #444; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; box-sizing: border-box; font-family: inherit; }
+        .btn-full { width: 100%; padding: 14px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s; margin-top: 10px; }
         .btn-full:hover { background-color: var(--primary-hover); }
-
-        .auth-footer { margin-top: 25px; font-size: 0.9rem; color: #777; }
-        .auth-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
-        .auth-footer a:hover { text-decoration: underline; }
-        
-        /* Ocultar menú en pantallas muy chicas (opcional, para que no se rompa) */
-        @media (max-width: 768px) {
-            .nav-list { display: none; } 
-        }
     </style>
 </head>
 <body>
-
     <header class="header">
         <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-            </div>
-            
+            <div class="nav-brand"><a href="index.html" class="logo">🐕 The Loyal Nest</a></div>
             <ul class="nav-list">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="search-pets.html">Adoptar</a></li>
-                <li><a href="map.html">Mapa</a></li>
                 <li><a href="education.html">Educación</a></li>
             </ul>
-
-            <div style="display:flex; align-items:center; gap:15px;">
-                <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
-            </div>
+            <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
         </nav>
     </header>
 
     <main class="auth-container">
         <div class="auth-card">
             <h1>Crea tu cuenta</h1>
-            <p>Elige tu rol para personalizar tu experiencia.</p>
-
             <form id="registerForm">
                 <div class="form-group">
-                    <label for="fullName">Nombre Completo</label>
-                    <input type="text" id="fullName" class="form-control" placeholder="Ej. Juan Pérez" required>
+                    <label>Nombre(s)</label>
+                    <input type="text" id="nombre" class="form-control" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Apellido Paterno</label>
+                        <input type="text" id="apPaterno" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Apellido Materno</label>
+                        <input type="text" id="apMaterno" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Edad</label>
+                        <input type="number" id="edad" class="form-control" min="18" required>
+                    </div>
+                    <div class="form-group">
+                        <label>CURP</label>
+                        <input type="text" id="curp" class="form-control" required placeholder="18 caracteres">
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="registerEmail">Correo Electrónico</label>
-                    <input type="email" id="registerEmail" class="form-control" placeholder="nombre@ejemplo.com" required>
+                    <label>Dirección Completa (Calle, Num, Col, CP)</label>
+                    <textarea id="direccion" class="form-control" rows="2" required placeholder="Ej. Av. Reforma 123, Col. Centro, CDMX"></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="registerPassword">Contraseña</label>
-                    <input type="password" id="registerPassword" class="form-control" placeholder="Mínimo 8 caracteres" required>
-                    <small style="color:#888; font-size:0.75rem; display:block; margin-top:5px;">
-                        Debe incluir mayúscula, número y símbolo.
-                    </small>
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="registerEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="registerPassword" class="form-control" required placeholder="Mínimo 8 caracteres">
                 </div>
 
                 <div class="form-group">
-                    <label for="role">¿Cómo quieres participar?</label>
+                    <label>Rol de Usuario</label>
                     <select id="role" class="form-control">
-                        <option value="adoptante">Adoptante (Quiero adoptar)</option>
-                        <option value="rescatista">Rescatista (Doy en adopción)</option>
+                        <option value="adoptante">Adoptante</option>
+                        <option value="rescatista">Rescatista / Refugio</option>
                         <option value="admin">Administrador</option>
                     </select>
                 </div>
 
+                <div id="camposRescatista" style="display: none;">
+                    <div class="form-group">
+                        <label style="color: #e67e22;">Estatus Legal del Refugio</label>
+                        <input type="text" id="estatusLegal" class="form-control" placeholder="Ej. Asociación Civil registrada">
+                    </div>
+                </div>
+
                 <button type="submit" class="btn-full">Registrarse</button>
             </form>
-
-            <div class="auth-footer">
-                ¿Ya tienes una cuenta? <a href="auth.html">Inicia sesión aquí</a>
+            <div style="text-align:center; margin-top:20px; font-size:0.9rem;">
+                ¿Ya tienes cuenta? <a href="auth.html" style="color:#e67e22;">Inicia sesión</a>
             </div>
         </div>
     </main>
-
     <script src="js/auth.js"></script>
 </body>
 </html>
