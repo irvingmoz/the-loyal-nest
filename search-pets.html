@@ -66,12 +66,28 @@
             background: #0077ff;
             color: #fff;
         }
-        <select id="filterAge" style="padding:12px;">
-    <option value="">Edad</option>
-    <option value="cachorro">Cachorro (menos de 1 año)</option>
-    <option value="adulto">Adulto (1 - 7 años)</option>
-    <option value="senior">Senior (más de 7 años)</option>
-</select>
+
+        <section style="display:flex; gap:20px; margin-bottom:30px;">
+    <input id="filterSearch" type="text" placeholder="Buscar por nombre, temperamento…" style="flex:1; padding:12px;">
+
+    <select id="filterBreed" style="padding:12px;">
+        <option value="">Raza</option>
+    </select>
+
+    <select id="filterSize" style="padding:12px;">
+        <option value="">Tamaño</option>
+        <option value="pequeño">Pequeño</option>
+        <option value="mediano">Mediano</option>
+        <option value="grande">Grande</option>
+    </select>
+    
+    <select id="filterAge" style="padding:12px;">
+        <option value="">Edad</option>
+        <option value="cachorro">Cachorro (menos de 1 año)</option>
+        <option value="adulto">Adulto (1 - 7 años)</option>
+        <option value="senior">Senior (más de 7 años)</option>
+    </select>
+</section>
 
         /* Drawer */
         #adoptionDrawer {
