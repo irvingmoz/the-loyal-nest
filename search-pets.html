@@ -3,34 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador de Mascotas | The Loyal Nest</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Buscar Mascotas | The Loyal Nest</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- ESTILOS VISUALES (Tema Naranja) --- */
+        :root {
+            --primary: #e67e22; /* NARANJA */
+            --primary-dark: #d35400;
+            --secondary: #2c3e50;
+            --light: #f4f6f7;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--light); color: #333; }
+        
+        /* Navbar */
+        nav { background: var(--white); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .nav-links { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--secondary); font-weight: 500; }
+        .btn-outline { border: 2px solid var(--primary); color: var(--primary); padding: 5px 15px; border-radius: 20px; background: none; cursor: pointer; font-weight: bold; }
+        .btn-outline:hover { background: var(--primary); color: white; }
+
+        /* Hero / Cabecera */
+        .hero { text-align: center; padding: 60px 20px; background: white; margin-bottom: 20px; }
+        .hero h1 { font-size: 2.5rem; color: var(--secondary); margin-bottom: 10px; }
+        .hero p { color: #7f8c8d; font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px; }
+
+        /* Barra de Filtros (Estilo "Top Bar") */
+        .filters-container {
+            max-width: 1000px;
+            margin: 0 auto 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .filter-group select, .filter-group input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        /* Botones de Especie (Pills) */
+        .species-pills { display: flex; gap: 10px; }
+        .pill {
+            padding: 8px 20px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #666;
+            font-weight: 600;
+        }
+        .pill:hover { background: #eee; }
+        .pill.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Grid de Mascotas */
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto 50px;
+            padding: 0 20px;
+        }
+
+        /* Tarjeta de Mascota */
+        .pet-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            position: relative;
+        }
+        .pet-card:hover { transform: translateY(-5px); }
+
+        .pet-img-container { height: 220px; overflow: hidden; position: relative; }
+        .pet-img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .badge {
+            position: absolute; top: 10px; right: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 5px 12px; border-radius: 15px;
+            font-size: 0.8rem; font-weight: bold; color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .pet-info { padding: 20px; text-align: center; }
+        .pet-name { font-size: 1.4rem; color: var(--secondary); margin: 0 0 5px; }
+        .pet-breed { color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px; }
+        
+        .tags { display: flex; gap: 5px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .tag { background: #f0f2f5; padding: 4px 10px; border-radius: 5px; font-size: 0.8rem; color: #555; }
+
+        .btn-view {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn-view:hover { background: var(--primary-dark); }
+
+    </style>
 </head>
 <body>
 
-    <main class="container">
+    <nav>
+        <a href="index.html" class="logo"><i class="fas fa-paw"></i> The Loyal Nest</a>
+        <ul class="nav-links">
+            <li><a href="education.html">Recursos</a></li>
+            <li id="nav-login"><a href="auth.html">Iniciar Sesión</a></li>
+            <li id="nav-user" style="display:none; gap:10px; align-items:center;">
+                <span>Mi Cuenta</span>
+                <button class="btn-outline" onclick="cerrarSesion()">Salir</button>
+            </li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <h1>Encuentra a tu compañero ideal</h1>
+        <p>Explora nuestro catálogo. Filtra por especie, tamaño o raza.</p>
         
-        <header class="page-header">
-            <h1>Encuentra a tu compañero ideal 🐾</h1>
-            <p>Utiliza los filtros para encontrar la mascota perfecta para ti.</p>
-        </header>
-
-        <div id="speciesFilters" class="species-nav">
-            <button class="pill pill--active" data-species="">Todos</button>
-            <button class="pill" data-species="perro">Perros 🐶</button>
-            <button class="pill" data-species="gato">Gatos 🐱</button>
-        </div>
-
-        <section class="filters-bar">
-            
-            <div class="filter-group">
-                <input type="text" id="filterSearch" placeholder="🔍 Buscar por nombre...">
-            </div>
-
-            <div class="filter-group">
-                <select id="filterBreed">
-                    <option value="">Todas las razas</option>
-                </select>
+        <div class="filters-container">
+            <div class="species-pills" id="speciesFilters">
+                <button class="pill active" data-species="">Todos</button>
+                <button class="pill" data-species="perro">Perros 🐶</button>
+                <button class="pill" data-species="gato">Gatos 🐱</button>
             </div>
 
             <div class="filter-group">
@@ -41,68 +162,100 @@
                     <option value="grande">Grande</option>
                 </select>
             </div>
-
+            
             <div class="filter-group">
-                <select id="filterAge">
-                    <option value="">Cualquier edad</option>
-                    <option value="cachorro">Cachorro (< 1 año)</option>
-                    <option value="adulto">Adulto (1 - 7 años)</option>
-                    <option value="senior">Senior (> 7 años)</option>
-                </select>
+                <input type="text" id="filterSearch" placeholder="🔍 Buscar por nombre...">
             </div>
-
-        </section>
-
-        <hr>
-
-        <section id="searchResults" class="pets-grid">
-            </section>
-
-
-        <section id="adminPanel" class="admin-section">
-            <h2>📋 Solicitudes Recibidas</h2>
-            <div id="requestEmpty" class="empty-state">No hay solicitudes todavía.</div>
-            
-            <div id="requestsTable" class="requests-table">
-                <div class="table-header">
-                    <span>Solicitante</span>
-                    <span>Mascota</span>
-                    <span>Estado</span>
-                    <span>Acciones</span>
-                </div>
-                <div id="requestsBody"></div>
-            </div>
-        </section>
-
-    </main>
-
-    <aside id="adoptionDrawer" class="drawer">
-        <div class="drawer-content">
-            <div class="drawer-header">
-                <h2>Adoptar a <span id="drawerPetName"></span></h2>
-                <button id="closeDrawer" class="btn-close">×</button>
-            </div>
-            <p id="drawerPetMeta" class="muted-text"></p>
-            
-            <form id="adoptionForm">
-                <label>Tu nombre completo</label>
-                <input type="text" name="applicant" required placeholder="Ej: Juan Pérez">
-                
-                <label>Correo electrónico</label>
-                <input type="email" name="email" required placeholder="juan@ejemplo.com">
-                
-                <label>¿Por qué quieres adoptar?</label>
-                <textarea name="message" rows="4" required></textarea>
-                
-                <div class="drawer-actions">
-                    <button type="submit" class="btn-primary">Enviar Solicitud</button>
-                    <button type="button" id="cancelDrawer" class="btn-secondary">Cancelar</button>
-                </div>
-            </form>
         </div>
-    </aside>
+    </section>
 
-    <script src="js/pets.js"></script>
+    <div id="petsContainer" class="pets-grid">
+        </div>
 
+    <script src="js/auth.js"></script>
+    <script>
+        // --- BASE DE DATOS DE MASCOTAS (Más Gatos Agregados) ---
+        const petsData = [
+            // PERROS
+            { id: 1, name: "Bruno", species: "perro", breed: "Golden Retriever", size: "grande", age: "2 años", tags: ["Juguetón", "Noble"], img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&q=80" },
+            { id: 2, name: "Rocky", species: "perro", breed: "Bulldog", size: "mediano", age: "4 años", tags: ["Dormilón", "Tranquilo"], img: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=500&q=80" },
+            { id: 3, name: "Max", species: "perro", breed: "Pastor Alemán", size: "grande", age: "5 años", tags: ["Protector", "Leal"], img: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=500&q=80" },
+            { id: 4, name: "Coco", species: "perro", breed: "Poodle", size: "pequeño", age: "2 años", tags: ["Cariñoso", "Listo"], img: "https://images.unsplash.com/photo-1591769225440-811ad7d6eca6?w=500&q=80" },
+            { id: 5, name: "Lola", species: "perro", breed: "Chihuahua", size: "pequeño", age: "5 meses", tags: ["Nerviosa", "Tierna"], img: "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=500&q=80" },
+            
+            // GATOS (¡NUEVOS!)
+            { id: 6, name: "Mila", species: "gato", breed: "Siamés", size: "pequeño", age: "1 año", tags: ["Elegante", "Vocal"], img: "https://images.unsplash.com/photo-1513245543132-31f507417b26?w=500&q=80" },
+            { id: 7, name: "Simba", species: "gato", breed: "Persa", size: "mediano", age: "3 años", tags: ["Peludo", "Rey"], img: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=500&q=80" },
+            { id: 8, name: "Luna", species: "gato", breed: "Negro Mestizo", size: "pequeño", age: "2 años", tags: ["Misteriosa", "Ágil"], img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500&q=80" },
+            { id: 9, name: "Garfield", species: "gato", breed: "Tabby", size: "grande", age: "6 años", tags: ["Glotón", "Cariñoso"], img: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=500&q=80" },
+            { id: 10, name: "Oliver", species: "gato", breed: "Blanco", size: "mediano", age: "4 años", tags: ["Tímido", "Dulce"], img: "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=500&q=80" },
+            { id: 11, name: "Nina", species: "gato", breed: "Calico", size: "pequeño", age: "8 meses", tags: ["Curiosa", "Activa"], img: "https://images.unsplash.com/photo-1529778873920-4da4926a7071?w=500&q=80" },
+            { id: 12, name: "Griselo", species: "gato", breed: "Azul Ruso", size: "grande", age: "5 años", tags: ["Independiente", "Fuerte"], img: "https://images.unsplash.com/photo-1511044568932-338cba0fb803?w=500&q=80" }
+        ];
+
+        // --- LÓGICA DE FILTROS ---
+        const container = document.getElementById('petsContainer');
+        let currentSpecies = "";
+        let currentSize = "";
+        let currentSearch = "";
+
+        function renderPets() {
+            container.innerHTML = "";
+            const filtered = petsData.filter(pet => {
+                const matchSpecies = currentSpecies === "" || pet.species === currentSpecies;
+                const matchSize = currentSize === "" || pet.size === currentSize;
+                const matchSearch = pet.name.toLowerCase().includes(currentSearch);
+                return matchSpecies && matchSize && matchSearch;
+            });
+
+            if(filtered.length === 0) {
+                container.innerHTML = "<p style='grid-column:1/-1; text-align:center;'>No se encontraron mascotas con esos filtros.</p>";
+                return;
+            }
+
+            filtered.forEach(pet => {
+                const tagsHTML = pet.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+                const card = `
+                    <article class="pet-card">
+                        <div class="pet-img-container">
+                            <img src="${pet.img}" class="pet-img" alt="${pet.name}">
+                            <span class="badge">${pet.species === 'perro' ? '🐶 Perro' : '🐱 Gato'}</span>
+                        </div>
+                        <div class="pet-info">
+                            <h3 class="pet-name">${pet.name}</h3>
+                            <p class="pet-breed">${pet.breed} • ${pet.age}</p>
+                            <div class="tags">${tagsHTML}</div>
+                            
+                            <a href="pet-profile.html?id=${pet.id}" class="btn-view">Ver Perfil</a>
+                        </div>
+                    </article>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        // Listeners
+        document.querySelectorAll('.pill').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentSpecies = e.target.dataset.species;
+                renderPets();
+            });
+        });
+
+        document.getElementById('filterSize').addEventListener('change', (e) => {
+            currentSize = e.target.value;
+            renderPets();
+        });
+
+        document.getElementById('filterSearch').addEventListener('input', (e) => {
+            currentSearch = e.target.value.toLowerCase();
+            renderPets();
+        });
+
+        // Inicio
+        renderPets();
+    </script>
 </body>
 </html>
