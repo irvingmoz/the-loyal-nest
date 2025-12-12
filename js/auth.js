@@ -1,105 +1,126 @@
-// js/auth.js
-// Registro/Login/Logout con validación, tokens y redirección por rol
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | The Loyal Nest</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --primary: #e67e22; --primary-hover: #d35400; --text-dark: #333; --bg-light: #f9f9f9; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-light); margin: 0; color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; }
 
-function ensureSessionModule() {
-    if (typeof persistSession !== 'function') {
-        console.warn('session.js debe cargarse antes de auth.js');
-    }
-}
-ensureSessionModule();
+        /* NAVBAR (Igual al Login) */
+        .header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .nav-brand .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); text-decoration: none; }
+        .nav-buttons { display: flex; gap: 15px; }
+        
+        .btn-text { text-decoration: none; color: #555; font-weight: 600; padding: 10px 15px; }
+        .btn-outline { padding: 10px 20px; border: 1px solid #ccc; border-radius: 50px; text-decoration: none; color: #333; font-weight: 500; transition: 0.3s; }
+        .btn-solid { padding: 10px 20px; background-color: var(--primary); color: white; border-radius: 50px; text-decoration: none; font-weight: 600; border: none; transition: 0.3s; }
+        .btn-solid:hover { background-color: var(--primary-hover); }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const registerForm = document.getElementById('registerForm');
-    const loginForm = document.getElementById('loginForm');
-    const roleSelector = document.querySelectorAll('[data-role-select]');
+        /* CONTENEDOR CENTRAL (La Magia del Diseño) */
+        .auth-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
 
-    if (registerForm) registerForm.addEventListener('submit', handleRegister);
-    if (loginForm) loginForm.addEventListener('submit', handleLogin);
-    roleSelector.forEach((btn) => btn.addEventListener('click', () => selectRole(btn.dataset.roleSelect)));
-});
+        /* LA TARJETA BLANCA */
+        .auth-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
 
-function selectRole(role) {
-    const roleInput = document.getElementById('role');
-    if (roleInput) roleInput.value = role;
-}
+        .auth-card h1 { color: var(--primary); margin-bottom: 10px; font-size: 1.8rem; }
+        .auth-card p { color: #666; margin-bottom: 30px; font-size: 0.95rem; }
 
-function setLoading(form, isLoading) {
-    const submit = form.querySelector('button[type="submit"]');
-    if (submit) submit.disabled = isLoading;
-    form.querySelectorAll('input, select').forEach((el) => { el.disabled = isLoading; });
-}
+        /* FORMULARIO */
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #444; }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box; /* Importante para que no se salga del cuadro */
+            font-family: inherit;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1); }
 
-function validatePassword(password) {
-    const rules = [/.{8,}/, /[A-Z]/, /[0-9]/, /[!@#$%^&*()_+\-={}\[\]:;"'`~<>,.?/]/];
-    return rules.every((r) => r.test(password));
-}
+        .btn-full { width: 100%; padding: 14px; margin-top: 10px; cursor: pointer; font-size: 1rem; }
 
-async function handleRegister(event) {
-    event.preventDefault();
-    const form = event.target;
-    const data = Object.fromEntries(new FormData(form).entries());
-    if (!validatePassword(data.password)) {
-        showFormError(form, 'La contraseña debe tener 8 caracteres, una mayúscula, un número y un símbolo.');
-        return;
-    }
-    try {
-        setLoading(form, true);
-        const res = await fetch('/users', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: data.name,
-                email: data.email,
-                password: data.password,
-                role: data.role || 'adoptante'
-            })
-        });
-        if (!res.ok) throw new Error('Registro fallido');
-        const payload = await res.json();
-        persistSession({ token: payload.token, user: payload.user, expiresIn: payload.expiresIn });
-        redirectToDashboard(payload.user.role);
-    } catch (error) {
-        console.error(error);
-        showFormError(form, 'No se pudo crear la cuenta.');
-    } finally {
-        setLoading(form, false);
-    }
-}
+        .auth-footer { margin-top: 25px; font-size: 0.9rem; color: #777; }
+        .auth-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .auth-footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
 
-async function handleLogin(event) {
-    event.preventDefault();
-    const form = event.target;
-    const data = Object.fromEntries(new FormData(form).entries());
-    try {
-        setLoading(form, true);
-        const res = await fetch('/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: data.email, password: data.password })
-        });
-        if (!res.ok) throw new Error('Login fallido');
-        const payload = await res.json();
-        persistSession({ token: payload.token, user: payload.user, expiresIn: payload.expiresIn });
-        redirectToDashboard(payload.user.role);
-    } catch (error) {
-        console.error(error);
-        showFormError(form, 'Credenciales incorrectas o servidor no disponible.');
-    } finally {
-        setLoading(form, false);
-    }
-}
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html" class="btn-text">Inicio</a>
+                <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
+                </div>
+        </nav>
+    </header>
 
-function logout() {
-    clearSession();
-    window.location.href = 'auth.html';
-}
+    <main class="auth-container">
+        <div class="auth-card">
+            <h1>Crea tu cuenta</h1>
+            <p>Elige tu rol para personalizar la experiencia.</p>
 
-function showFormError(form, message) {
-    let box = form.querySelector('.form-error');
-    if (!box) {
-        box = document.createElement('div');
-        box.className = 'form-error';
-        form.prepend(box);
-    }
-    box.textContent = message;
-}
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="fullName">Nombre completo</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="Ej. Juan Pérez" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="regEmail">Correo Electrónico</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="ejemplo@correo.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPassword">Contraseña</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Mín. 8 caracteres" required>
+                    <small style="color:#999; font-size:0.8rem;">Incluye mayúscula, número y símbolo.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="userRole">Selecciona tu rol</label>
+                    <select id="userRole" class="form-control">
+                        <option value="adoptante">Adoptante (Quiero adoptar)</option>
+                        <option value="rescatista">Rescatista (Doy en adopción)</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-solid btn-full">Crear cuenta</button>
+            </form>
+
+            <div class="auth-footer">
+                ¿Ya tienes cuenta? <a href="auth.html">Inicia sesión</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
