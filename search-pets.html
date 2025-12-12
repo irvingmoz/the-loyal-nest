@@ -9,272 +9,235 @@
     <style>
         /* --- ESTILOS GENERALES --- */
         :root {
-            --primary: #e67e22; /* Naranja */
+            --primary: #e67e22; /* NARANJA */
+            --primary-dark: #d35400;
             --secondary: #2c3e50;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --bg-light: #f9f9f9;
+            --light: #f4f6f7;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            background-color: var(--bg-light); 
-            color: var(--text-dark); 
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--light); color: #333; }
         
-        /* --- NAVBAR EXACTO (Estilo Refugios/Educación) --- */
+        /* --- NAVBAR (Igual a Refugios) --- */
         nav { 
-            background: #ffffff; 
-            padding: 15px 40px; 
+            background: var(--white); 
+            padding: 1rem 2rem; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            /* Sombra muy suave, SIN línea negra */
-            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+            box-shadow: var(--shadow); 
             position: sticky; 
             top: 0; 
-            z-index: 1000; 
+            z-index: 100; 
         }
 
-        /* 1. Logo */
         .logo { 
-            font-size: 1.4rem; 
-            font-weight: 800; 
+            font-size: 1.5rem; 
+            font-weight: bold; 
             color: var(--primary); 
             text-decoration: none; 
             display: flex; 
             align-items: center; 
-            gap: 8px; 
+            gap: 10px; 
         }
-        .logo i { font-size: 1.2rem; }
 
-        /* 2. Menú Central */
-        .nav-center {
+        /* Enlaces del Centro */
+        .nav-menu {
             display: flex;
-            gap: 30px;
-            align-items: center;
+            gap: 25px;
         }
 
-        .nav-link {
+        .nav-menu a {
             text-decoration: none;
-            color: var(--text-light);
+            color: #555;
             font-weight: 500;
             font-size: 1rem;
-            transition: color 0.2s;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+
+        /* Clase para resaltar la página actual */
+        .nav-menu a.active {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Botones de Sesión (Derecha) */
+        .nav-auth {
             display: flex;
             align-items: center;
-            gap: 5px;
         }
 
-        .nav-link:hover { color: var(--primary); }
-        
-        /* Clase para la pestaña activa */
-        .nav-link.active {
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        /* 3. Botón Sesión (Estilo "Cápsula" suave) */
-        .btn-login {
+        .btn-outline { 
+            border: 2px solid var(--primary); 
+            color: var(--primary); 
+            padding: 8px 20px; 
+            border-radius: 20px; 
+            background: none; 
+            cursor: pointer; 
+            font-weight: bold; 
             text-decoration: none;
-            padding: 10px 25px;
-            background: #ffffff;
-            border: 1px solid #e0e0e0; /* Borde gris muy suave */
-            border-radius: 50px; /* Muy redondeado */
-            color: var(--text-dark);
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-login:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            box-shadow: 0 2px 8px rgba(230, 126, 34, 0.15);
-        }
-
-        /* --- HERO & FILTROS --- */
-        .hero { 
-            text-align: center; 
-            padding: 60px 20px; 
-            background: white; 
-            margin-bottom: 20px; 
-        }
-        
-        .hero h1 { 
-            font-size: 2.2rem; 
-            color: var(--secondary); 
-            margin-bottom: 10px; 
-            font-weight: 700;
-        }
-        
-        .hero p { 
-            color: #7f8c8d; 
-            font-size: 1.1rem; 
-            margin-bottom: 30px; 
-        }
-
-        /* Contenedor de Filtros Limpio */
-        .filters-container {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        /* Pills (Botones de Especie) */
-        .pill {
-            padding: 10px 24px;
-            border-radius: 30px;
-            border: 1px solid #eee;
-            background: #fff;
-            color: #555;
-            cursor: pointer;
-            font-weight: 600;
             transition: all 0.3s;
         }
         
-        .pill:hover { background: #f9f9f9; }
+        .btn-outline:hover { 
+            background: var(--primary); 
+            color: white; 
+        }
+
+        /* --- HERO & FILTROS --- */
+        .hero { text-align: center; padding: 60px 20px; background: white; margin-bottom: 20px; }
+        .hero h1 { font-size: 2.5rem; color: var(--secondary); margin-bottom: 10px; }
+        .hero p { color: #7f8c8d; font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px; }
+
+        .filters-container {
+            max-width: 1000px;
+            margin: 0 auto 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .filter-group select, .filter-group input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
         
+        .species-pills { display: flex; gap: 10px; }
+        .pill {
+            padding: 8px 20px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #666;
+            font-weight: 600;
+        }
+        .pill:hover { background: #eee; }
         .pill.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
-            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.3);
+            transform: scale(1.05);
         }
 
-        /* Inputs y Selects estilo moderno */
-        .modern-select, .modern-input {
-            padding: 10px 15px;
-            border-radius: 12px;
-            border: 1px solid #eee;
-            background: #fff;
-            color: #555;
-            outline: none;
-            font-size: 0.95rem;
-        }
-
-        .search-wrapper { position: relative; }
-        .search-wrapper i {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #aaa;
-        }
-        .modern-input { padding-left: 35px; width: 200px; }
-
-        /* --- GRID RESULTADOS --- */
+        /* --- GRID & CARDS --- */
         .pets-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
+            gap: 25px;
             max-width: 1200px;
-            margin: 40px auto;
+            margin: 0 auto 50px;
             padding: 0 20px;
         }
 
         .pet-card {
             background: white;
-            border-radius: 20px;
+            border-radius: 15px;
             overflow: hidden;
-            border: 1px solid #f0f0f0; /* Borde casi invisible */
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            position: relative;
         }
-        
-        .pet-card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-        }
+        .pet-card:hover { transform: translateY(-5px); }
 
-        .pet-img-container { height: 250px; position: relative; }
+        .pet-img-container { height: 220px; overflow: hidden; position: relative; }
         .pet-img { width: 100%; height: 100%; object-fit: cover; }
         
         .badge {
-            position: absolute; top: 15px; right: 15px;
-            background: rgba(255,255,255,0.95);
-            padding: 6px 14px; border-radius: 20px;
-            font-size: 0.85rem; font-weight: 700; color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: absolute; top: 10px; right: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 5px 12px; border-radius: 15px;
+            font-size: 0.8rem; font-weight: bold; color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .pet-info { padding: 25px; text-align: center; }
-        .pet-name { font-size: 1.5rem; color: var(--text-dark); margin: 0 0 5px; font-weight: 700; }
-        .pet-breed { color: var(--primary); font-weight: 600; font-size: 0.9rem; margin-bottom: 15px; display: block; }
-        .pet-meta { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+        .pet-info { padding: 20px; text-align: center; }
+        .pet-name { font-size: 1.4rem; color: var(--secondary); margin: 0 0 5px; }
+        .pet-breed { color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px; }
+        
+        .tags { display: flex; gap: 5px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .tag { background: #f0f2f5; padding: 4px 10px; border-radius: 5px; font-size: 0.8rem; color: #555; }
 
-        .tags { display: flex; gap: 8px; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }
-        .tag { color: #666; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; }
-
-        .btn-action {
-            display: inline-block;
+        .btn-view {
+            display: block;
             width: 100%;
-            padding: 12px 0;
-            background: #27ae60; /* Verde para acción principal */
+            padding: 12px;
+            background: var(--primary);
             color: white;
             text-decoration: none;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: background 0.2s;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
         }
-        .btn-action:hover { background: #219150; }
+        .btn-view:hover { background: var(--primary-dark); }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-            nav { flex-direction: column; gap: 15px; padding: 20px; }
-            .nav-center { flex-wrap: wrap; justify-content: center; width: 100%; }
+        /* Responsivo para el Navbar */
+        @media (max-width: 768px) {
+            nav { flex-direction: column; gap: 15px; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; }
         }
+
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="index.html" class="logo">
-            <i class="fas fa-paw"></i> The Loyal Nest
-        </a>
+        <a href="index.html" class="logo"><i class="fas fa-paw"></i> The Loyal Nest</a>
         
-        <div class="nav-center">
-            <a href="index.html" class="nav-link">Inicio</a>
-            <a href="search-pets.html" class="nav-link active">Buscar Mascotas</a>
-            <a href="shelters-map.html" class="nav-link">Refugios</a>
-            <a href="education.html" class="nav-link"><i class="fas fa-book-open" style="font-size:0.9rem;"></i> Educación</a>
+        <div class="nav-menu">
+            <a href="index.html">Inicio</a>
+            <a href="search-pets.html" class="active">Buscar Mascotas</a>
+            <a href="shelters-map.html">Refugios</a>
+            <a href="education.html">Educación</a>
         </div>
 
-        <div id="auth-section">
-            <a href="auth.html" id="nav-login" class="btn-login">Iniciar Sesión</a>
+        <div class="nav-auth">
+            <a href="auth.html" id="nav-login" class="btn-outline">Iniciar Sesión</a>
             
             <div id="nav-user" style="display:none; gap:10px; align-items:center;">
-                <span style="font-weight:600; color:#555;">Mi Cuenta</span>
-                <button class="btn-login" onclick="cerrarSesion()">Salir</button>
+                <span style="font-weight: 500;">Mi Cuenta</span>
+                <button class="btn-outline" onclick="cerrarSesion()" style="border: 1px solid #ccc; color: #555;">Salir</button>
             </div>
         </div>
     </nav>
 
     <section class="hero">
-        <h1>Encuentra a tu compañero ideal <i class="fas fa-paw" style="color:#555; font-size:1.8rem;"></i></h1>
-        <p>Utiliza los filtros para encontrar la mascota perfecta para ti.</p>
+        <h1>Encuentra a tu compañero ideal</h1>
+        <p>Explora nuestro catálogo. Filtra por especie, tamaño o raza.</p>
         
         <div class="filters-container">
-            <div id="speciesFilters" style="display:flex; gap:10px;">
+            <div class="species-pills" id="speciesFilters">
                 <button class="pill active" data-species="">Todos</button>
                 <button class="pill" data-species="perro">Perros 🐶</button>
                 <button class="pill" data-species="gato">Gatos 🐱</button>
             </div>
 
-            <select id="filterSize" class="modern-select">
-                <option value="">Cualquier tamaño</option>
-                <option value="pequeño">Pequeño</option>
-                <option value="mediano">Mediano</option>
-                <option value="grande">Grande</option>
-            </select>
+            <div class="filter-group">
+                <select id="filterSize">
+                    <option value="">Cualquier tamaño</option>
+                    <option value="pequeño">Pequeño</option>
+                    <option value="mediano">Mediano</option>
+                    <option value="grande">Grande</option>
+                </select>
+            </div>
             
-            <div class="search-wrapper">
-                <i class="fas fa-search"></i>
-                <input type="text" id="filterSearch" class="modern-input" placeholder="Buscar por nombre...">
+            <div class="filter-group">
+                <input type="text" id="filterSearch" placeholder="🔍 Buscar por nombre...">
             </div>
         </div>
     </section>
@@ -284,20 +247,26 @@
 
     <script src="js/auth.js"></script>
     <script>
+        // DATOS DE PRUEBA
         const petsData = [
             // PERROS
-            { id: 1, name: "Bruno", species: "perro", breed: "Labrador", size: "grande", age: "3 años", desc: "Bruno es un labrador chocolate ideal para familias activas.", tags: ["juguetón", "sociable"], img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&q=80" },
-            { id: 2, name: "Maya", species: "perro", breed: "Corgi", size: "pequeño", age: "9 meses", desc: "Maya es pequeña pero con mucha personalidad. Ama aprender trucos.", tags: ["tierna", "curiosa"], img: "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=500&q=80" },
-            { id: 3, name: "Coco", species: "perro", breed: "Poodle", size: "pequeño", age: "2 años", desc: "Perfecto para departamentos, muy limpio y educado.", tags: ["cariñoso", "listo"], img: "https://images.unsplash.com/photo-1591769225440-811ad7d6eca6?w=500&q=80" },
-            { id: 4, name: "Rocky", species: "perro", breed: "Pastor Alemán", size: "grande", age: "4 años", desc: "Un guardián noble que busca un compañero de aventuras.", tags: ["leal", "protector"], img: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=500&q=80" },
+            { id: 1, name: "Bruno", species: "perro", breed: "Golden Retriever", size: "grande", age: "2 años", tags: ["Juguetón", "Noble"], img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&q=80" },
+            { id: 2, name: "Rocky", species: "perro", breed: "Bulldog", size: "mediano", age: "4 años", tags: ["Dormilón", "Tranquilo"], img: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=500&q=80" },
+            { id: 3, name: "Max", species: "perro", breed: "Pastor Alemán", size: "grande", age: "5 años", tags: ["Protector", "Leal"], img: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=500&q=80" },
+            { id: 4, name: "Coco", species: "perro", breed: "Poodle", size: "pequeño", age: "2 años", tags: ["Cariñoso", "Listo"], img: "https://images.unsplash.com/photo-1591769225440-811ad7d6eca6?w=500&q=80" },
+            { id: 5, name: "Lola", species: "perro", breed: "Chihuahua", size: "pequeño", age: "5 meses", tags: ["Nerviosa", "Tierna"], img: "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=500&q=80" },
             
             // GATOS
-            { id: 5, name: "Luna", species: "gato", breed: "Mestizo", size: "pequeño", age: "1 año", desc: "Luna es una gatita negra muy elegante y tranquila.", tags: ["tranquila", "pequeño"], img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500&q=80" },
-            { id: 6, name: "Michi", species: "gato", breed: "Atigrado", size: "mediano", age: "6 meses", desc: "Michi es un torbellino de energía, ideal para jugar.", tags: ["juguetón", "mediano"], img: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=500&q=80" },
-            { id: 7, name: "Simba", species: "gato", breed: "Persa", size: "mediano", age: "3 años", desc: "Rey de la casa, busca un sofá cómodo y muchos mimos.", tags: ["peludo", "noble"], img: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=500&q=80" },
-            { id: 8, name: "Nieve", species: "gato", breed: "Blanco", size: "pequeño", age: "2 años", desc: "Tímida al principio pero muy dulce cuando entra en confianza.", tags: ["dulce", "tímida"], img: "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=500&q=80" }
+            { id: 6, name: "Mila", species: "gato", breed: "Siamés", size: "pequeño", age: "1 año", tags: ["Elegante", "Vocal"], img: "https://images.unsplash.com/photo-1513245543132-31f507417b26?w=500&q=80" },
+            { id: 7, name: "Simba", species: "gato", breed: "Persa", size: "mediano", age: "3 años", tags: ["Peludo", "Rey"], img: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=500&q=80" },
+            { id: 8, name: "Luna", species: "gato", breed: "Negro Mestizo", size: "pequeño", age: "2 años", tags: ["Misteriosa", "Ágil"], img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500&q=80" },
+            { id: 9, name: "Garfield", species: "gato", breed: "Tabby", size: "grande", age: "6 años", tags: ["Glotón", "Cariñoso"], img: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=500&q=80" },
+            { id: 10, name: "Oliver", species: "gato", breed: "Blanco", size: "mediano", age: "4 años", tags: ["Tímido", "Dulce"], img: "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=500&q=80" },
+            { id: 11, name: "Nina", species: "gato", breed: "Calico", size: "pequeño", age: "8 meses", tags: ["Curiosa", "Activa"], img: "https://images.unsplash.com/photo-1529778873920-4da4926a7071?w=500&q=80" },
+            { id: 12, name: "Griselo", species: "gato", breed: "Azul Ruso", size: "grande", age: "5 años", tags: ["Independiente", "Fuerte"], img: "https://images.unsplash.com/photo-1511044568932-338cba0fb803?w=500&q=80" }
         ];
 
+        // LÓGICA DE FILTROS
         const container = document.getElementById('petsContainer');
         let currentSpecies = "";
         let currentSize = "";
@@ -313,9 +282,52 @@
             });
 
             if(filtered.length === 0) {
-                container.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:#777;'>No encontramos mascotas con esos filtros.</p>";
+                container.innerHTML = "<p style='grid-column:1/-1; text-align:center;'>No se encontraron mascotas con esos filtros.</p>";
                 return;
             }
 
             filtered.forEach(pet => {
-                const tagsHTML = pet.tags.map(tag => `<span class="tag"><i class="fas fa-tag" style="font-size:0.
+                const tagsHTML = pet.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+                const card = `
+                    <article class="pet-card">
+                        <div class="pet-img-container">
+                            <img src="${pet.img}" class="pet-img" alt="${pet.name}">
+                            <span class="badge">${pet.species === 'perro' ? '🐶 Perro' : '🐱 Gato'}</span>
+                        </div>
+                        <div class="pet-info">
+                            <h3 class="pet-name">${pet.name}</h3>
+                            <p class="pet-breed">${pet.breed} • ${pet.age}</p>
+                            <div class="tags">${tagsHTML}</div>
+                            <a href="pet-profile.html?id=${pet.id}" class="btn-view">Ver Perfil</a>
+                        </div>
+                    </article>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        // LISTENERS
+        document.querySelectorAll('.pill').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentSpecies = e.target.dataset.species;
+                renderPets();
+            });
+        });
+
+        document.getElementById('filterSize').addEventListener('change', (e) => {
+            currentSize = e.target.value;
+            renderPets();
+        });
+
+        document.getElementById('filterSearch').addEventListener('input', (e) => {
+            currentSearch = e.target.value.toLowerCase();
+            renderPets();
+        });
+
+        // INICIALIZAR
+        renderPets();
+    </script>
+</body>
+</html>
