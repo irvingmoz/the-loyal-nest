@@ -17,14 +17,13 @@
 
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--bg-light); color: var(--text-dark); }
         
-        /* --- NAVBAR MODIFICADO --- */
+        /* --- NAVBAR --- */
         nav { 
             background: #ffffff; 
             padding: 15px 40px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            /* CAMBIO 1: SE QUITÓ LA SOMBRA/LÍNEA HORIZONTAL */
             box-shadow: none; 
             position: sticky; 
             top: 0; 
@@ -32,55 +31,62 @@
         }
 
         .logo { 
-            font-size: 1.4rem; 
+            font-size: 1.8rem; 
             font-weight: 800; 
             color: var(--primary); 
             text-decoration: none; 
-            display: flex; align-items: center; gap: 8px; 
+            display: flex; align-items: center; gap: 10px; 
         }
 
-        /* Menú al Centro */
-        .nav-center { display: flex; gap: 30px; align-items: center; }
+        .nav-center { display: flex; gap: 35px; align-items: center; }
+        
         .nav-link {
-            text-decoration: none; color: #666; font-weight: 500; font-size: 1rem; transition: color 0.2s;
+            text-decoration: none; 
+            color: #555; 
+            font-weight: 600; 
+            font-size: 1.15rem; 
+            transition: color 0.2s;
         }
         .nav-link:hover { color: var(--primary); }
         .nav-link.active { color: var(--primary); font-weight: 700; }
 
-        /* CAMBIO 2: BOTÓN INICIAR SESIÓN (CONTORNO NARANJA) */
+        /* --- BOTÓN INICIAR SESIÓN (CAMBIO A GRIS -> NARANJA) --- */
         .btn-login {
             text-decoration: none; 
-            padding: 10px 25px; 
-            background: transparent; /* Fondo transparente */
-            border: 2px solid var(--primary); /* Borde Naranja */
+            padding: 10px 28px; 
+            background: transparent; 
+            /* 1. Estado Normal: GRIS */
+            border: 2px solid #ccc; 
+            color: #777; 
+            
             border-radius: 50px;
-            color: var(--primary); /* Texto Naranja */
+            font-size: 1.05rem; 
             font-weight: 700; 
-            transition: all 0.3s; 
+            transition: all 0.3s ease; 
             cursor: pointer;
         }
         
-        /* Efecto al pasar el mouse (se rellena de naranja) */
+        /* 2. Estado Mouse Encima: NARANJA */
         .btn-login:hover {
+            border-color: var(--primary);
             background: var(--primary);
             color: white;
-            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.3);
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.4);
         }
 
         /* --- HERO & FILTROS --- */
-        .hero { text-align: center; padding: 60px 20px; background: white; margin-bottom: 20px; }
-        .hero h1 { font-size: 2.2rem; color: var(--secondary); margin-bottom: 10px; font-weight: 700; }
-        .hero p { color: #7f8c8d; font-size: 1.1rem; margin-bottom: 30px; }
+        .hero { text-align: center; padding: 70px 20px; background: white; margin-bottom: 20px; }
+        .hero h1 { font-size: 2.8rem; color: var(--secondary); margin-bottom: 15px; font-weight: 800; }
+        .hero p { color: #7f8c8d; font-size: 1.25rem; margin-bottom: 35px; }
 
         .filters-container {
-            max-width: 900px; margin: 0 auto;
+            max-width: 950px; margin: 0 auto;
             display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;
         }
 
-        /* Botones de Filtro (Pills) */
         .pill {
-            padding: 10px 24px; border-radius: 30px; border: 1px solid #eee;
-            background: #fff; color: #555; cursor: pointer; font-weight: 600;
+            padding: 12px 28px; border-radius: 30px; border: 1px solid #eee;
+            background: #fff; color: #555; cursor: pointer; font-weight: 700; font-size: 1rem;
             transition: all 0.2s;
         }
         .pill:hover { background: #f9f9f9; transform: translateY(-2px); }
@@ -90,51 +96,52 @@
         }
 
         .modern-select, .modern-input {
-            padding: 10px 15px; border-radius: 12px; border: 1px solid #eee;
-            background: #fff; color: #555; outline: none;
+            padding: 12px 18px; border-radius: 12px; border: 1px solid #eee;
+            background: #fff; color: #555; outline: none; font-size: 1rem;
         }
         .search-wrapper { position: relative; display: flex; align-items: center; }
-        .search-wrapper i { position: absolute; left: 12px; color: #aaa; }
-        .modern-input { padding-left: 35px; width: 200px; }
+        .search-wrapper i { position: absolute; left: 15px; color: #aaa; font-size: 1.1rem; }
+        .modern-input { padding-left: 40px; width: 220px; }
 
         /* --- GRID --- */
         .pets-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px; max-width: 1200px; margin: 40px auto; padding: 0 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 35px; max-width: 1250px; margin: 40px auto; padding: 0 25px;
         }
 
         .pet-card {
             background: white; border-radius: 20px; overflow: hidden;
             border: 1px solid #f0f0f0; transition: transform 0.3s;
         }
-        .pet-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .pet-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
 
-        .pet-img-container { height: 250px; position: relative; }
+        .pet-img-container { height: 260px; position: relative; }
         .pet-img { width: 100%; height: 100%; object-fit: cover; }
         
         .badge {
             position: absolute; top: 15px; right: 15px;
-            background: rgba(255,255,255,0.95); padding: 6px 14px; border-radius: 20px;
-            font-size: 0.85rem; font-weight: 700; color: var(--primary);
+            background: rgba(255,255,255,0.95); padding: 8px 16px; border-radius: 20px;
+            font-size: 0.9rem; font-weight: 700; color: var(--primary);
         }
 
         .pet-info { padding: 25px; text-align: center; }
-        .pet-name { font-size: 1.5rem; margin: 0 0 5px; font-weight: 700; }
-        .pet-meta { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+        .pet-name { font-size: 1.6rem; margin: 0 0 5px; font-weight: 800; color: var(--secondary); }
+        .pet-meta { color: #888; font-size: 1rem; margin-bottom: 20px; }
         
         .tags { display: flex; gap: 8px; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }
-        .tag { color: #666; font-size: 0.85rem; background: #f5f5f5; padding: 4px 8px; border-radius: 6px; }
+        .tag { color: #666; font-size: 0.9rem; background: #f5f5f5; padding: 6px 12px; border-radius: 8px; }
 
         .btn-action {
-            display: inline-block; width: 100%; padding: 12px 0;
+            display: inline-block; width: 100%; padding: 14px 0;
             background: #27ae60; color: white; text-decoration: none;
-            border-radius: 12px; font-weight: 600; transition: background 0.2s;
+            border-radius: 12px; font-weight: 700; font-size: 1.05rem; transition: background 0.2s;
         }
         .btn-action:hover { background: #219150; }
 
         @media (max-width: 900px) {
-            nav { flex-direction: column; gap: 15px; padding: 20px; }
-            .nav-center { flex-wrap: wrap; justify-content: center; }
+            nav { flex-direction: column; gap: 20px; padding: 25px; }
+            .nav-center { flex-wrap: wrap; justify-content: center; gap: 20px; }
+            .hero h1 { font-size: 2rem; }
         }
     </style>
 </head>
@@ -147,21 +154,21 @@
             <a href="index.html" class="nav-link">Inicio</a>
             <a href="search-pets.html" class="nav-link active">Buscar Mascotas</a>
             <a href="shelters-map.html" class="nav-link">Refugios</a>
-            <a href="education.html" class="nav-link"><i class="fas fa-book-open" style="font-size:0.9rem;"></i> Educación</a>
+            <a href="education.html" class="nav-link"><i class="fas fa-book-open" style="font-size:1rem;"></i> Educación</a>
         </div>
 
         <div id="auth-section">
             <a href="auth.html" id="nav-login" class="btn-login">Iniciar Sesión</a>
             
             <div id="nav-user" style="display:none; gap:10px; align-items:center;">
-                <span style="font-weight:600; color:#555;">Mi Cuenta</span>
+                <span style="font-weight:700; color:#555; font-size:1.1rem;">Mi Cuenta</span>
                 <button class="btn-login" onclick="cerrarSesion()">Salir</button>
             </div>
         </div>
     </nav>
 
     <section class="hero">
-        <h1>Encuentra a tu compañero ideal <i class="fas fa-paw" style="color:#555; font-size:1.8rem;"></i></h1>
+        <h1>Encuentra a tu compañero ideal <i class="fas fa-paw" style="color:#555; font-size:2rem;"></i></h1>
         <p>Utiliza los filtros para encontrar la mascota perfecta para ti.</p>
         
         <div class="filters-container">
@@ -210,7 +217,6 @@
         function renderPets() {
             container.innerHTML = "";
             
-            // Filtrar
             const filtered = petsData.filter(pet => {
                 const matchSpecies = currentSpecies === "" || pet.species === currentSpecies;
                 const matchSize = currentSize === "" || pet.size === currentSize;
@@ -218,15 +224,13 @@
                 return matchSpecies && matchSize && matchSearch;
             });
 
-            // Mostrar Mensaje si no hay nada
             if(filtered.length === 0) {
-                container.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:#777; padding:20px;'>No encontramos mascotas con esos filtros.</p>";
+                container.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:#777; padding:20px; font-size:1.1rem;'>No encontramos mascotas con esos filtros.</p>";
                 return;
             }
 
-            // Dibujar Tarjetas
             filtered.forEach(pet => {
-                const tagsHTML = pet.tags.map(tag => `<span class="tag"><i class="fas fa-tag" style="font-size:0.7rem;"></i> ${tag}</span>`).join('');
+                const tagsHTML = pet.tags.map(tag => `<span class="tag"><i class="fas fa-tag" style="font-size:0.8rem;"></i> ${tag}</span>`).join('');
                 
                 const card = `
                     <article class="pet-card">
@@ -237,7 +241,7 @@
                         <div class="pet-info">
                             <h3 class="pet-name">${pet.name}</h3>
                             <div class="pet-meta">${pet.breed} · ${pet.age}</div>
-                            <p style="font-size:0.9rem; color:#666; margin-bottom:20px; min-height:50px;">${pet.desc}</p>
+                            <p style="font-size:1rem; color:#666; margin-bottom:20px; min-height:50px;">${pet.desc}</p>
                             <div class="tags">${tagsHTML}</div>
                             <a href="pet-profile.html?id=${pet.id}" class="btn-action">Ver Perfil / Adoptar</a>
                         </div>
@@ -274,7 +278,6 @@
             };
         }
 
-        // Arrancar
         document.addEventListener("DOMContentLoaded", renderPets);
 
     </script>
