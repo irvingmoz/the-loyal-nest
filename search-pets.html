@@ -11,25 +11,93 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- ESTILOS ESPECÍFICOS DEL BUSCADOR (Lo que no está en style.css) --- */
+        /* --- ESTILOS ESPECÍFICOS DEL BUSCADOR --- */
         
-        /* Ajuste de colores base si faltan */
         :root {
             --primary: #e67e22;
             --bg-light: #f9f9f9;
         }
 
-        /* HERO & FILTROS */
-        .hero { text-align: center; padding: 60px 20px; background: white; margin-bottom: 20px; }
-        .hero h1 { font-size: 2.5rem; color: #2c3e50; margin-bottom: 15px; font-weight: 800; }
-        .hero p { color: #7f8c8d; font-size: 1.1rem; margin-bottom: 35px; }
+        /* HERO (El cuadro principal actualizado para ser más chico) */
+        .hero {
+            text-align: center;
+            padding: 30px 20px; /* Padding reducido (antes 60px) */
+            background: transparent; /* Fondo transparente para que se vea el del container */
+            margin-bottom: 20px;
+        }
 
+        /* NUEVO: Contenedor interno para limitar el ancho y dar estilo de cuadro */
+        .hero-container {
+            max-width: 900px; /* Ancho máximo restringido */
+            margin: 0 auto;   /* Centrado horizontalmente */
+            background: #fff; /* Fondo blanco del cuadro */
+            padding: 40px;    /* Espacio interno */
+            border-radius: 24px; /* Bordes redondeados */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06); /* Sombra suave */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            text-align: left; /* Texto alineado a la izquierda dentro del cuadro */
+        }
+
+        .hero-content { flex: 1; }
+
+        .hero h1 {
+            font-size: 2.2rem; /* Un poco más pequeño */
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+
+        /* Ajuste para la imagen del hero */
+        .hero-image-container {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+        
+        .floating-badge {
+            position: absolute;
+            bottom: 20px;
+            left: -20px;
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Botones del Hero */
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .btn-primary { background: var(--primary); color: white; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: 600; }
+        .btn-secondary { background: #eee; color: #333; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: 600; }
+
+
+        /* FILTROS */
         .filters-container {
-            max-width: 950px; margin: 0 auto;
+            max-width: 950px; margin: 30px auto; /* Margen superior ajustado */
             display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;
         }
 
-        /* Estilos de los botones de filtro (Pills) */
         .pill {
             padding: 10px 24px; border-radius: 30px; border: 1px solid #eee;
             background: #fff; color: #555; cursor: pointer; font-weight: 600; font-size: 1rem;
@@ -53,7 +121,7 @@
 
         /* GRID RESULTADOS */
         .pets-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px; max-width: 1200px; margin: 40px auto; padding: 0 20px;
         }
 
@@ -86,6 +154,13 @@
             font-family: 'Inter', sans-serif;
         }
         .btn-action:hover { background: #219150; }
+
+        @media (max-width: 900px) {
+            .hero-container { flex-direction: column-reverse; text-align: center; padding: 30px 20px; }
+            .hero-image-container { max-width: 100%; }
+            .floating-badge { left: 50%; transform: translateX(-50%); bottom: -15px; width: max-content; }
+            .hero-buttons { justify-content: center; }
+        }
     </style>
 </head>
 <body>
@@ -95,7 +170,6 @@
             <div class="nav-brand">
                 <a href="index.html" class="logo">🐕 The Loyal Nest</a>
             </div>
-            
             <ul class="nav-links">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="search-pets.html" class="active">Buscar Mascotas</a></li>
@@ -103,7 +177,6 @@
                 <li><a href="education.html">Educación</a></li>
                 <li class="nav-auth">
                     <a href="auth.html" id="nav-login" class="btn-outline">Iniciar Sesión</a>
-                    
                     <div id="nav-user" style="display:none; gap:10px; align-items:center;">
                         <span style="font-weight:600; color:#555;">Mi Cuenta</span>
                         <button class="btn-outline" onclick="cerrarSesion()" style="padding:0.3rem 1rem; border:1px solid #ccc; font-size:0.9rem;">Salir</button>
@@ -114,27 +187,40 @@
     </header>
 
     <section class="hero">
-        <h1>Encuentra a tu compañero ideal <i class="fas fa-paw" style="color:#555; font-size:2rem;"></i></h1>
-        <p>Utiliza los filtros para encontrar la mascota perfecta para ti.</p>
-        
-        <div class="filters-container">
-            <button class="pill active" onclick="filtrarEspecie(this, '')">Todos</button>
-            <button class="pill" onclick="filtrarEspecie(this, 'perro')">Perros 🐶</button>
-            <button class="pill" onclick="filtrarEspecie(this, 'gato')">Gatos 🐱</button>
-
-            <select id="filterSize" class="modern-select">
-                <option value="">Cualquier tamaño</option>
-                <option value="pequeño">Pequeño</option>
-                <option value="mediano">Mediano</option>
-                <option value="grande">Grande</option>
-            </select>
-            
-            <div class="search-wrapper">
-                <i class="fas fa-search"></i>
-                <input type="text" id="filterSearch" class="modern-input" placeholder="Buscar por nombre...">
-            </div>
-        </div>
+         <div class="hero-container">
+             <div class="hero-content">
+                <span style="color: #777; font-weight: 600; display: block; margin-bottom: 10px;">Buscar mascotas</span>
+                <h1>Adopta con confianza y enamórate del catálogo</h1>
+                <p>Explora perros y gatos listos para un hogar. Filtra por especie, raza o tamaño y envía tu solicitud sin salir de esta página.</p>
+                <div class="hero-buttons">
+                    <a href="#petsContainer" class="btn-primary">Ver catálogo</a>
+                    <a href="#" class="btn-secondary">Panel administrador</a>
+                </div>
+             </div>
+             <div class="hero-image-container">
+                 <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&q=80" alt="Perro feliz" class="hero-image">
+                 <div class="floating-badge">Catálogo curado ✨</div>
+             </div>
+         </div>
     </section>
+
+    <div class="filters-container">
+        <button class="pill active" onclick="filtrarEspecie(this, '')">Todos</button>
+        <button class="pill" onclick="filtrarEspecie(this, 'perro')">Perros 🐶</button>
+        <button class="pill" onclick="filtrarEspecie(this, 'gato')">Gatos 🐱</button>
+
+        <select id="filterSize" class="modern-select">
+            <option value="">Cualquier tamaño</option>
+            <option value="pequeño">Pequeño</option>
+            <option value="mediano">Mediano</option>
+            <option value="grande">Grande</option>
+        </select>
+        
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" id="filterSearch" class="modern-input" placeholder="Buscar por nombre...">
+        </div>
+    </div>
 
     <div id="petsContainer" class="pets-grid"></div>
 
