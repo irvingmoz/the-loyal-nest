@@ -3,112 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de mascota | The Loyal Nest</title>
+    <title>Perfil de Mascota | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* Estilos base iguales a tus otras páginas */
+        :root { --primary: #e67e22; --secondary: #2c3e50; --text-dark: #333; --bg-light: #f9f9f9; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg-light); color: var(--text-dark); }
+
+        /* NAVBAR (Mismo estilo) */
+        .header { background: #ffffff; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .nav-brand .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; margin: 0; padding: 0; }
+        .nav-links li a { text-decoration: none; color: #555; font-weight: 500; transition: color 0.3s; }
+        .nav-links li a:hover { color: var(--primary); }
+        .btn-outline { padding: 0.5rem 1.5rem; border: 1px solid #ccc; border-radius: 50px; color: #666; font-weight: 500; text-decoration: none; transition: all 0.3s; display:inline-block; cursor: pointer;}
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); background: transparent; }
+        #nav-user { display: none; gap: 10px; align-items: center; }
+
+        /* PERFIL */
+        .profile-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .profile-img { width: 100%; height: 400px; object-fit: cover; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .profile-info h1 { font-size: 2.5rem; color: var(--secondary); margin-bottom: 10px; }
+        .breed { color: var(--primary); font-weight: 600; font-size: 1.1rem; margin-bottom: 20px; display: block; }
+        .description { line-height: 1.6; color: #555; margin-bottom: 30px; }
+        
+        .btn-adopt { display: block; width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; text-align: center; transition: background 0.3s; }
+        .btn-adopt:hover { background: #d35400; }
+
+        @media (max-width: 768px) { .profile-container { grid-template-columns: 1fr; } }
+    </style>
 </head>
-
 <body>
-<header class="header">
-    <nav class="nav">
-        <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-        <ul class="nav-links">
-            <li><a href="search-pets.html">Buscar</a></li>
-            <li class="nav-user" style="display:none; gap:8px; align-items:center;">
-                <span class="nav-user-name"></span>
-                <button class="btn-outline" data-action="logout">Salir</button>
-            </li>
-        </ul>
-    </nav>
-</header>
 
-<main class="container" style="margin-top:110px; max-width:1100px;">
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand"><a href="index.html" class="logo">🐕 The Loyal Nest</a></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="search-pets.html">Buscar Mascotas</a></li>
+                <li><a href="shelters-map.html">Refugios</a></li>
+                <li><a href="education.html">Educación</a></li>
+                <li class="nav-auth">
+                    <a href="auth.html" id="nav-login" class="btn-outline">Iniciar Sesión</a>
+                    <div id="nav-user"><span style="font-weight:600;">Mi Cuenta</span> <button class="btn-outline" onclick="cerrarSesion()">Salir</button></div>
+                </li>
+            </ul>
+        </nav>
+    </header>
 
-    <!-- SECCIÓN PERFIL -->
-    <section class="panel" id="petProfileCard">
-        <header class="panel__header">
-            <div>
-                <p class="muted">Ficha de mascota</p>
-                <h1 data-field="name">Mascota</h1>
-                <p class="muted" data-field="meta"></p>
-            </div>
-            <span class="status" data-field="status">disponible</span>
-        </header>
+    <main class="profile-container" id="profileContent">
+        </main>
 
-        <p data-field="description">Descripción pendiente</p>
-        <p><strong>Refugio / contacto:</strong> <span data-field="owner">-</span></p>
+    <script src="js/auth.js"></script>
+    <script>
+        // 1. BASE DE DATOS (Igual al buscador)
+        const petsData = [
+            { id: 1, name: "Bruno", species: "Perro", breed: "Labrador", size: "Grande", age: "3 años", desc: "Bruno es un labrador chocolate lleno de amor. Le encantan los paseos largos.", img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&q=80" },
+            { id: 2, name: "Maya", species: "Perro", breed: "Corgi", size: "Pequeño", age: "9 meses", desc: "Pequeña pero con mucha personalidad. Ama aprender trucos.", img: "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=500&q=80" },
+            { id: 3, name: "Coco", species: "Perro", breed: "Poodle", size: "Pequeño", age: "2 años", desc: "Perfecto para depas, muy limpio y educado.", img: "https://images.unsplash.com/photo-1591769225440-811ad7d6eca6?w=500&q=80" },
+            { id: 4, name: "Rocky", species: "Perro", breed: "Pastor Alemán", size: "Grande", age: "4 años", desc: "Guardián noble que busca aventuras.", img: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=500&q=80" },
+            { id: 5, name: "Luna", species: "Gato", breed: "Mestizo", size: "Pequeño", age: "1 año", desc: "Gatita negra muy elegante y tranquila.", img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500&q=80" },
+            { id: 6, name: "Michi", species: "Gato", breed: "Atigrado", size: "Mediano", age: "6 meses", desc: "Torbellino de energía, ideal para jugar.", img: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=500&q=80" },
+            { id: 7, name: "Simba", species: "Gato", breed: "Persa", size: "Mediano", age: "3 años", desc: "Rey de la casa, busca un sofá cómodo.", img: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=500&q=80" },
+            { id: 8, name: "Nieve", species: "Gato", breed: "Blanco", size: "Pequeño", age: "2 años", desc: "Tímida al principio pero muy dulce.", img: "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=500&q=80" }
+        ];
 
-        <button class="btn-primary" data-hide-role="rescatista,rescuer"
-            onclick="document.getElementById('adoptionModal').showModal()">
-            Solicitar adopción
-        </button>
-    </section>
+        // 2. RECUPERAR ID DE LA URL
+        const params = new URLSearchParams(window.location.search);
+        const petId = parseInt(params.get('id'));
+        const pet = petsData.find(p => p.id === petId);
+        const container = document.getElementById('profileContent');
 
-    <!-- SECCIÓN HISTORIAL MÉDICO -->
-    <section class="panel">
-        <header class="panel__header"><h2>Historial médico</h2></header>
+        if (pet) {
+            // 3. MOSTRAR DATOS
+            container.innerHTML = `
+                <div class="profile-image-box">
+                    <img src="${pet.img}" alt="${pet.name}" class="profile-img">
+                </div>
+                <div class="profile-info">
+                    <h1>${pet.name}</h1>
+                    <span class="breed">${pet.breed} • ${pet.age}</span>
+                    <p class="description">${pet.desc}</p>
+                    <div style="background:#fff3e0; padding:15px; border-radius:10px; margin-bottom:20px;">
+                        <strong>📍 Refugio:</strong> Huellitas Seguras<br>
+                        <strong>📞 Contacto:</strong> 55-1234-5678
+                    </div>
+                    <button class="btn-adopt" onclick="enviarSolicitud()">¡Quiero Adoptar!</button>
+                </div>
+            `;
+        } else {
+            container.innerHTML = "<h2>Mascota no encontrada 😢</h2>";
+        }
 
-        <table class="table">
-            <thead>
-                <tr><th>Tipo</th><th>Fecha</th><th>Notas</th><th>Próxima</th></tr>
-            </thead>
-            <tbody id="medicalHistory"></tbody>
-        </table>
+        // 4. FUNCIÓN GUARDAR SOLICITUD (TAREA 2)
+        function enviarSolicitud() {
+            // Crear objeto solicitud
+            const nuevaSolicitud = {
+                id: Date.now(), // ID único basado en la hora
+                mascota: pet.name,
+                foto: pet.img,
+                fecha: new Date().toLocaleDateString(),
+                estado: "En Revisión"
+            };
 
-        <!-- Esto solo lo ven roles de refugio -->
-        <form id="medicalForm" class="form-grid" data-require-role="rescatista,rescuer">
-            <label>Tipo
-                <select name="type">
-                    <option>Vacuna</option>
-                    <option>Desparasitación</option>
-                    <option>Cita</option>
-                </select>
-            </label>
+            // Leer lo que ya hay guardado o iniciar array vacío
+            let solicitudes = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
+            
+            // Agregar nueva y guardar
+            solicitudes.push(nuevaSolicitud);
+            localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudes));
 
-            <label>Fecha <input type="date" name="date" required></label>
-            <label>Notas <textarea name="notes"></textarea></label>
-            <label>Próxima fecha <input type="date" name="nextDate"></label>
-
-            <button class="btn-outline" type="submit">Agregar entrada</button>
-        </form>
-    </section>
-
-    <!-- TIMELINE -->
-    <section class="panel">
-        <header class="panel__header"><h2>Timeline de solicitudes</h2></header>
-        <div id="adoptionRequests" class="cards-grid"></div>
-    </section>
-
-</main>
-
-<!-- MODAL -->
-<dialog id="adoptionModal">
-    <form id="adoptionRequestForm" class="form-grid" method="dialog">
-        <h3>Solicitar adopción</h3>
-
-        <label>Mensaje
-            <textarea name="message" required></textarea>
-        </label>
-
-        <input type="hidden" name="petId" value="">
-        <button class="btn-primary" type="submit">Enviar</button>
-
-        <div id="adoptionStatus" class="muted"></div>
-    </form>
-
-    <button class="btn-text" onclick="document.getElementById('adoptionModal').close()">
-        Cerrar
-    </button>
-</dialog>
-
-<!-- SCRIPTS CORRECTOS -->
-<script src="js/session.js"></script>
-<script src="js/pet-profile.js"></script>  <!-- ESTE ES EL CORRECTO -->
-<script src="js/adoptions.js"></script>     <!-- Opcional -->
-<script>
-    const idParam = new URLSearchParams(window.location.search).get('id');
-    const requestForm = document.getElementById('adoptionRequestForm');
-    if (requestForm && idParam) requestForm.petId.value = idParam;
-</script>
-
+            alert("✅ Solicitud enviada exitosamente.\nPuedes ver el estado en tu Dashboard.");
+            window.location.href = "dashboard-adoptante.html";
+        }
+    </script>
 </body>
 </html>
