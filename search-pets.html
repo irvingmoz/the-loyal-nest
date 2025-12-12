@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* --- ESTILOS GENERALES --- */
+        /* --- ESTILOS GENERALES (BASE IDÉNTICA A TU EDUCATION.CSS) --- */
         :root {
             --primary: #e67e22;
             --secondary: #2c3e50;
@@ -15,13 +15,12 @@
             --bg-light: #f9f9f9;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--bg-light); color: var(--text-dark); }
+        body { font-family: 'Inter', 'Segoe UI', sans-serif; margin: 0; background-color: var(--bg-light); color: var(--text-dark); }
         
-        /* --- HEADER & NAV --- */
+        /* --- HEADER & NAV (COPIADO EXACTO DE EDUCATION.HTML) --- */
         .header {
             background: #ffffff;
-            box-shadow: none; /* Sin sombra */
-            border-bottom: none; /* Sin línea */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Sombra suave igual que education */
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -31,72 +30,73 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 40px;
-            max-width: 1400px;
+            padding: 1rem 2rem; /* Padding estándar */
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* Logo */
-        .logo {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--primary);
-            text-decoration: underline;
+        .nav-brand .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark); /* Color oscuro base */
+            text-decoration: none;
             display: flex; align-items: center; gap: 8px;
         }
 
-        /* Lista de Links */
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 2rem;
             list-style: none;
             margin: 0;
             padding: 0;
         }
 
-        .nav-links a {
+        .nav-links li a {
             text-decoration: none;
             color: #555;
-            font-weight: 600;
-            font-size: 1.05rem; /* TAMAÑO BASE DE LAS LETRAS */
-            transition: color 0.2s;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
         }
 
-        .nav-links a:hover { color: var(--primary); }
-        .nav-links a.active { color: var(--primary); font-weight: 700; }
+        .nav-links li a:hover { color: var(--primary); }
+        
+        /* Clase Active (Naranja) */
+        .nav-links li a.active { 
+            color: var(--primary); 
+            font-weight: 600; 
+        }
 
-        .nav-auth { margin-left: 15px; }
-
-        /* --- BOTÓN SESIÓN CORREGIDO --- */
+        /* Botón Iniciar Sesión (Estilo Outline) */
         .btn-outline {
-            padding: 8px 24px;
-            background: transparent;
-            
-            /* ESTADO NORMAL: GRIS */
-            border: 2px solid #aaa; /* Borde Gris */
-            color: #666;            /* Texto Gris */
-            
+            padding: 0.5rem 1.5rem;
+            border: 1px solid #ddd;
             border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.05rem; /* MISMO TAMAÑO QUE LOS LINKS */
+            color: var(--text-dark);
+            font-weight: 500;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
         }
 
-        /* ESTADO HOVER: NARANJA FANTASMA */
         .btn-outline:hover {
-            border-color: var(--primary); /* Borde Naranja */
-            color: var(--primary);        /* Texto Naranja */
-            background: transparent;      /* Fondo Transparente */
-            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.2);
+            border-color: var(--primary);
+            color: var(--primary);
+            background: transparent;
         }
 
-        /* --- HERO & FILTROS --- */
+        /* Menú de Usuario (Oculto por defecto) */
+        #nav-user {
+            display: none; 
+            gap: 10px; 
+            align-items: center;
+        }
+
+        /* --- HERO & FILTROS (Mantenemos tu diseño de buscador) --- */
         .hero { text-align: center; padding: 70px 20px; background: white; margin-bottom: 20px; }
-        .hero h1 { font-size: 2.8rem; color: var(--secondary); margin-bottom: 15px; font-weight: 800; }
-        .hero p { color: #7f8c8d; font-size: 1.25rem; margin-bottom: 35px; }
+        .hero h1 { font-size: 2.5rem; color: var(--secondary); margin-bottom: 15px; font-weight: 800; }
+        .hero p { color: #7f8c8d; font-size: 1.1rem; margin-bottom: 35px; }
 
         .filters-container {
             max-width: 950px; margin: 0 auto;
@@ -104,8 +104,8 @@
         }
 
         .pill {
-            padding: 12px 28px; border-radius: 30px; border: 1px solid #eee;
-            background: #fff; color: #555; cursor: pointer; font-weight: 700; font-size: 1rem;
+            padding: 10px 24px; border-radius: 30px; border: 1px solid #eee;
+            background: #fff; color: #555; cursor: pointer; font-weight: 600; font-size: 1rem;
             transition: all 0.2s;
         }
         .pill:hover { background: #f9f9f9; transform: translateY(-2px); }
@@ -115,52 +115,52 @@
         }
 
         .modern-select, .modern-input {
-            padding: 12px 18px; border-radius: 12px; border: 1px solid #eee;
+            padding: 10px 16px; border-radius: 12px; border: 1px solid #eee;
             background: #fff; color: #555; outline: none; font-size: 1rem;
         }
         .search-wrapper { position: relative; display: flex; align-items: center; }
-        .search-wrapper i { position: absolute; left: 15px; color: #aaa; font-size: 1.1rem; }
+        .search-wrapper i { position: absolute; left: 15px; color: #aaa; font-size: 1rem; }
         .modern-input { padding-left: 40px; width: 220px; }
 
         /* --- GRID --- */
         .pets-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 35px; max-width: 1250px; margin: 40px auto; padding: 0 25px;
+            gap: 30px; max-width: 1200px; margin: 40px auto; padding: 0 20px;
         }
 
         .pet-card {
             background: white; border-radius: 20px; overflow: hidden;
             border: 1px solid #f0f0f0; transition: transform 0.3s;
         }
-        .pet-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .pet-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
 
-        .pet-img-container { height: 260px; position: relative; }
+        .pet-img-container { height: 250px; position: relative; }
         .pet-img { width: 100%; height: 100%; object-fit: cover; }
         
         .badge {
             position: absolute; top: 15px; right: 15px;
-            background: rgba(255,255,255,0.95); padding: 8px 16px; border-radius: 20px;
-            font-size: 0.9rem; font-weight: 700; color: var(--primary);
+            background: rgba(255,255,255,0.95); padding: 6px 14px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: 700; color: var(--primary);
         }
 
         .pet-info { padding: 25px; text-align: center; }
-        .pet-name { font-size: 1.6rem; margin: 0 0 5px; font-weight: 800; color: var(--secondary); }
-        .pet-meta { color: #888; font-size: 1rem; margin-bottom: 20px; }
+        .pet-name { font-size: 1.5rem; margin: 0 0 5px; font-weight: 700; color: var(--secondary); }
+        .pet-meta { color: #888; font-size: 0.95rem; margin-bottom: 20px; }
         
         .tags { display: flex; gap: 8px; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }
-        .tag { color: #666; font-size: 0.9rem; background: #f5f5f5; padding: 6px 12px; border-radius: 8px; }
+        .tag { color: #666; font-size: 0.85rem; background: #f5f5f5; padding: 5px 10px; border-radius: 6px; }
 
         .btn-action {
-            display: inline-block; width: 100%; padding: 14px 0;
+            display: inline-block; width: 100%; padding: 12px 0;
             background: #27ae60; color: white; text-decoration: none;
-            border-radius: 12px; font-weight: 700; font-size: 1.05rem; transition: background 0.2s;
+            border-radius: 12px; font-weight: 600; transition: background 0.2s;
         }
         .btn-action:hover { background: #219150; }
 
-        @media (max-width: 900px) {
-            .nav { flex-direction: column; gap: 20px; }
-            .nav-links { flex-direction: column; gap: 15px; width: 100%; }
-            .nav-auth { margin-left: 0; }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav { flex-direction: column; gap: 1rem; padding: 1rem; }
+            .nav-links { flex-direction: column; gap: 1rem; }
         }
     </style>
 </head>
@@ -171,19 +171,17 @@
             <div class="nav-brand">
                 <a href="index.html" class="logo">🐕 The Loyal Nest</a>
             </div>
-            
             <ul class="nav-links">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="search-pets.html" class="active">Buscar Mascotas</a></li>
                 <li><a href="shelters-map.html">Refugios</a></li>
                 <li><a href="education.html">Educación</a></li>
-                
                 <li class="nav-auth">
                     <a href="auth.html" id="nav-login" class="btn-outline">Iniciar Sesión</a>
                     
-                    <div id="nav-user" style="display:none; gap:10px; align-items:center;">
-                        <span style="font-weight:700; color:#555;">Mi Cuenta</span>
-                        <button class="btn-outline" onclick="cerrarSesion()" style="border:1px solid #ccc; font-size:0.9rem;">Salir</button>
+                    <div id="nav-user">
+                        <span style="font-weight:600; color:#555;">Mi Cuenta</span>
+                        <button class="btn-outline" onclick="cerrarSesion()" style="padding:0.3rem 1rem; font-size:0.9rem;">Salir</button>
                     </div>
                 </li>
             </ul>
@@ -259,7 +257,7 @@
                         <div class="pet-info">
                             <h3 class="pet-name">${pet.name}</h3>
                             <div class="pet-meta">${pet.breed} · ${pet.age}</div>
-                            <p style="font-size:1rem; color:#666; margin-bottom:20px; min-height:50px;">${pet.desc}</p>
+                            <p style="font-size:0.95rem; color:#666; margin-bottom:20px; min-height:50px;">${pet.desc}</p>
                             <div class="tags">${tagsHTML}</div>
                             <a href="pet-profile.html?id=${pet.id}" class="btn-action">Ver Perfil / Adoptar</a>
                         </div>
