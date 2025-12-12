@@ -153,6 +153,7 @@ function renderPets() {
     const container = document.getElementById('searchResults');
     if (!container) return;
     const filtered = filterPets();
+    
     if (!filtered.length) {
         container.innerHTML = '<p class="muted">No hay coincidencias con los filtros seleccionados.</p>';
         return;
@@ -173,9 +174,11 @@ function renderPets() {
                 <span>🐾 ${pet.temperament}</span>
                 <span>📏 Tamaño ${pet.size}</span>
             </div>
-            <div class="pet-card__actions">
-                <span class="badge-status">Disponible</span>
-                <button class="btn-primary" data-action="open-drawer" data-pet-id="${pet.id}">Solicitar adopción</button>
+            
+            <div class="pet-card__actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="pet-profile.html?id=${pet.id}" class="btn-outline" style="text-align: center; text-decoration: none; flex: 1;">Ver Perfil</a>
+                
+                <button class="btn-primary" data-action="open-drawer" data-pet-id="${pet.id}" style="flex: 1;">Adoptar</button>
             </div>
         </article>
     `).join('');
