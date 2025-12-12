@@ -20,10 +20,8 @@
         /* --- HEADER & NAV --- */
         .header {
             background: #ffffff;
-            /* CAMBIO: SIN SOMBRA NI BORDES (Adiós línea horizontal) */
-            box-shadow: none;
-            border-bottom: none;
-            
+            box-shadow: none; /* Sin sombra */
+            border-bottom: none; /* Sin línea */
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -31,7 +29,7 @@
 
         .nav {
             display: flex;
-            justify-content: space-between; /* Logo izquierda, Menú derecha */
+            justify-content: space-between;
             align-items: center;
             padding: 15px 40px;
             max-width: 1400px;
@@ -43,11 +41,11 @@
             font-size: 1.6rem;
             font-weight: 800;
             color: var(--primary);
-            text-decoration: underline; /* Subrayado */
+            text-decoration: underline;
             display: flex; align-items: center; gap: 8px;
         }
 
-        /* Lista de Links (Alineada a la derecha) */
+        /* Lista de Links */
         .nav-links {
             display: flex;
             align-items: center;
@@ -61,7 +59,7 @@
             text-decoration: none;
             color: #555;
             font-weight: 600;
-            font-size: 1.05rem;
+            font-size: 1.05rem; /* TAMAÑO BASE DE LAS LETRAS */
             transition: color 0.2s;
         }
 
@@ -70,23 +68,28 @@
 
         .nav-auth { margin-left: 15px; }
 
-        /* Botón Fantasma (Gris -> Naranja) */
+        /* --- BOTÓN SESIÓN CORREGIDO --- */
         .btn-outline {
             padding: 8px 24px;
             background: transparent;
-            border: 2px solid #ccc; /* Borde gris inicial */
-            color: #666;            /* Texto gris inicial */
+            
+            /* ESTADO NORMAL: GRIS */
+            border: 2px solid #aaa; /* Borde Gris */
+            color: #666;            /* Texto Gris */
+            
             border-radius: 50px;
-            font-weight: 700;
+            font-weight: 600;
+            font-size: 1.05rem; /* MISMO TAMAÑO QUE LOS LINKS */
             transition: all 0.3s ease;
-            text-decoration: none;  /* Importante para que no se subraye como link */
+            text-decoration: none;
             display: inline-block;
         }
 
+        /* ESTADO HOVER: NARANJA FANTASMA */
         .btn-outline:hover {
-            border-color: var(--primary);
-            background: var(--primary);
-            color: white;
+            border-color: var(--primary); /* Borde Naranja */
+            color: var(--primary);        /* Texto Naranja */
+            background: transparent;      /* Fondo Transparente */
             box-shadow: 0 4px 10px rgba(230, 126, 34, 0.2);
         }
 
