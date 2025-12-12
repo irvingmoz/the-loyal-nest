@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Mascotas | The Loyal Nest</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- ESTILOS GENERALES (BASE IDÉNTICA A TU EDUCATION.CSS) --- */
+        /* --- ESTILOS GENERALES --- */
         :root {
             --primary: #e67e22;
             --secondary: #2c3e50;
@@ -15,12 +16,12 @@
             --bg-light: #f9f9f9;
         }
 
-        body { font-family: 'Inter', 'Segoe UI', sans-serif; margin: 0; background-color: var(--bg-light); color: var(--text-dark); }
+        body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg-light); color: var(--text-dark); }
         
-        /* --- HEADER & NAV (COPIADO EXACTO DE EDUCATION.HTML) --- */
+        /* --- HEADER & NAV (ESTRUCTURA EXACTA DE EDUCATION.HTML) --- */
         .header {
             background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Sombra suave igual que education */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -28,9 +29,9 @@
 
         .nav {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Logo a la izquierda, TODO lo demás a la derecha */
             align-items: center;
-            padding: 1rem 2rem; /* Padding estándar */
+            padding: 1rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -38,15 +39,16 @@
         .nav-brand .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text-dark); /* Color oscuro base */
+            color: var(--text-dark);
             text-decoration: none;
             display: flex; align-items: center; gap: 8px;
         }
 
+        /* ESTO ES LO QUE FALTABA: Agrupar links y botón en una sola lista a la derecha */
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: 2rem; /* Espacio entre items */
             list-style: none;
             margin: 0;
             padding: 0;
@@ -62,38 +64,43 @@
 
         .nav-links li a:hover { color: var(--primary); }
         
-        /* Clase Active (Naranja) */
+        /* Link Activo */
         .nav-links li a.active { 
             color: var(--primary); 
             font-weight: 600; 
         }
 
-        /* Botón Iniciar Sesión (Estilo Outline) */
+        /* --- BOTÓN INICIAR SESIÓN (GRIS -> NARANJA) --- */
         .btn-outline {
-            padding: 0.5rem 1.5rem;
-            border: 1px solid #ddd;
+            padding: 0.6rem 1.5rem;
+            background: transparent;
+            
+            /* Estado Normal: Gris */
+            border: 1px solid #ccc;
+            color: #666;
+            
             border-radius: 50px;
-            color: var(--text-dark);
             font-weight: 500;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
         }
 
+        /* Estado Hover: Naranja (Sin fondo) */
         .btn-outline:hover {
             border-color: var(--primary);
             color: var(--primary);
             background: transparent;
         }
 
-        /* Menú de Usuario (Oculto por defecto) */
+        /* Menú Usuario (Oculto por defecto) */
         #nav-user {
             display: none; 
             gap: 10px; 
             align-items: center;
         }
 
-        /* --- HERO & FILTROS (Mantenemos tu diseño de buscador) --- */
+        /* --- HERO & FILTROS (Tu diseño del buscador) --- */
         .hero { text-align: center; padding: 70px 20px; background: white; margin-bottom: 20px; }
         .hero h1 { font-size: 2.5rem; color: var(--secondary); margin-bottom: 15px; font-weight: 800; }
         .hero p { color: #7f8c8d; font-size: 1.1rem; margin-bottom: 35px; }
@@ -122,7 +129,7 @@
         .search-wrapper i { position: absolute; left: 15px; color: #aaa; font-size: 1rem; }
         .modern-input { padding-left: 40px; width: 220px; }
 
-        /* --- GRID --- */
+        /* --- GRID RESULTADOS --- */
         .pets-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 30px; max-width: 1200px; margin: 40px auto; padding: 0 20px;
@@ -171,11 +178,13 @@
             <div class="nav-brand">
                 <a href="index.html" class="logo">🐕 The Loyal Nest</a>
             </div>
+            
             <ul class="nav-links">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="search-pets.html" class="active">Buscar Mascotas</a></li>
                 <li><a href="shelters-map.html">Refugios</a></li>
                 <li><a href="education.html">Educación</a></li>
+                
                 <li class="nav-auth">
                     <a href="auth.html" id="nav-login" class="btn-outline">Iniciar Sesión</a>
                     
@@ -214,7 +223,6 @@
     <div id="petsContainer" class="pets-grid"></div>
 
     <script src="js/auth.js"></script> 
-    
     <script>
         const petsData = [
             { id: 1, name: "Bruno", species: "perro", breed: "Labrador", size: "grande", age: "3 años", desc: "Bruno es un labrador ideal para familias activas.", tags: ["juguetón", "sociable"], img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&q=80" },
