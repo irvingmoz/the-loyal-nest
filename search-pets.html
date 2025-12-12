@@ -17,10 +17,13 @@
 
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--bg-light); color: var(--text-dark); }
         
-        /* --- HEADER & NAV (IGUAL AL MAPA) --- */
+        /* --- HEADER & NAV --- */
         .header {
             background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            /* CAMBIO: SIN SOMBRA NI BORDES (Adiós línea horizontal) */
+            box-shadow: none;
+            border-bottom: none;
+            
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -28,7 +31,7 @@
 
         .nav {
             display: flex;
-            justify-content: space-between; /* Logo a un lado, Links al otro */
+            justify-content: space-between; /* Logo izquierda, Menú derecha */
             align-items: center;
             padding: 15px 40px;
             max-width: 1400px;
@@ -40,7 +43,7 @@
             font-size: 1.6rem;
             font-weight: 800;
             color: var(--primary);
-            text-decoration: underline; /* Subrayado como pediste */
+            text-decoration: underline; /* Subrayado */
             display: flex; align-items: center; gap: 8px;
         }
 
@@ -65,20 +68,19 @@
         .nav-links a:hover { color: var(--primary); }
         .nav-links a.active { color: var(--primary); font-weight: 700; }
 
-        /* Estilo específico para el Auth (Botón) */
-        .nav-auth {
-            margin-left: 15px; /* Un poco de separación extra */
-        }
+        .nav-auth { margin-left: 15px; }
 
         /* Botón Fantasma (Gris -> Naranja) */
         .btn-outline {
             padding: 8px 24px;
             background: transparent;
-            border: 2px solid #ccc; /* Borde gris */
-            color: #666;            /* Texto gris */
+            border: 2px solid #ccc; /* Borde gris inicial */
+            color: #666;            /* Texto gris inicial */
             border-radius: 50px;
             font-weight: 700;
             transition: all 0.3s ease;
+            text-decoration: none;  /* Importante para que no se subraye como link */
+            display: inline-block;
         }
 
         .btn-outline:hover {
