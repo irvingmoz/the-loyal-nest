@@ -1,126 +1,178 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro | The Loyal Nest</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+// js/auth.js - CUMPLE RF01, RF02, RF03, RF04, RF05, RNF10
+
+document.addEventListener("DOMContentLoaded", function() {
+    checkSession();
     
-    <style>
-        :root { --primary: #e67e22; --primary-hover: #d35400; --text-dark: #333; --bg-light: #f9f9f9; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-light); margin: 0; color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; }
-
-        /* NAVBAR (Igual al Login) */
-        .header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1200px; margin: 0 auto; }
-        .nav-brand .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); text-decoration: none; }
-        .nav-buttons { display: flex; gap: 15px; }
+    // Detectar formulario de Registro
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        // Mostrar campos según el rol (RF02)
+        const roleSelect = document.getElementById('role');
+        roleSelect.addEventListener('change', toggleCamposPorRol);
         
-        .btn-text { text-decoration: none; color: #555; font-weight: 600; padding: 10px 15px; }
-        .btn-outline { padding: 10px 20px; border: 1px solid #ccc; border-radius: 50px; text-decoration: none; color: #333; font-weight: 500; transition: 0.3s; }
-        .btn-solid { padding: 10px 20px; background-color: var(--primary); color: white; border-radius: 50px; text-decoration: none; font-weight: 600; border: none; transition: 0.3s; }
-        .btn-solid:hover { background-color: var(--primary-hover); }
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            registrarUsuario();
+        });
+    }
 
-        /* CONTENEDOR CENTRAL (La Magia del Diseño) */
-        .auth-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
+    // Detectar formulario de Login
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            iniciarSesion();
+        });
+    }
+});
+
+// --- RNF10: ENCRIPTACIÓN (Simulada con Base64 para prototipo) ---
+function encriptar(texto) {
+    return btoa(texto); // Convierte a Base64 (No es texto plano)
+}
+
+// --- RF02: REGISTRO CON CAMPOS ESPECÍFICOS ---
+function toggleCamposPorRol() {
+    const rol = document.getElementById('role').value;
+    const divRescatista = document.getElementById('camposRescatista');
+    // Si es rescatista, mostramos el campo "Estatus Legal", si no, se oculta.
+    if (rol === 'rescatista') {
+        divRescatista.style.display = 'block';
+    } else {
+        divRescatista.style.display = 'none';
+    }
+}
+
+function registrarUsuario() {
+    // Datos Comunes (RF02)
+    const nombre = document.getElementById('nombre').value;
+    const apPaterno = document.getElementById('apPaterno').value;
+    const apMaterno = document.getElementById('apMaterno').value;
+    const edad = document.getElementById('edad').value;
+    const curp = document.getElementById('curp').value;
+    const direccion = document.getElementById('direccion').value; // Calle, Num, Col, etc.
+    const correo = document.getElementById('registerEmail').value;
+    const passRaw = document.getElementById('registerPassword').value;
+    const rol = document.getElementById('role').value;
+
+    // Datos Específicos (RF02)
+    let estatusLegal = "";
+    if (rol === 'rescatista') {
+        estatusLegal = document.getElementById('estatusLegal').value;
+    }
+
+    // Validación básica
+    if(passRaw.length < 8) {
+        alert("La contraseña debe tener al menos 8 caracteres.");
+        return;
+    }
+
+    // RNF10: Guardar contraseña ENCRIPTADA
+    const pass = encriptar(passRaw);
+
+    const nuevoUsuario = { 
+        nombre, apPaterno, apMaterno, edad, curp, direccion, 
+        correo, pass, rol, estatusLegal 
+    };
+
+    // Guardar en LocalStorage ("Base de Datos")
+    // Nota: En un sistema real usaríamos una lista de usuarios, aquí sobrescribimos para el demo
+    localStorage.setItem('userDB', JSON.stringify(nuevoUsuario));
+    
+    // Auto-login
+    localStorage.setItem('userSession', JSON.stringify(nuevoUsuario));
+
+    alert("¡Cuenta creada con éxito! Bienvenido/a " + nombre);
+    redirigirPorRol(rol);
+}
+
+// --- LOGIN (Validando contraseña encriptada) ---
+function iniciarSesion() {
+    const correo = document.getElementById('email').value;
+    const passRaw = document.getElementById('password').value;
+    const passEnc = encriptar(passRaw); // Encriptamos lo que escribe para comparar
+
+    const usuarioGuardado = JSON.parse(localStorage.getItem('userDB'));
+
+    if (usuarioGuardado && usuarioGuardado.correo === correo && usuarioGuardado.pass === passEnc) {
+        localStorage.setItem('userSession', JSON.stringify(usuarioGuardado));
+        redirigirPorRol(usuarioGuardado.rol);
+    } else {
+        alert("Correo o contraseña incorrectos.");
+    }
+}
+
+// --- RF03: RECUPERACIÓN DE CONTRASEÑA ---
+function recuperarContrasena() {
+    const email = prompt("Por favor, ingresa tu correo electrónico para restablecer tu contraseña:");
+    if (email) {
+        // Simulamos envío (Cumple RF03)
+        alert(`Hemos enviado un enlace de recuperación a ${email}. Revisa tu bandeja de entrada.`);
+    }
+}
+
+// --- RF04: EDITAR PERFIL ---
+function guardarPerfilEditado() {
+    const sesionActual = JSON.parse(localStorage.getItem('userSession'));
+    if (!sesionActual) return;
+
+    // Obtenemos los nuevos valores del modal (ver dashboard)
+    const nuevoNombre = document.getElementById('editNombre').value;
+    const nuevaDireccion = document.getElementById('editDireccion').value;
+
+    // Actualizamos el objeto
+    sesionActual.nombre = nuevoNombre;
+    sesionActual.direccion = nuevaDireccion;
+
+    // Guardamos en Session y DB
+    localStorage.setItem('userSession', JSON.stringify(sesionActual));
+    localStorage.setItem('userDB', JSON.stringify(sesionActual)); // Actualiza el registro maestro también
+
+    alert("Perfil actualizado correctamente.");
+    location.reload(); // Recargar para ver cambios
+}
+
+// --- RF05: ELIMINAR CUENTA ---
+function eliminarCuenta() {
+    const confirmacion = confirm("¿Estás seguro que deseas ELIMINAR tu cuenta? Esta acción no se puede deshacer.");
+    if (confirmacion) {
+        localStorage.removeItem('userSession');
+        localStorage.removeItem('userDB'); // Borra el registro
+        localStorage.removeItem('solicitudesAdopcion'); // Opcional: Borra sus datos
+        alert("Tu cuenta ha sido eliminada.");
+        window.location.href = 'index.html';
+    }
+}
+
+// --- UTILIDADES ---
+function cerrarSesion() {
+    localStorage.removeItem('userSession');
+    window.location.href = 'index.html';
+}
+
+function checkSession() {
+    const sesion = JSON.parse(localStorage.getItem('userSession'));
+    const navButtons = document.getElementById('nav-auth-buttons');
+    if (navButtons) {
+        if (sesion) {
+            let dashboardLink = 'dashboard-adoptante.html';
+            if (sesion.rol === 'rescatista') dashboardLink = 'dashboard-rescatista.html';
+            if (sesion.rol === 'admin') dashboardLink = 'dashboard-admin.html';
+
+            navButtons.innerHTML = `
+                <span style="margin-right:10px; font-size:0.9rem;">Hola, <strong>${sesion.nombre}</strong></span>
+                <a href="${dashboardLink}" class="btn-outline" style="margin-right:5px;">Mi Panel</a>
+                <button onclick="cerrarSesion()" class="btn-outline" style="border-color:#e74c3c; color:#e74c3c;">Salir</button>
+            `;
+        } else {
+            navButtons.innerHTML = `<a href="auth.html" class="btn-outline">Iniciar Sesión</a>`;
         }
+    }
+}
 
-        /* LA TARJETA BLANCA */
-        .auth-card {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .auth-card h1 { color: var(--primary); margin-bottom: 10px; font-size: 1.8rem; }
-        .auth-card p { color: #666; margin-bottom: 30px; font-size: 0.95rem; }
-
-        /* FORMULARIO */
-        .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #444; }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            box-sizing: border-box; /* Importante para que no se salga del cuadro */
-            font-family: inherit;
-        }
-        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1); }
-
-        .btn-full { width: 100%; padding: 14px; margin-top: 10px; cursor: pointer; font-size: 1rem; }
-
-        .auth-footer { margin-top: 25px; font-size: 0.9rem; color: #777; }
-        .auth-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
-        .auth-footer a:hover { text-decoration: underline; }
-    </style>
-</head>
-<body>
-
-    <header class="header">
-        <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-            </div>
-            <div class="nav-buttons">
-                <a href="index.html" class="btn-text">Inicio</a>
-                <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
-                </div>
-        </nav>
-    </header>
-
-    <main class="auth-container">
-        <div class="auth-card">
-            <h1>Crea tu cuenta</h1>
-            <p>Elige tu rol para personalizar la experiencia.</p>
-
-            <form id="registerForm">
-                <div class="form-group">
-                    <label for="fullName">Nombre completo</label>
-                    <input type="text" id="fullName" class="form-control" placeholder="Ej. Juan Pérez" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="regEmail">Correo Electrónico</label>
-                    <input type="email" id="regEmail" class="form-control" placeholder="ejemplo@correo.com" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="regPassword">Contraseña</label>
-                    <input type="password" id="regPassword" class="form-control" placeholder="Mín. 8 caracteres" required>
-                    <small style="color:#999; font-size:0.8rem;">Incluye mayúscula, número y símbolo.</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="userRole">Selecciona tu rol</label>
-                    <select id="userRole" class="form-control">
-                        <option value="adoptante">Adoptante (Quiero adoptar)</option>
-                        <option value="rescatista">Rescatista (Doy en adopción)</option>
-                        <option value="admin">Administrador</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn-solid btn-full">Crear cuenta</button>
-            </form>
-
-            <div class="auth-footer">
-                ¿Ya tienes cuenta? <a href="auth.html">Inicia sesión</a>
-            </div>
-        </div>
-    </main>
-
-    <script src="js/auth.js"></script>
-</body>
-</html>
+function redirigirPorRol(rol) {
+    if (rol === 'adoptante') window.location.href = 'dashboard-adoptante.html';
+    else if (rol === 'rescatista') window.location.href = 'dashboard-rescatista.html';
+    else if (rol === 'admin') window.location.href = 'dashboard-admin.html'; // Si tuvieras este archivo
+    else window.location.href = 'index.html';
+}
