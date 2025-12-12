@@ -12,11 +12,18 @@
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-light); color: var(--text-dark); margin: 0; }
 
         /* NAVBAR ESTILO COMPLETO */
-        .header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header { 
+            background: #fff; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            position: fixed; /* Fija el menú arriba */
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+        }
         .nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1200px; margin: 0 auto; }
         .nav-brand .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); text-decoration: none; }
         
-        /* Enlaces del menú (Como en Educación/Mapa) */
+        /* Enlaces del menú */
         .nav-list { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
         .nav-list li a { text-decoration: none; color: #555; font-weight: 500; transition: color 0.3s; }
         .nav-list li a:hover { color: var(--primary); }
@@ -25,7 +32,12 @@
         .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
 
         /* DASHBOARD */
-        .dashboard-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .dashboard-container { 
+            max-width: 1000px; 
+            /* AQUÍ ESTÁ EL ARREGLO: 120px arriba para que baje y no lo tape el menú */
+            margin: 120px auto 40px; 
+            padding: 0 20px; 
+        }
         .dashboard-header { margin-bottom: 30px; }
         .dashboard-header h1 { font-size: 2rem; color: #2c3e50; }
 
@@ -34,11 +46,10 @@
         
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         
-        /* Quitamos los bordes (border-bottom) */
+        /* Quitamos los bordes */
         th { text-align: left; padding: 15px; color: #777; border: none; }
         td { padding: 15px; vertical-align: middle; border: none; }
         
-        /* Hover suave en las filas */
         tr:hover td { background-color: #fafafa; border-radius: 10px; }
 
         .pet-thumb { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 10px; vertical-align: middle; }
