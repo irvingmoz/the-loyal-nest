@@ -53,37 +53,50 @@ function registrarUsuario() {
         estatusLegal = document.getElementById('estatusLegal').value.trim();
     }
 
+    // --- VALIDACIONES DE "MANO DURA" 👮‍♂️ ---
+
+    // 1. Nombre y Apellidos (Solo letras)
     const regexSoloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
     
     if (!regexSoloLetras.test(nombre)) {
-        return alert("Error: El nombre no puede contener números ni símbolos.");
+        return alert("❌ Error en Nombre: No puede contener números ni símbolos.");
     }
     if (!regexSoloLetras.test(apPaterno) || !regexSoloLetras.test(apMaterno)) {
-        return alert("Error: Los apellidos no pueden contener números.");
+        return alert("❌ Error en Apellidos: No pueden contener números.");
     }
 
+    // 2. Edad (Mayor de edad)
     if (edad < 18 || edad > 99) {
-        return alert("Error: Debes ser mayor de 18 años para registrarte.");
+        return alert("❌ Error en Edad: Debes ser mayor de 18 años para registrarte.");
     }
 
+    // 3. CURP (Formato estricto 18 caracteres)
     const regexCURP = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]{2}$/;
     if (!regexCURP.test(curp)) {
-        return alert("Error: El CURP ingresado no es válido. Debe tener 18 caracteres y el formato oficial.");
+        return alert("❌ Error en CURP: Debe tener 18 caracteres y el formato oficial (Ej: AAAA990101HDF...)");
     }
 
-    if (direccion.length < 10) {
-        return alert("Error: La dirección es muy corta. Por favor detalla calle y colonia.");
+    // 4. DIRECCIÓN COHERENTE (NUEVO) 🏠
+    // Reglas: Mínimo 15 caracteres, debe tener espacios y al menos un número (para calle o CP).
+    const tieneEspacios = /\s/.test(direccion);
+    const tieneNumeros = /\d/.test(direccion);
+    
+    if (direccion.length < 15 || !tieneEspacios || !tieneNumeros) {
+        return alert("❌ Error en Dirección: La dirección no parece válida.\n\nDebe incluir:\n- Calle y Número\n- Colonia\n- Mínimo 15 caracteres");
     }
 
+    // 5. Contraseña Fuerte
     const regexPass = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
     if (!regexPass.test(passRaw)) {
-        return alert("Error: La contraseña es insegura.\nDebe tener:\n- Mínimo 8 caracteres\n- Una mayúscula\n- Un número\n- Un símbolo (@, #, $, etc.)");
+        return alert("❌ Error en Contraseña: Es insegura.\nDebe tener:\n- Mínimo 8 caracteres\n- Una mayúscula\n- Un número\n- Un símbolo (@, #, $, etc.)");
     }
 
+    // 6. Estatus Legal (Solo para refugios)
     if (rol === 'rescatista' && estatusLegal.length < 5) {
-        return alert("Error: Debes especificar el estatus legal del refugio.");
+        return alert("❌ Error: Debes especificar el estatus legal del refugio correctamente.");
     }
 
+    // --- SI TODO ESTÁ BIEN, GUARDAMOS ---
     const pass = encriptar(passRaw);
 
     const nuevoUsuario = { 
@@ -94,7 +107,7 @@ function registrarUsuario() {
     localStorage.setItem('userDB', JSON.stringify(nuevoUsuario));
     localStorage.setItem('userSession', JSON.stringify(nuevoUsuario));
 
-    alert("¡Registro Exitoso! Bienvenido, " + nombre);
+    alert("✅ ¡Registro Exitoso! Bienvenido, " + nombre);
     redirigirPorRol(rol);
 }
 
@@ -109,14 +122,14 @@ function iniciarSesion() {
         localStorage.setItem('userSession', JSON.stringify(usuarioGuardado));
         redirigirPorRol(usuarioGuardado.rol);
     } else {
-        alert("Correo o contraseña incorrectos.");
+        alert("⚠️ Correo o contraseña incorrectos.");
     }
 }
 
 function recuperarContrasena() {
     const email = prompt("Ingresa tu correo para restablecer:");
     if (email && email.includes('@')) {
-        alert(`Hemos enviado un enlace de recuperación a ${email}.`);
+        alert(`📧 Hemos enviado un enlace de recuperación a ${email}.`);
     } else if (email) {
         alert("Por favor ingresa un correo válido.");
     }
@@ -130,7 +143,10 @@ function guardarPerfilEditado() {
         sesionActual.nombre = document.getElementById('editNombre').value;
     }
     if(document.getElementById('editDireccion')) {
-        sesionActual.direccion = document.getElementById('editDireccion').value;
+        // También validamos al editar
+        const nuevaDir = document.getElementById('editDireccion').value;
+        if(nuevaDir.length < 10) return alert("La dirección es muy corta.");
+        sesionActual.direccion = nuevaDir;
     }
     if(document.getElementById('editEstatus')) {
         sesionActual.estatusLegal = document.getElementById('editEstatus').value;
@@ -139,12 +155,12 @@ function guardarPerfilEditado() {
     localStorage.setItem('userSession', JSON.stringify(sesionActual));
     localStorage.setItem('userDB', JSON.stringify(sesionActual));
 
-    alert("Perfil actualizado correctamente.");
+    alert("✅ Perfil actualizado correctamente.");
     location.reload();
 }
 
 function eliminarCuenta() {
-    if (confirm("¿Estás seguro que deseas ELIMINAR tu cuenta? Esta acción es irreversible.")) {
+    if (confirm("⚠️ ¿Estás seguro que deseas ELIMINAR tu cuenta? Esta acción es irreversible.")) {
         localStorage.removeItem('userSession');
         localStorage.removeItem('userDB');
         localStorage.removeItem('solicitudesAdopcion');
