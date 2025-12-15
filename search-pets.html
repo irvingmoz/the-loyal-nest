@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adopta un Amigo | The Loyal Nest</title>
+    <title>Buscar Mascotas | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     
@@ -20,13 +20,21 @@
         .nav-list li a:hover { color: var(--primary); }
         .btn-outline { padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 50px; cursor: pointer; background: transparent; font-size: 0.9rem; text-decoration:none; color:#333; }
 
-        /* BUSCADOR Y FILTROS (RF13) */
+        /* BUSCADOR Y FILTROS (RF13 - Completo) */
         .search-container { max-width: 1100px; margin: 100px auto 20px; padding: 0 20px; }
-        .filters-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
-        .filter-group { flex: 1; min-width: 150px; }
+        .filters-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
         .filter-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #666; }
-        .form-select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; }
-        .btn-search { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; height: 40px; align-self: flex-end; }
+        .form-select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; background-color: #fff; }
+        .btn-search { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; height: 42px; width: 100%; }
+        .btn-search:hover { background: #d35400; }
 
         /* GRILLA DE TARJETAS (RF14) */
         .pets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; max-width: 1100px; margin: 0 auto 40px; padding: 0 20px; }
@@ -37,8 +45,11 @@
         .pet-img { width: 100%; height: 200px; object-fit: cover; background-color: #eee; }
         .pet-info { padding: 20px; flex: 1; display: flex; flex-direction: column; }
         .pet-name { font-size: 1.4rem; font-weight: 700; margin: 0 0 5px 0; color: #2c3e50; }
-        .pet-details { color: #777; font-size: 0.9rem; margin-bottom: 15px; }
-        .pet-tag { display: inline-block; padding: 4px 10px; background: #fff3e0; color: #e67e22; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 10px; }
+        .pet-details { color: #777; font-size: 0.9rem; margin-bottom: 15px; line-height: 1.5; }
+        
+        /* Etiquetas de características */
+        .tags-container { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+        .pet-tag { padding: 4px 10px; background: #fff3e0; color: #e67e22; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
         
         .btn-adopt { margin-top: auto; display: block; width: 100%; padding: 10px; background: var(--primary); color: white; text-align: center; text-decoration: none; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; }
         .btn-adopt:hover { background: #d35400; }
@@ -51,8 +62,8 @@
             <div class="nav-brand"><a href="index.html" class="logo">🐕 The Loyal Nest</a></div>
             <ul class="nav-list">
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="search-pets.html" style="color:var(--primary);">Adoptar</a></li>
-                <li><a href="map.html">Mapa</a></li>
+                <li><a href="search-pets.html" style="color:var(--primary);">Buscar Mascotas</a></li>
+                <li><a href="map.html">Refugios</a></li>
                 <li><a href="education.html">Educación</a></li>
             </ul>
             <div id="nav-auth-buttons" style="display:flex; gap:10px;"></div>
@@ -61,23 +72,51 @@
 
     <section class="search-container">
         <div class="filters-card">
-            <div class="filter-group">
-                <label>Especie</label>
-                <select id="filtroEspecie" class="form-select">
-                    <option value="todos">Todos</option>
-                    <option value="Perro">Perros</option>
-                    <option value="Gato">Gatos</option>
-                </select>
+            <h2 style="margin-top:0; font-size:1.2rem; color:#444;">Encuentra a tu compañero ideal</h2>
+            <div class="filters-grid">
+                
+                <div class="filter-group">
+                    <label>Especie</label>
+                    <select id="filtroEspecie" class="form-select">
+                        <option value="todos">Todos</option>
+                        <option value="Perro">Perros</option>
+                        <option value="Gato">Gatos</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Edad</label>
+                    <select id="filtroEdad" class="form-select">
+                        <option value="todos">Cualquiera</option>
+                        <option value="cachorro">Cachorro (< 1 año)</option>
+                        <option value="adulto">Adulto (1 - 7 años)</option>
+                        <option value="senior">Senior (+7 años)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Tamaño</label>
+                    <select id="filtroTamano" class="form-select">
+                        <option value="todos">Cualquiera</option>
+                        <option value="Pequeño">Pequeño</option>
+                        <option value="Mediano">Mediano</option>
+                        <option value="Grande">Grande</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Ubicación (Refugio)</label>
+                    <select id="filtroUbicacion" class="form-select">
+                        <option value="todos">Todas las zonas</option>
+                        <option value="Centro Iztapalapa">Centro Iztapalapa</option>
+                        <option value="CEDA">CEDA (Central de Abasto)</option>
+                        <option value="Cerro de la Estrella">Cerro de la Estrella</option>
+                        <option value="Santa Martha">Santa Martha</option>
+                    </select>
+                </div>
+
+                <button onclick="aplicarFiltros()" class="btn-search">🔍 Buscar</button>
             </div>
-            <div class="filter-group">
-                <label>Edad</label>
-                <select id="filtroEdad" class="form-select">
-                    <option value="todos">Cualquiera</option>
-                    <option value="cachorro">Cachorro (< 1 año)</option>
-                    <option value="adulto">Adulto (1 - 7 años)</option>
-                </select>
-            </div>
-            <button onclick="aplicarFiltros()" class="btn-search">Buscar</button>
         </div>
     </section>
 
@@ -95,19 +134,59 @@
             cargarMascotas();
         });
 
-        // DATOS DE PRUEBA (Para que no se vea vacío si es la primera vez)
+        // BASE DE DATOS EXTENDIDA (Con Tamaño y Ubicación)
         const mascotasDefault = [
-            { nombre: "Bruno", tipo: "Perro", edad: 2, foto: "https://placedog.net/300/300?id=1", desc: "Muy juguetón" },
-            { nombre: "Misha", tipo: "Gato", edad: 1, foto: "https://placekitten.com/300/300", desc: "Tranquila y cariñosa" },
-            { nombre: "Rocky", tipo: "Perro", edad: 5, foto: "https://placedog.net/300/300?id=3", desc: "Guardián leal" }
+            { 
+                nombre: "Bruno", 
+                tipo: "Perro", 
+                edad: 2, 
+                tamano: "Mediano", 
+                ubicacion: "Centro Iztapalapa", 
+                foto: "https://placedog.net/300/300?id=1", 
+                desc: "Muy juguetón y activo." 
+            },
+            { 
+                nombre: "Misha", 
+                tipo: "Gato", 
+                edad: 1, 
+                tamano: "Pequeño", 
+                ubicacion: "Cerro de la Estrella", 
+                foto: "https://placekitten.com/300/300", 
+                desc: "Tranquila y cariñosa." 
+            },
+            { 
+                nombre: "Rocky", 
+                tipo: "Perro", 
+                edad: 5, 
+                tamano: "Grande", 
+                ubicacion: "CEDA", 
+                foto: "https://placedog.net/300/300?id=3", 
+                desc: "Guardián leal, ideal para casa grande." 
+            },
+            { 
+                nombre: "Luna", 
+                tipo: "Gato", 
+                edad: 0.5, 
+                tamano: "Pequeño", 
+                ubicacion: "Santa Martha", 
+                foto: "https://placekitten.com/301/301", 
+                desc: "Cachorra juguetona." 
+            }
         ];
 
         function cargarMascotas() {
-            // 1. LEER DATABASE DEL NAVEGADOR
-            // Combinamos las que agregaste tú (localStorage) con las de prueba
+            // Combinar base de datos local (creadas en dashboard) + default
             const mascotasGuardadas = JSON.parse(localStorage.getItem('petsDB')) || [];
-            const todasLasMascotas = [...mascotasDefault, ...mascotasGuardadas];
+            
+            // Nota: Las mascotas creadas manualmente en el dashboard tal vez no tengan
+            // todos los campos nuevos (ubicación/tamaño), así que les ponemos un default.
+            const mascotasGuardadasNormalizadas = mascotasGuardadas.map(p => ({
+                ...p,
+                tamano: p.tamano || "Mediano",
+                ubicacion: p.ubicacion || "Centro Iztapalapa"
+            }));
 
+            const todasLasMascotas = [...mascotasDefault, ...mascotasGuardadasNormalizadas];
             mostrarMascotas(todasLasMascotas);
         }
 
@@ -123,15 +202,28 @@
             noResults.style.display = 'none';
 
             lista.forEach(pet => {
-                // Crear tarjeta HTML (RF14)
+                // Lógica simple para categoría de edad
+                let rangoEdad = "adulto";
+                if(pet.edad < 1) rangoEdad = "cachorro";
+                if(pet.edad > 7) rangoEdad = "senior";
+
+                // Inyectamos los datos ocultos para filtrar después si fuera necesario, 
+                // aunque aquí ya filtramos el array antes de mostrarlo.
+                
                 const card = document.createElement('div');
                 card.className = 'pet-card';
                 card.innerHTML = `
                     <img src="${pet.foto || 'https://via.placeholder.com/300'}" class="pet-img" alt="${pet.nombre}">
                     <div class="pet-info">
-                        <span class="pet-tag">${pet.tipo}</span>
+                        <div class="tags-container">
+                            <span class="pet-tag">${pet.tipo}</span>
+                            <span class="pet-tag">${pet.tamano}</span>
+                        </div>
                         <h3 class="pet-name">${pet.nombre}</h3>
-                        <p class="pet-details">${pet.edad} años • Iztapalapa</p>
+                        <p class="pet-details">
+                            📍 ${pet.ubicacion}<br>
+                            🎂 ${pet.edad} años (${rangoEdad})
+                        </p>
                         <button onclick="verPerfil('${pet.nombre}')" class="btn-adopt">Ver Perfil</button>
                     </div>
                 `;
@@ -139,33 +231,82 @@
             });
         }
 
-        // LÓGICA DE FILTROS (RF13)
+        // LÓGICA DE FILTROS ACTUALIZADA (RF13)
         function aplicarFiltros() {
             const especie = document.getElementById('filtroEspecie').value;
-            // Recuperamos la lista completa de nuevo
-            const mascotasGuardadas = JSON.parse(localStorage.getItem('petsDB')) || [];
-            const todasLasMascotas = [...mascotasDefault, ...mascotasGuardadas];
+            const edadRango = document.getElementById('filtroEdad').value;
+            const tamano = document.getElementById('filtroTamano').value;
+            const ubicacion = document.getElementById('filtroUbicacion').value;
 
-            // Filtramos
+            const mascotasGuardadas = JSON.parse(localStorage.getItem('petsDB')) || [];
+            const mascotasGuardadasNormalizadas = mascotasGuardadas.map(p => ({
+                ...p,
+                tamano: p.tamano || "Mediano",
+                ubicacion: p.ubicacion || "Centro Iztapalapa"
+            }));
+            const todasLasMascotas = [...mascotasDefault, ...mascotasGuardadasNormalizadas];
+
             const filtradas = todasLasMascotas.filter(pet => {
+                // Filtro Especie
                 if (especie !== 'todos' && pet.tipo !== especie) return false;
+                
+                // Filtro Tamaño
+                if (tamano !== 'todos' && pet.tamano !== tamano) return false;
+
+                // Filtro Ubicación
+                if (ubicacion !== 'todos' && pet.ubicacion !== ubicacion) return false;
+
+                // Filtro Edad (Lógica de rangos)
+                if (edadRango !== 'todos') {
+                    if (edadRango === 'cachorro' && pet.edad >= 1) return false;
+                    if (edadRango === 'adulto' && (pet.edad < 1 || pet.edad > 7)) return false;
+                    if (edadRango === 'senior' && pet.edad <= 7) return false;
+                }
+
                 return true;
             });
 
             mostrarMascotas(filtradas);
         }
 
-        // SIMULACIÓN DE PERFIL COMPLETO (RF14)
         function verPerfil(nombreMascota) {
-            // En un proyecto final, esto iría a 'pet-profile.html?id=...'
-            // Para el prototipo, mostramos un alert con los datos
+            // Recuperamos datos para mostrar en la alerta
             const mascotasGuardadas = JSON.parse(localStorage.getItem('petsDB')) || [];
-            const todas = [...mascotasDefault, ...mascotasGuardadas];
+            const todas = [...mascotasDefault, ...mascotasGuardadas]; // Nota: en prod esto no se duplica así
             const mascota = todas.find(p => p.nombre === nombreMascota);
 
             if(mascota) {
-                alert(`🐶 PERFIL DE ${mascota.nombre.toUpperCase()}\n\nEdad: ${mascota.edad} años\nTipo: ${mascota.tipo}\nHistoria: ${mascota.desc || "Sin descripción"}\n\n[Aquí iría el botón de 'Solicitar Adopción']`);
+                // RF14: Vista previa / Perfil completo (Simulado con Alert)
+                const confirmar = confirm(`🐶 PERFIL DE ${mascota.nombre.toUpperCase()}\n\n📍 Ubicación: ${mascota.ubicacion || "Desconocida"}\n📏 Tamaño: ${mascota.tamano || "N/A"}\n🎂 Edad: ${mascota.edad} años\n📝 Historia: ${mascota.desc || "Sin descripción"}\n\n¿Quieres enviar una Solicitud de Adopción?`);
+                
+                if(confirmar) {
+                    // RF15: Enviar Solicitud
+                    registrarSolicitud(mascota);
+                }
             }
+        }
+
+        function registrarSolicitud(mascota) {
+            // Verificar si hay usuario logueado
+            const sesion = JSON.parse(localStorage.getItem('userSession'));
+            if(!sesion || sesion.rol !== 'adoptante') {
+                alert("Debes iniciar sesión como Adoptante para solicitar.");
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            // Guardar solicitud
+            const solicitudes = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
+            const nuevaSolicitud = {
+                mascota: mascota.nombre,
+                foto: mascota.foto,
+                fecha: new Date().toLocaleDateString(),
+                estado: "En Revisión"
+            };
+            solicitudes.push(nuevaSolicitud);
+            localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudes));
+
+            alert(`¡Solicitud enviada para adoptar a ${mascota.nombre}!\nRevisa el estado en 'Mi Panel'.`);
         }
     </script>
 </body>
