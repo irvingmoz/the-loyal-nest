@@ -87,11 +87,38 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Dirección Completa</label>
-                    <textarea id="direccion" class="form-control" rows="2" required placeholder="Calle, Número, Colonia, Código Postal..."></textarea>
-                </div>
+                <label style="font-weight:600; color:#444; margin-bottom:5px; display:block;">Dirección Completa</label>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 15px;">
+                    
+                    <div class="form-row" style="margin-bottom: 10px;">
+                        <div class="form-group" style="flex: 2;">
+                            <input type="text" id="dirCalle" class="form-control" placeholder="Calle / Av." required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <input type="text" id="dirNum" class="form-control" placeholder="Núm. Ext" required>
+                        </div>
+                    </div>
 
+                    <div class="form-row" style="margin-bottom: 10px;">
+                        <div class="form-group">
+                            <input type="text" id="dirColonia" class="form-control" placeholder="Colonia" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="dirCP" class="form-control" placeholder="C.P. (5 dígitos)" maxlength="5" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <select id="dirAlcaldia" class="form-control">
+                            <option value="">Selecciona Alcaldía/Municipio...</option>
+                            <option value="Iztapalapa">Iztapalapa</option>
+                            <option value="Iztacalco">Iztacalco</option>
+                            <option value="Coyoacán">Coyoacán</option>
+                            <option value="Tláhuac">Tláhuac</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label>Correo Electrónico</label>
                     <input type="email" id="registerEmail" class="form-control" required placeholder="nombre@ejemplo.com">
