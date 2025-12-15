@@ -72,8 +72,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 direccion: {
                     calle: document.getElementById('dirCalle').value,
                     colonia: document.getElementById('dirColonia').value,
-                    alcaldia: document.getElementById('dirAlcaldia').value,
-                    cp: document.getElementById('dirCP').value
+                    alcaldia: document.getElementById('dirAlcaldia').value
+                    // ELIMINADO: cp: document.getElementById('dirCP').value (Ya no existe en HTML)
                 },
                 estatusLegal: rol === 'rescatista' ? document.getElementById('estatusLegal').value : "",
                 fechaRegistro: new Date().toLocaleDateString()
@@ -88,41 +88,61 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =======================================================
-    // 3. CONTROL DEL MENÚ (OCULTAR BOTONES SI HAY SESIÓN) - NUEVO
+    // 3. CONTROL DEL MENÚ (OCULTAR BOTONES SI HAY SESIÓN) - CORREGIDO
     // =======================================================
-    // Esto revisa si ya entraste para limpiar el menú
     const sesionActiva = localStorage.getItem('sesionActiva');
     const rutaActual = window.location.pathname;
 
     if (sesionActiva === 'true') {
-        // A) Si ya hay sesión, buscamos el botón de "Iniciar Sesión" y lo ocultamos
-        const botonesMenu = document.querySelectorAll('a, button'); // Buscamos en todos los enlaces y botones
+        
+        // A) Buscamos botones por etiqueta (a, button) y clase (.btn-outline)
+        const botonesMenu = document.querySelectorAll('a, button, .btn-outline'); 
         
         botonesMenu.forEach(btn => {
-            // Si el texto del botón dice "Iniciar Sesión" o "Registrarse"... ¡ADIÓS!
-            if (btn.innerText.includes('Iniciar Sesión') || btn.innerText.includes('Registrarse')) {
+            // Convertimos el texto a minúsculas para asegurar que lo encuentre
+            // sin importar si escribiste "Iniciar Sesión" o "Iniciar sesión"
+            const texto = (btn.innerText || btn.textContent).toLowerCase();
+
+            if (texto.includes('iniciar sesion') || 
+                texto.includes('iniciar sesión') || 
+                texto.includes('registrarse')) {
+                
+                // Lo ocultamos forzosamente
                 btn.style.display = 'none';
             }
         });
 
-        // B) Opcional: Agregar botón de "Cerrar Sesión" al menú si no existe
+        // B) Agregar botón de "Cerrar Sesión" si no existe
         const nav = document.querySelector('.nav');
+        // Verificamos que exista el nav y que no hayamos agregado el botón ya
         if (nav && !document.getElementById('btn-logout-auto')) {
-            const btnLogout = document.createElement('button');
+            
+            // Creamos un elemento <a> para que se vea igual a los enlaces del menú
+            const btnLogout = document.createElement('a'); 
             btnLogout.id = 'btn-logout-auto';
             btnLogout.innerText = "Cerrar Sesión";
-            btnLogout.className = "btn-outline"; // Usamos tu clase de estilo
+            btnLogout.className = "btn-outline"; 
+            btnLogout.href = "#"; // Para que parezca link
+            
+            // Estilos para que resalte (opcional)
             btnLogout.style.marginLeft = "10px";
-            btnLogout.style.color = "red";
-            btnLogout.style.borderColor = "red";
-            btnLogout.onclick = cerrarSesion;
+            btnLogout.style.color = "#d35400";
+            btnLogout.style.borderColor = "#d35400";
+            
+            // Acción al hacer click
+            btnLogout.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                cerrarSesion();
+            });
+
+            // Lo agregamos al menú
             nav.appendChild(btnLogout);
         }
 
     } else {
-        // C) PROTECCIÓN: Si NO hay sesión y estás en páginas privadas, ¡FUERA!
+        // C) PROTECCIÓN: Si NO hay sesión y estás en páginas privadas
         if (rutaActual.includes('shelters-map') || rutaActual.includes('education') || rutaActual.includes('dashboard')) {
-            // Evitamos el bucle infinito si ya estamos en auth
+            // Evitamos bucle infinito si ya estamos en auth
             if (!rutaActual.includes('auth.html')) {
                 alert("Debes iniciar sesión para ver esta sección.");
                 window.location.href = "auth.html";
@@ -132,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
-// Función para cerrar sesión
+// Función global para cerrar sesión
 function cerrarSesion() {
     localStorage.removeItem('sesionActiva');
     localStorage.removeItem('usuario');
