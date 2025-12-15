@@ -58,7 +58,9 @@
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="search-pets.html">Buscar</a></li>
             </ul>
-            <div id="nav-auth-buttons" style="display:flex; align-items:center; gap:15px;"></div>
+            <div id="nav-auth-buttons" style="display:flex; align-items:center; gap:15px;">
+                 <button onclick="cerrarSesion()" class="btn-outline">Salir</button>
+            </div>
         </nav>
     </header>
 
@@ -77,7 +79,7 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <span class="stat-number" id="countPets">0</span>
-                <span class="stat-label">Mascotas Activas</span>
+                <span class="stat-label">Mis Mascotas</span>
             </div>
             <div class="stat-card">
                 <span class="stat-number">0</span>
@@ -124,7 +126,6 @@
 
             <label>Foto de la Mascota:</label>
             <input type="file" id="petImageFile" class="modal-input" accept="image/*">
-            
             <div style="margin-bottom:15px; text-align:center;">
                 <img id="imagePreview" src="" style="display:none; max-width:100%; max-height:150px; border-radius:8px; border:1px solid #ddd;">
             </div>
@@ -153,18 +154,21 @@
                 <button onclick="guardarPerfilEditado()" class="btn-primary">Guardar</button>
                 <button onclick="document.getElementById('modalPerfil').style.display='none'" class="btn-outline">Cancelar</button>
             </div>
-            <div style="margin-top:20px; text-align:center;">
-                <button onclick="eliminarCuenta()" style="color:red; background:none; border:none; cursor:pointer; text-decoration:underline;">Eliminar Cuenta</button>
-            </div>
         </div>
     </div>
 
     <script src="js/auth.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Verificar sesión antes de cargar nada
+            if (!localStorage.getItem('usuario')) {
+                window.location.href = "auth.html";
+                return;
+            }
+
             cargarMascotas();
 
-            // --- LÓGICA PARA LEER LA FOTO AL SELECCIONARLA ---
+            // Lógica para previsualizar imagen
             const fileInput = document.getElementById('petImageFile');
             const preview = document.getElementById('imagePreview');
             const hiddenInput = document.getElementById('petImageBase64');
@@ -177,7 +181,7 @@
                         reader.onload = function(evt) {
                             preview.src = evt.target.result;
                             preview.style.display = 'block';
-                            hiddenInput.value = evt.target.result; // Guardamos el código de la imagen
+                            hiddenInput.value = evt.target.result;
                         };
                         reader.readAsDataURL(file);
                     }
@@ -186,20 +190,36 @@
         });
 
         // --- LÓGICA DE MASCOTAS ---
+
         function cargarMascotas() {
-            const mascotas = JSON.parse(localStorage.getItem('petsDB')) || [];
+            // 1. Obtener TODAS las mascotas de la base de datos
+            const todasLasMascotas = JSON.parse(localStorage.getItem('petsDB')) || [];
+            
+            // 2. Obtener quién es el usuario actual (su email)
+            const usuarioActual = localStorage.getItem('usuario'); 
+
+            // 3. ¡EL FILTRO MÁGICO!
+            // Solo nos quedamos con las mascotas donde 'creador' sea igual al 'usuarioActual'
+            const misMascotas = todasLasMascotas.filter(pet => pet.creador === usuarioActual);
+
             const tbody = document.getElementById('petsBody');
             const emptyMsg = document.getElementById('emptyMsg');
             const counter = document.getElementById('countPets');
 
             tbody.innerHTML = '';
-            counter.innerText = mascotas.length;
+            // Actualizamos el contador solo con MIS mascotas
+            counter.innerText = misMascotas.length;
 
-            if (mascotas.length === 0) {
+            if (misMascotas.length === 0) {
                 emptyMsg.style.display = 'block';
             } else {
                 emptyMsg.style.display = 'none';
-                mascotas.forEach((pet, index) => {
+                
+                // Iteramos solo sobre 'misMascotas'
+                misMascotas.forEach((pet) => {
+                    // Usamos el ID original para poder borrarla del array principal luego
+                    // Si no tienes IDs, usaremos una lógica simple de filtrado luego, 
+                    // pero visualmente aquí se llena la tabla.
                     const row = `
                         <tr>
                             <td><img src="${pet.foto || 'https://via.placeholder.com/50'}" class="pet-thumb"></td>
@@ -207,7 +227,7 @@
                             <td>${pet.tipo}</td>
                             <td>${pet.edad} años</td>
                             <td>
-                                <button onclick="eliminarMascota(${index})" style="color:red; border:1px solid red; background:white; border-radius:5px; cursor:pointer;">🗑️</button>
+                                <button onclick="eliminarMascota('${pet.nombre}')" style="color:red; border:1px solid red; background:white; border-radius:5px; cursor:pointer;">🗑️</button>
                             </td>
                         </tr>
                     `;
@@ -217,10 +237,9 @@
         }
 
         function abrirModalMascota() {
-            // Limpiar campos previos
             document.getElementById('petName').value = '';
             document.getElementById('petAge').value = '';
-            document.getElementById('petImageFile').value = ''; // Limpiar input file
+            document.getElementById('petImageFile').value = ''; 
             document.getElementById('imagePreview').style.display = 'none';
             document.getElementById('petImageBase64').value = '';
             document.getElementById('petDesc').value = '';
@@ -232,56 +251,66 @@
             const nombre = document.getElementById('petName').value;
             const tipo = document.getElementById('petType').value;
             const edad = document.getElementById('petAge').value;
-            // AQUI ESTÁ EL CAMBIO: Leemos el hidden input, no el text input
             const foto = document.getElementById('petImageBase64').value;
             const desc = document.getElementById('petDesc').value;
 
-            if(!nombre || !edad) return alert("Nombre y edad requeridos");
-            
-            // Validación opcional: Obligar a subir foto
-            // if(!foto) return alert("Por favor sube una foto de la mascota");
+            // Obtener el usuario actual
+            const usuarioActual = localStorage.getItem('usuario');
 
-            const nuevaMascota = { nombre, tipo, edad, foto, desc, estado: 'Disponible' };
+            if(!nombre || !edad) return alert("Nombre y edad requeridos");
+
+            // --- AQUÍ ESTÁ EL CAMBIO IMPORTANTE ---
+            // Agregamos la propiedad 'creador' con el correo del usuario
+            const nuevaMascota = { 
+                nombre, 
+                tipo, 
+                edad, 
+                foto, 
+                desc, 
+                estado: 'Disponible',
+                creador: usuarioActual // <--- ESTO ES LO QUE DEFINE AL DUEÑO
+            };
             
-            // Guardar en Array Global
             const mascotas = JSON.parse(localStorage.getItem('petsDB')) || [];
             mascotas.push(nuevaMascota);
             localStorage.setItem('petsDB', JSON.stringify(mascotas));
 
             alert("¡Mascota publicada con éxito!");
             document.getElementById('modalMascota').style.display = 'none';
-            cargarMascotas(); // Recargar tabla
+            cargarMascotas(); 
         }
 
-        function eliminarMascota(index) {
+        function eliminarMascota(nombreMascota) {
             if(confirm("¿Seguro que deseas eliminar esta mascota?")) {
-                const mascotas = JSON.parse(localStorage.getItem('petsDB')) || [];
-                mascotas.splice(index, 1);
+                let mascotas = JSON.parse(localStorage.getItem('petsDB')) || [];
+                const usuarioActual = localStorage.getItem('usuario');
+
+                // Borramos la mascota que coincida con el nombre Y que sea mía
+                // (Para evitar borrar mascotas de otros con el mismo nombre)
+                mascotas = mascotas.filter(pet => !(pet.nombre === nombreMascota && pet.creador === usuarioActual));
+                
                 localStorage.setItem('petsDB', JSON.stringify(mascotas));
                 cargarMascotas();
             }
         }
 
-        // --- LÓGICA DE PERFIL ---
         function abrirModalPerfil() {
-            const sesion = JSON.parse(localStorage.getItem('userSession'));
-            if(sesion) {
-                document.getElementById('editNombre').value = sesion.nombre;
-                document.getElementById('editDireccion').value = sesion.direccion || "";
-                document.getElementById('editEstatus').value = sesion.estatusLegal || "";
-                document.getElementById('modalPerfil').style.display = 'flex';
-            }
+            // Aquí intentamos llenar datos si existen
+            const sesion = JSON.parse(localStorage.getItem('userSession')) || {};
+            document.getElementById('editNombre').value = sesion.nombre || "";
+            document.getElementById('editDireccion').value = sesion.direccion || "";
+            document.getElementById('editEstatus').value = sesion.estatusLegal || "";
+            document.getElementById('modalPerfil').style.display = 'flex';
         }
 
         function guardarPerfilEditado() {
-            const sesion = JSON.parse(localStorage.getItem('userSession'));
+            // Guardamos datos extra del perfil
+            const sesion = JSON.parse(localStorage.getItem('userSession')) || {};
             sesion.nombre = document.getElementById('editNombre').value;
             sesion.direccion = document.getElementById('editDireccion').value;
             sesion.estatusLegal = document.getElementById('editEstatus').value;
             
             localStorage.setItem('userSession', JSON.stringify(sesion));
-            localStorage.setItem('userDB', JSON.stringify(sesion));
-            
             alert("Perfil actualizado.");
             location.reload();
         }
