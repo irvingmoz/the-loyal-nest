@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", function() {
-    checkSession(); // Revisa si ya hay sesión iniciada
+    //checkSession(); // Revisa si ya hay sesión iniciada
 
     // --- LÓGICA DEL REGISTRO (Coincide con tu HTML) ---
     const registerForm = document.getElementById('registerForm');
