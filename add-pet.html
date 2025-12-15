@@ -30,7 +30,16 @@
         <label>Tamaño<select name="size"><option value="Chico">Chico</option><option value="Mediano">Mediano</option><option value="Grande">Grande</option></select></label>
         <label>Estado<select name="status"><option value="disponible">Disponible</option><option value="en_proceso">En proceso</option><option value="adoptado">Adoptado</option></select></label>
         <label>Descripción<textarea name="description" rows="3"></textarea></label>
-        <label>Foto<input type="file" name="image" accept="image/*"></label>
+        
+        <label>Foto de la Mascota
+            <input type="file" id="petImageInput" accept="image/*" required>
+            
+            <div style="margin-top: 10px;">
+                <img id="imagePreview" src="" alt="Vista previa" style="display:none; max-width: 200px; max-height: 200px; border-radius: 8px; border: 1px solid #ccc;">
+            </div>
+
+            <input type="hidden" name="image" id="petImageBase64">
+        </label>
         <label>Refugio<input id="petOwner" name="shelter" placeholder="Nombre del refugio"></label>
         <button class="btn-primary" type="submit">Guardar</button>
         <div id="formStatus" class="muted"></div>
@@ -41,6 +50,30 @@
 <script src="js/pets.js"></script>
 <script>
     requireAuth(['rescatista', 'rescuer']);
+
+    // --- SCRIPT NUEVO PARA MANEJAR LA FOTO ---
+    // Esto convierte la imagen a texto y muestra la vista previa
+    document.getElementById('petImageInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('imagePreview');
+        const hiddenInput = document.getElementById('petImageBase64');
+
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(evt) {
+                // 1. Mostrar la imagen en pantalla
+                preview.src = evt.target.result;
+                preview.style.display = 'block';
+
+                // 2. Guardar el código de la imagen en el input oculto
+                // (Así tu pets.js recibirá el texto de la imagen correctamente)
+                hiddenInput.value = evt.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
 </script>
 </body>
 </html>
