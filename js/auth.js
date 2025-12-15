@@ -78,10 +78,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            // Creamos el objeto con TODOS los datos que pediste
+            // Creamos el objeto con TODOS los datos
             const newUser = {
                 nombre: nombre,
-                apellido: apPaterno, // Puedes concatenar materno si quieres
+                apellido: apPaterno,
                 email: email,
                 password: password,
                 rol: rol,
@@ -94,7 +94,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     alcaldia: document.getElementById('dirAlcaldia').value,
                     cp: document.getElementById('dirCP').value
                 },
-                // Si es rescatista, guardamos el estatus legal, si no, vacío
                 estatusLegal: rol === 'rescatista' ? document.getElementById('estatusLegal').value : "",
                 fechaRegistro: new Date().toLocaleDateString()
             };
@@ -107,9 +106,75 @@ document.addEventListener("DOMContentLoaded", function() {
             window.location.href = "auth.html";
         });
     }
-});
 
-// Función global para cerrar sesión (puedes usarla en tus botones de Salir)
+    // =======================================================
+    // 3. VALIDACIÓN INTELIGENTE DE DIRECCIÓN (CDMX) - NUEVO
+    // =======================================================
+    const inputCP = document.getElementById('dirCP');
+    const selectAlcaldia = document.getElementById('dirAlcaldia');
+
+    if (inputCP && selectAlcaldia) {
+        
+        // A) Cuando escriben el CP, detectamos la zona
+        inputCP.addEventListener('input', function() {
+            const cp = this.value;
+            
+            // Solo actuamos si ya escribieron 5 números
+            if (cp.length === 5) {
+                const primerosDos = cp.substring(0, 2);
+                let alcaldiaDetectada = "";
+
+                // Mapeo básico de CDMX
+                if (primerosDos === "09") alcaldiaDetectada = "Iztapalapa";
+                else if (primerosDos === "08") alcaldiaDetectada = "Iztacalco";
+                else if (primerosDos === "04") alcaldiaDetectada = "Coyoacán";
+                else if (primerosDos === "13") alcaldiaDetectada = "Tláhuac";
+                
+                // Si detectamos una alcaldía conocida, la seleccionamos
+                if (alcaldiaDetectada) {
+                    selectAlcaldia.value = alcaldiaDetectada;
+                    // Efecto visual (borde naranja un segundo)
+                    selectAlcaldia.style.borderColor = "#e67e22"; 
+                    setTimeout(() => selectAlcaldia.style.borderColor = "#ddd", 1000);
+                }
+            }
+        });
+
+        // B) Candado: Evitar que cambien la alcaldía si no coincide con el CP
+        selectAlcaldia.addEventListener('change', function() {
+            const cp = inputCP.value;
+            const alcaldiaSeleccionada = this.value;
+
+            if (cp.length === 5) {
+                const primerosDos = cp.substring(0, 2);
+                
+                // Validación Iztapalapa
+                if (primerosDos === "09" && alcaldiaSeleccionada !== "Iztapalapa") {
+                    alert("El Código Postal " + cp + " pertenece a Iztapalapa. No puedes seleccionar otra alcaldía.");
+                    this.value = "Iztapalapa"; // Lo regresamos a la correcta
+                }
+                // Validación Iztacalco
+                else if (primerosDos === "08" && alcaldiaSeleccionada !== "Iztacalco") {
+                    alert("El Código Postal " + cp + " pertenece a Iztacalco.");
+                    this.value = "Iztacalco";
+                }
+                // Validación Coyoacán
+                else if (primerosDos === "04" && alcaldiaSeleccionada !== "Coyoacán") {
+                    alert("El Código Postal " + cp + " pertenece a Coyoacán.");
+                    this.value = "Coyoacán";
+                }
+                 // Validación Tláhuac
+                 else if (primerosDos === "13" && alcaldiaSeleccionada !== "Tláhuac") {
+                    alert("El Código Postal " + cp + " pertenece a Tláhuac.");
+                    this.value = "Tláhuac";
+                }
+            }
+        });
+    }
+
+}); // Fin del DOMContentLoaded
+
+// Función global para cerrar sesión
 function cerrarSesion() {
     localStorage.removeItem('sesionActiva');
     localStorage.removeItem('usuario');
