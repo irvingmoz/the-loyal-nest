@@ -165,33 +165,41 @@
     <script src="js/auth.js"></script>
     
     <script>
-        // Lógica específica del Dashboard
-        document.addEventListener("DOMContentLoaded", function() {
-            // 1. Cargar Solicitudes en la Tabla
-            const solicitudes = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
-            const tbody = document.getElementById('tableBody');
-            const emptyMsg = document.getElementById('emptyMsg');
+       // En dashboard-adoptante.html (dentro del script)
 
-            if (solicitudes.length === 0) {
-                emptyMsg.style.display = 'block';
-            } else {
-                solicitudes.forEach(sol => {
-                    const foto = sol.foto || 'https://via.placeholder.com/50'; 
-                    const row = `
-                        <tr>
-                            <td>
-                                <img src="${foto}" class="pet-thumb">
-                                <strong>${sol.mascota}</strong>
-                            </td>
-                            <td>${sol.fecha}</td>
-                            <td><span class="status-badge">${sol.estado}</span></td>
-                        </tr>
-                    `;
-                    tbody.innerHTML += row;
-                });
-            }
+document.addEventListener("DOMContentLoaded", function() {
+    checkSession(); // Asegura que auth.js cargó la sesión
+    
+    const sesion = JSON.parse(localStorage.getItem('userSession'));
+    const solicitudesTotales = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
+    
+    // FILTRO DE PRIVACIDAD: Solo mostramos las de ESTE usuario
+    const misSolicitudes = solicitudesTotales.filter(sol => sol.usuario === sesion.correo);
+
+    const tbody = document.getElementById('tableBody');
+    const emptyMsg = document.getElementById('emptyMsg');
+
+    if (misSolicitudes.length === 0) {
+        if(emptyMsg) emptyMsg.style.display = 'block';
+    } else {
+        if(emptyMsg) emptyMsg.style.display = 'none';
+        
+        misSolicitudes.forEach(sol => {
+            const foto = sol.foto || 'https://via.placeholder.com/50'; 
+            const row = `
+                <tr>
+                    <td>
+                        <img src="${foto}" class="pet-thumb">
+                        <strong>${sol.mascota}</strong>
+                    </td>
+                    <td>${sol.fecha}</td>
+                    <td><span class="status-badge">${sol.estado}</span></td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
         });
-
+    }
+});
         // Función para abrir el modal y pre-llenar datos (RF04)
         function abrirModalPerfil() {
             const sesion = JSON.parse(localStorage.getItem('userSession'));
