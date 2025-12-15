@@ -20,7 +20,7 @@
         .nav-list li a:hover { color: var(--primary); }
         .btn-outline { padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 50px; cursor: pointer; background: transparent; font-size: 0.9rem; text-decoration:none; color:#333; }
 
-        /* BUSCADOR Y FILTROS (RF13 - Completo) */
+        /* BUSCADOR Y FILTROS */
         .search-container { max-width: 1100px; margin: 100px auto 20px; padding: 0 20px; }
         .filters-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         
@@ -36,7 +36,7 @@
         .btn-search { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; height: 42px; width: 100%; }
         .btn-search:hover { background: #d35400; }
 
-        /* GRILLA DE TARJETAS (RF14) */
+        /* GRILLA DE TARJETAS */
         .pets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; max-width: 1100px; margin: 0 auto 40px; padding: 0 20px; }
         
         .pet-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s; display: flex; flex-direction: column; }
@@ -47,7 +47,6 @@
         .pet-name { font-size: 1.4rem; font-weight: 700; margin: 0 0 5px 0; color: #2c3e50; }
         .pet-details { color: #777; font-size: 0.9rem; margin-bottom: 15px; line-height: 1.5; }
         
-        /* Etiquetas de características */
         .tags-container { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
         .pet-tag { padding: 4px 10px; background: #fff3e0; color: #e67e22; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
         
@@ -63,7 +62,7 @@
             <ul class="nav-list">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="search-pets.html" style="color:var(--primary);">Buscar Mascotas</a></li>
-                <li><a href="map.html">Refugios</a></li>
+                <li><a href="shelters-map.html">Refugios</a></li>
                 <li><a href="education.html">Educación</a></li>
             </ul>
             <div id="nav-auth-buttons" style="display:flex; gap:10px;"></div>
@@ -134,7 +133,7 @@
             cargarMascotas();
         });
 
-        // BASE DE DATOS EXTENDIDA (Con Tamaño y Ubicación)
+        // BASE DE DATOS MOCK
         const mascotasDefault = [
             { 
                 nombre: "Bruno", 
@@ -175,11 +174,8 @@
         ];
 
         function cargarMascotas() {
-            // Combinar base de datos local (creadas en dashboard) + default
             const mascotasGuardadas = JSON.parse(localStorage.getItem('petsDB')) || [];
             
-            // Nota: Las mascotas creadas manualmente en el dashboard tal vez no tengan
-            // todos los campos nuevos (ubicación/tamaño), así que les ponemos un default.
             const mascotasGuardadasNormalizadas = mascotasGuardadas.map(p => ({
                 ...p,
                 tamano: p.tamano || "Mediano",
@@ -202,14 +198,10 @@
             noResults.style.display = 'none';
 
             lista.forEach(pet => {
-                // Lógica simple para categoría de edad
                 let rangoEdad = "adulto";
                 if(pet.edad < 1) rangoEdad = "cachorro";
                 if(pet.edad > 7) rangoEdad = "senior";
 
-                // Inyectamos los datos ocultos para filtrar después si fuera necesario, 
-                // aunque aquí ya filtramos el array antes de mostrarlo.
-                
                 const card = document.createElement('div');
                 card.className = 'pet-card';
                 card.innerHTML = `
@@ -231,7 +223,6 @@
             });
         }
 
-        // LÓGICA DE FILTROS ACTUALIZADA (RF13)
         function aplicarFiltros() {
             const especie = document.getElementById('filtroEspecie').value;
             const edadRango = document.getElementById('filtroEdad').value;
@@ -247,22 +238,15 @@
             const todasLasMascotas = [...mascotasDefault, ...mascotasGuardadasNormalizadas];
 
             const filtradas = todasLasMascotas.filter(pet => {
-                // Filtro Especie
                 if (especie !== 'todos' && pet.tipo !== especie) return false;
-                
-                // Filtro Tamaño
                 if (tamano !== 'todos' && pet.tamano !== tamano) return false;
-
-                // Filtro Ubicación
                 if (ubicacion !== 'todos' && pet.ubicacion !== ubicacion) return false;
 
-                // Filtro Edad (Lógica de rangos)
                 if (edadRango !== 'todos') {
                     if (edadRango === 'cachorro' && pet.edad >= 1) return false;
                     if (edadRango === 'adulto' && (pet.edad < 1 || pet.edad > 7)) return false;
                     if (edadRango === 'senior' && pet.edad <= 7) return false;
                 }
-
                 return true;
             });
 
@@ -270,32 +254,23 @@
         }
 
         function verPerfil(nombreMascota) {
-            // Recuperamos datos para mostrar en la alerta
             const mascotasGuardadas = JSON.parse(localStorage.getItem('petsDB')) || [];
-            const todas = [...mascotasDefault, ...mascotasGuardadas]; // Nota: en prod esto no se duplica así
+            const todas = [...mascotasDefault, ...mascotasGuardadas];
             const mascota = todas.find(p => p.nombre === nombreMascota);
 
             if(mascota) {
-                // RF14: Vista previa / Perfil completo (Simulado con Alert)
                 const confirmar = confirm(`🐶 PERFIL DE ${mascota.nombre.toUpperCase()}\n\n📍 Ubicación: ${mascota.ubicacion || "Desconocida"}\n📏 Tamaño: ${mascota.tamano || "N/A"}\n🎂 Edad: ${mascota.edad} años\n📝 Historia: ${mascota.desc || "Sin descripción"}\n\n¿Quieres enviar una Solicitud de Adopción?`);
-                
-                if(confirmar) {
-                    // RF15: Enviar Solicitud
-                    registrarSolicitud(mascota);
-                }
+                if(confirmar) registrarSolicitud(mascota);
             }
         }
 
         function registrarSolicitud(mascota) {
-            // Verificar si hay usuario logueado
             const sesion = JSON.parse(localStorage.getItem('userSession'));
             if(!sesion || sesion.rol !== 'adoptante') {
                 alert("Debes iniciar sesión como Adoptante para solicitar.");
                 window.location.href = 'auth.html';
                 return;
             }
-
-            // Guardar solicitud
             const solicitudes = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
             const nuevaSolicitud = {
                 mascota: mascota.nombre,
@@ -305,7 +280,6 @@
             };
             solicitudes.push(nuevaSolicitud);
             localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudes));
-
             alert(`¡Solicitud enviada para adoptar a ${mascota.nombre}!\nRevisa el estado en 'Mi Panel'.`);
         }
     </script>
