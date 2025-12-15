@@ -263,25 +263,34 @@
                 if(confirmar) registrarSolicitud(mascota);
             }
         }
+// En search-pets.html
 
-        function registrarSolicitud(mascota) {
-            const sesion = JSON.parse(localStorage.getItem('userSession'));
-            if(!sesion || sesion.rol !== 'adoptante') {
-                alert("Debes iniciar sesión como Adoptante para solicitar.");
-                window.location.href = 'auth.html';
-                return;
-            }
-            const solicitudes = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
-            const nuevaSolicitud = {
-                mascota: mascota.nombre,
-                foto: mascota.foto,
-                fecha: new Date().toLocaleDateString(),
-                estado: "En Revisión"
-            };
-            solicitudes.push(nuevaSolicitud);
-            localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudes));
-            alert(`¡Solicitud enviada para adoptar a ${mascota.nombre}!\nRevisa el estado en 'Mi Panel'.`);
-        }
+function registrarSolicitud(mascota) {
+    const sesion = JSON.parse(localStorage.getItem('userSession'));
+    
+    // Validación de seguridad
+    if(!sesion || sesion.rol !== 'adoptante') {
+        alert("Debes iniciar sesión como Adoptante para solicitar.");
+        window.location.href = 'auth.html';
+        return;
+    }
+
+    const solicitudes = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
+    
+    // AQUI ESTÁ EL CAMBIO CLAVE: Guardamos quién la pidió
+    const nuevaSolicitud = {
+        usuario: sesion.correo, // <--- ESTO ES LO NUEVO
+        mascota: mascota.nombre,
+        foto: mascota.foto,
+        fecha: new Date().toLocaleDateString(),
+        estado: "En Revisión"
+    };
+
+    solicitudes.push(nuevaSolicitud);
+    localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudes));
+
+    alert(`¡Solicitud enviada para adoptar a ${mascota.nombre}!\nRevisa el estado en 'Mi Panel'.`);
+}
     </script>
 </body>
 </html>
