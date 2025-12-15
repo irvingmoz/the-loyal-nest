@@ -21,34 +21,32 @@
         .btn-outline { padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 50px; cursor: pointer; background: transparent; font-size: 0.9rem; transition:0.3s; }
         .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
 
-        /* DASHBOARD CONTAINER */
+        /* DASHBOARD */
         .dashboard-container { max-width: 1100px; margin: 100px auto 40px; padding: 0 20px; }
-        
-        /* HEADER DEL DASHBOARD */
         .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap:15px; }
         .dashboard-header h1 { font-size: 2rem; color: #2c3e50; margin: 0; }
+        
         .btn-primary { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-weight: 600; text-decoration: none; cursor: pointer; }
         .btn-primary:hover { background: #d35400; }
 
-        /* STATS CARDS (Diseño que te gustó) */
+        /* ESTADÍSTICAS */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .stat-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; }
         .stat-number { display: block; font-size: 2.5rem; font-weight: 700; color: var(--primary); }
         .stat-label { color: #666; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SECCIONES Y TABLAS */
+        /* TABLAS */
         .panel-section { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 30px; }
         .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .panel-header h2 { margin: 0; font-size: 1.2rem; color: #444; }
-
         table { width: 100%; border-collapse: collapse; }
         th { text-align: left; padding: 15px; color: #777; border-bottom: 1px solid #eee; }
         td { padding: 15px; vertical-align: middle; border-bottom: 1px solid #f9f9f9; }
-        
-        /* MODAL */
-        #modalPerfil { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .modal-input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .pet-thumb { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; margin-right: 10px; vertical-align: middle; }
+
+        /* MODALES */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
+        .modal-input, .modal-select, .modal-textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
     </style>
 </head>
 <body>
@@ -59,7 +57,6 @@
             <ul class="nav-list">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="search-pets.html">Buscar</a></li>
-                <li><a href="adoption-requests.html">Solicitudes</a></li>
             </ul>
             <div id="nav-auth-buttons" style="display:flex; align-items:center; gap:15px;"></div>
         </nav>
@@ -72,23 +69,19 @@
                 <h1>Centro de Rescate</h1>
             </div>
             <div style="display:flex; gap:10px;">
-                <button onclick="alert('Funcionalidad del siguiente módulo')" class="btn-primary">+ Agregar Mascota</button>
+                <button onclick="abrirModalMascota()" class="btn-primary">+ Agregar Mascota</button>
                 <button onclick="abrirModalPerfil()" class="btn-outline">⚙️ Mi Perfil</button>
             </div>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <span class="stat-number">0</span>
+                <span class="stat-number" id="countPets">0</span>
                 <span class="stat-label">Mascotas Activas</span>
             </div>
             <div class="stat-card">
                 <span class="stat-number">0</span>
                 <span class="stat-label">Solicitudes</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">0</span>
-                <span class="stat-label">Adopciones</span>
             </div>
         </div>
 
@@ -96,58 +89,145 @@
             <div class="panel-header">
                 <h2>🐾 Mis Mascotas en Adopción</h2>
             </div>
-            <div id="petList">
-                <p style="text-align:center; color:#999; padding:20px;">No tienes mascotas registradas aún.</p>
-            </div>
-        </section>
-
-        <section class="panel-section">
-            <div class="panel-header">
-                <h2>📩 Solicitudes Recientes</h2>
-            </div>
-            <div id="adoptionRequests">
-                <p style="text-align:center; color:#999; padding:20px;">No hay solicitudes nuevas.</p>
-            </div>
+            <table id="petsTable" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Nombre</th>
+                        <th>Especie</th>
+                        <th>Edad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="petsBody">
+                    </tbody>
+            </table>
+            <p id="emptyMsg" style="text-align:center; color:#999; padding:20px; display:none;">No tienes mascotas registradas aún.</p>
         </section>
     </main>
 
-    <div id="modalPerfil">
+    <div id="modalMascota" class="modal-overlay">
         <div class="modal-content">
-            <h2 style="color:var(--primary); margin-top:0;">Perfil del Refugio</h2>
-            <p style="font-size:0.9rem; color:#666;">Actualiza los datos de tu organización.</p>
+            <h2 style="color:var(--primary); margin-top:0;">Nueva Mascota</h2>
             
-            <label style="font-weight:600;">Nombre del Encargado/Refugio:</label>
-            <input type="text" id="editNombre" class="modal-input">
+            <label>Nombre:</label>
+            <input type="text" id="petName" class="modal-input" placeholder="Ej. Max">
             
-            <label style="font-weight:600;">Dirección Física:</label>
-            <input type="text" id="editDireccion" class="modal-input">
-            
-            <label style="font-weight:600; color:#e67e22;">Estatus Legal:</label>
-            <input type="text" id="editEstatus" class="modal-input" placeholder="Ej. Asociación Civil">
-            
-            <div style="text-align:right; margin-top:15px;">
-                <button onclick="guardarPerfilEditado()" class="btn-primary" style="padding:8px 20px;">Guardar</button>
-                <button onclick="document.getElementById('modalPerfil').style.display='none'" class="btn-outline" style="background:#eee; border:none; color:#333;">Cancelar</button>
+            <label>Especie:</label>
+            <select id="petType" class="modal-select">
+                <option value="Perro">Perro</option>
+                <option value="Gato">Gato</option>
+            </select>
+
+            <label>Edad (Años):</label>
+            <input type="number" id="petAge" class="modal-input" placeholder="Ej. 2">
+
+            <label>Foto (URL):</label>
+            <input type="text" id="petPhoto" class="modal-input" placeholder="Pega un link de imagen (ej. imgur)">
+            <small style="color:#888; display:block; margin-bottom:10px;">Tip: Usa 'https://placedog.net/300' para probar.</small>
+
+            <label>Historia / Descripción:</label>
+            <textarea id="petDesc" class="modal-textarea" rows="3" placeholder="Cuenta su historia..."></textarea>
+
+            <div style="text-align:right;">
+                <button onclick="guardarMascota()" class="btn-primary">Publicar</button>
+                <button onclick="document.getElementById('modalMascota').style.display='none'" class="btn-outline">Cancelar</button>
             </div>
+        </div>
+    </div>
+
+    <div id="modalPerfil" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="color:var(--primary);">Perfil del Refugio</h2>
+            <label>Nombre:</label>
+            <input type="text" id="editNombre" class="modal-input">
+            <label>Dirección:</label>
+            <input type="text" id="editDireccion" class="modal-input">
+            <label>Estatus Legal:</label>
+            <input type="text" id="editEstatus" class="modal-input">
             
-            <div style="margin-top:20px; border-top:1px solid #eee; padding-top:15px; text-align:center;">
-                <button onclick="eliminarCuenta()" style="color:red; background:none; border:none; cursor:pointer; font-size:0.9rem; text-decoration:underline;">Eliminar mi cuenta de Rescatista</button>
+            <div style="text-align:right; margin-top:10px;">
+                <button onclick="guardarPerfilEditado()" class="btn-primary">Guardar</button>
+                <button onclick="document.getElementById('modalPerfil').style.display='none'" class="btn-outline">Cancelar</button>
+            </div>
+            <div style="margin-top:20px; text-align:center;">
+                <button onclick="eliminarCuenta()" style="color:red; background:none; border:none; cursor:pointer; text-decoration:underline;">Eliminar Cuenta</button>
             </div>
         </div>
     </div>
 
     <script src="js/auth.js"></script>
     <script>
-        // Lógica del Dashboard Rescatista
         document.addEventListener("DOMContentLoaded", function() {
-            // Verificar si es rescatista real
-            const sesion = JSON.parse(localStorage.getItem('userSession'));
-            if (!sesion || sesion.rol !== 'rescatista') {
-                // Si no es rescatista, fuera de aquí
-                window.location.href = 'index.html';
-            }
+            cargarMascotas();
         });
 
+        // --- LÓGICA DE MASCOTAS ---
+        function cargarMascotas() {
+            const mascotas = JSON.parse(localStorage.getItem('petsDB')) || [];
+            const tbody = document.getElementById('petsBody');
+            const emptyMsg = document.getElementById('emptyMsg');
+            const counter = document.getElementById('countPets');
+
+            tbody.innerHTML = '';
+            counter.innerText = mascotas.length;
+
+            if (mascotas.length === 0) {
+                emptyMsg.style.display = 'block';
+            } else {
+                emptyMsg.style.display = 'none';
+                mascotas.forEach((pet, index) => {
+                    const row = `
+                        <tr>
+                            <td><img src="${pet.foto || 'https://via.placeholder.com/50'}" class="pet-thumb"></td>
+                            <td><strong>${pet.nombre}</strong></td>
+                            <td>${pet.tipo}</td>
+                            <td>${pet.edad} años</td>
+                            <td>
+                                <button onclick="eliminarMascota(${index})" style="color:red; border:1px solid red; background:white; border-radius:5px; cursor:pointer;">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
+        }
+
+        function abrirModalMascota() {
+            document.getElementById('modalMascota').style.display = 'flex';
+        }
+
+        function guardarMascota() {
+            const nombre = document.getElementById('petName').value;
+            const tipo = document.getElementById('petType').value;
+            const edad = document.getElementById('petAge').value;
+            const foto = document.getElementById('petPhoto').value;
+            const desc = document.getElementById('petDesc').value;
+
+            if(!nombre || !edad) return alert("Nombre y edad requeridos");
+
+            const nuevaMascota = { nombre, tipo, edad, foto, desc, estado: 'Disponible' };
+            
+            // Guardar en Array Global
+            const mascotas = JSON.parse(localStorage.getItem('petsDB')) || [];
+            mascotas.push(nuevaMascota);
+            localStorage.setItem('petsDB', JSON.stringify(mascotas));
+
+            alert("¡Mascota publicada con éxito!");
+            document.getElementById('modalMascota').style.display = 'none';
+            cargarMascotas(); // Recargar tabla
+        }
+
+        function eliminarMascota(index) {
+            if(confirm("¿Seguro que deseas eliminar esta mascota?")) {
+                const mascotas = JSON.parse(localStorage.getItem('petsDB')) || [];
+                mascotas.splice(index, 1);
+                localStorage.setItem('petsDB', JSON.stringify(mascotas));
+                cargarMascotas();
+            }
+        }
+
+        // --- LÓGICA DE PERFIL ---
         function abrirModalPerfil() {
             const sesion = JSON.parse(localStorage.getItem('userSession'));
             if(sesion) {
@@ -158,24 +238,17 @@
             }
         }
 
-        // Función personalizada para guardar datos de Rescatista
         function guardarPerfilEditado() {
-            const sesionActual = JSON.parse(localStorage.getItem('userSession'));
-            if (!sesionActual) return;
-
-            sesionActual.nombre = document.getElementById('editNombre').value;
-            sesionActual.direccion = document.getElementById('editDireccion').value;
-            sesionActual.estatusLegal = document.getElementById('editEstatus').value;
-
-            // Actualizar session y DB
-            localStorage.setItem('userSession', JSON.stringify(sesionActual));
-            localStorage.setItem('userDB', JSON.stringify(sesionActual));
-
-            alert("Perfil de refugio actualizado correctamente.");
-            document.getElementById('modalPerfil').style.display = 'none';
+            const sesion = JSON.parse(localStorage.getItem('userSession'));
+            sesion.nombre = document.getElementById('editNombre').value;
+            sesion.direccion = document.getElementById('editDireccion').value;
+            sesion.estatusLegal = document.getElementById('editEstatus').value;
             
-            // Actualizar nombre en el header
-            checkSession(); 
+            localStorage.setItem('userSession', JSON.stringify(sesion));
+            localStorage.setItem('userDB', JSON.stringify(sesion));
+            
+            alert("Perfil actualizado.");
+            location.reload();
         }
     </script>
 </body>
