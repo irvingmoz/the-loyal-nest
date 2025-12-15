@@ -1,3 +1,4 @@
+localStorage.clear();
 document.addEventListener("DOMContentLoaded", function() {
     checkSession(); // Revisa si ya hay sesión iniciada
 
