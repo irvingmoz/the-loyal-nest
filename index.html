@@ -10,6 +10,8 @@
 
     <style>
         /* Estilos específicos para la landing page */
+        :root { --primary: #e67e22; --primary-dark: #d35400; --white: #ffffff; --gray: #6b7280; --gray-light: #f3f4f6; --gray-lighter: #f9fafb; --dark: #111827; --radius-xl: 1rem; --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        
         .hero {
             background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 25%, #7c3aed 50%, var(--primary-dark) 100%);
             color: var(--white);
@@ -91,6 +93,16 @@
         .final-cta p { font-size: 1.25rem; margin-bottom: 2.5rem; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto; }
         .trust-badges { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 2rem; opacity: 0.8; }
         .trust-badge { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
+
+        /* Footer */
+        .footer { background-color: #111827; color: white; padding: 4rem 2rem; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 4rem; justify-content: space-between; }
+        .footer-section h3 { color: var(--primary); margin-top: 0; }
+        .footer-section h4 { margin-bottom: 1.5rem; font-size: 1.1rem; }
+        .footer-section ul { list-style: none; padding: 0; margin: 0; }
+        .footer-section ul li { margin-bottom: 0.75rem; }
+        .footer-section ul li a { color: #9ca3af; text-decoration: none; transition: color 0.3s; }
+        .footer-section ul li a:hover { color: var(--primary); }
 
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
@@ -280,11 +292,11 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section">
+                <div class="footer-section" style="flex:2;">
                     <h3>🐕 The Loyal Nest</h3>
                     <p>Conectando corazones con patitas desde 2024.</p>
                 </div>
-                <div class="footer-section">
+                <div class="footer-section" style="flex:1;">
                     <h4>Explorar</h4>
                     <ul>
                         <li><a href="auth.html">Iniciar Sesión</a></li>
@@ -292,22 +304,19 @@
                         <li><a href="education.html">Cómo Funciona</a></li>
                     </ul>
                 </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="#privacidad">Privacidad</a></li>
-                        <li><a href="#terminos">Términos</a></li>
-                        <li><a href="#cookies">Cookies</a></li>
-                    </ul>
-                </div>
+            </div>
+            <div style="border-top: 1px solid #374151; margin-top: 40px; padding-top: 20px; text-align: center; color: #9ca3af; font-size: 0.9rem;">
+                &copy; 2025 The Loyal Nest. Todos los derechos reservados.
             </div>
         </div>
     </footer>
 
-    <script src="js/script.js"></script> <script src="js/auth.js"></script>
+    <script src="js/script.js"></script> 
+    <script src="js/auth.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Animación de contadores
             const stats = document.querySelectorAll('.stat-number');
             stats.forEach(stat => {
                 const hasPercent = stat.textContent.includes('%');
@@ -329,6 +338,8 @@
                     stat.textContent = Math.floor(current) + suffix;
                 }, 40);
             });
+
+            // Scroll suave
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     const href = this.getAttribute('href');
@@ -340,9 +351,6 @@
                 });
             });
         });
-        <script src="js/auth.js"></script>
-
     </script>
 </body>
 </html>
-
