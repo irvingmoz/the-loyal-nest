@@ -3,294 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar Mascotas | The Loyal Nest</title>
-    
+    <title>Adopta un Amigo | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- ESTILOS ESPECÍFICOS DEL BUSCADOR --- */
+        :root { --primary: #e67e22; --text-dark: #333; --bg-light: #f9f9f9; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-light); color: var(--text-dark); margin: 0; }
+
+        /* NAVBAR */
+        .header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .nav-brand .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); text-decoration: none; }
+        .nav-list { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
+        .nav-list li a { text-decoration: none; color: #555; font-weight: 500; transition: color 0.3s; }
+        .nav-list li a:hover { color: var(--primary); }
+        .btn-outline { padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 50px; cursor: pointer; background: transparent; font-size: 0.9rem; text-decoration:none; color:#333; }
+
+        /* BUSCADOR Y FILTROS (RF13) */
+        .search-container { max-width: 1100px; margin: 100px auto 20px; padding: 0 20px; }
+        .filters-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
+        .filter-group { flex: 1; min-width: 150px; }
+        .filter-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #666; }
+        .form-select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; }
+        .btn-search { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; height: 40px; align-self: flex-end; }
+
+        /* GRILLA DE TARJETAS (RF14) */
+        .pets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; max-width: 1100px; margin: 0 auto 40px; padding: 0 20px; }
         
-        :root {
-            --primary: #e67e22;
-            --bg-light: #f9f9f9;
-        }
-
-        /* HERO UPDATE: Limpio y sin extras */
-        .hero {
-            text-align: center;
-            padding: 30px 20px;
-            background: transparent;
-            margin-bottom: 20px;
-        }
-
-        .hero-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 40px;
-            text-align: left;
-        }
-
-        .hero-content { flex: 1; }
-
-        .hero h1 {
-            font-size: 2.2rem;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-weight: 800;
-            line-height: 1.2;
-        }
+        .pet-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s; display: flex; flex-direction: column; }
+        .pet-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         
-        .hero p {
-            color: #7f8c8d;
-            font-size: 1rem;
-            margin-bottom: 25px;
-        }
-
-        .hero-image-container {
-            flex: 1;
-            max-width: 400px;
-            position: relative;
-            /* Se quitó el badge flotante aquí */
-        }
+        .pet-img { width: 100%; height: 200px; object-fit: cover; background-color: #eee; }
+        .pet-info { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+        .pet-name { font-size: 1.4rem; font-weight: 700; margin: 0 0 5px 0; color: #2c3e50; }
+        .pet-details { color: #777; font-size: 0.9rem; margin-bottom: 15px; }
+        .pet-tag { display: inline-block; padding: 4px 10px; background: #fff3e0; color: #e67e22; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 10px; }
         
-        .hero-image {
-            width: 100%;
-            height: auto;
-            border-radius: 20px;
-            object-fit: cover;
-        }
-        
-        /* Botón único del Hero */
-        .hero-buttons { display: flex; }
-        .btn-primary { background: var(--primary); color: white; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: 700; display: inline-block; }
-        .btn-primary:hover { opacity: 0.9; }
-
-
-        /* FILTROS */
-        .filters-container {
-            max-width: 950px; margin: 30px auto;
-            display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;
-        }
-
-        .pill {
-            padding: 10px 24px; border-radius: 30px; border: 1px solid #eee;
-            background: #fff; color: #555; cursor: pointer; font-weight: 600; font-size: 1rem;
-            transition: all 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-        .pill:hover { background: #f9f9f9; transform: translateY(-2px); }
-        .pill.active {
-            background: var(--primary); color: white; border-color: var(--primary);
-            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.3);
-        }
-
-        .modern-select, .modern-input {
-            padding: 10px 16px; border-radius: 12px; border: 1px solid #eee;
-            background: #fff; color: #555; outline: none; font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-        }
-        .search-wrapper { position: relative; display: flex; align-items: center; }
-        .search-wrapper i { position: absolute; left: 15px; color: #aaa; font-size: 1rem; }
-        .modern-input { padding-left: 40px; width: 220px; }
-
-        /* --- GRID Y FICHAS MÁS PEQUEÑAS --- */
-        .pets-grid {
-            display: grid;
-            /* CAMBIO: Ancho mínimo reducido a 240px para que sean más chicas */
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 25px; /* Gap un poco menor */
-            max-width: 1100px; /* Ancho total un poco menor */
-            margin: 40px auto; padding: 0 20px;
-        }
-
-        .pet-card {
-            background: white; border-radius: 20px; overflow: hidden;
-            border: 1px solid #f0f0f0; transition: transform 0.3s;
-        }
-        .pet-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
-
-        /* CAMBIO: Altura de imagen reducida */
-        .pet-img-container { height: 200px; position: relative; }
-        .pet-img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .badge {
-            position: absolute; top: 12px; right: 12px;
-            background: rgba(255,255,255,0.95); padding: 5px 12px; border-radius: 20px;
-            font-size: 0.8rem; font-weight: 700; color: var(--primary);
-        }
-
-        /* CAMBIO: Padding y tamaños de fuente reducidos para la ficha compacta */
-        .pet-info { padding: 20px; text-align: center; }
-        .pet-name { font-size: 1.35rem; margin: 0 0 5px; font-weight: 700; color: #2c3e50; }
-        .pet-meta { color: #888; font-size: 0.9rem; margin-bottom: 15px; }
-        
-        .tags { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
-        .tag { color: #666; font-size: 0.8rem; background: #f5f5f5; padding: 4px 10px; border-radius: 6px; }
-
-        .btn-action {
-            display: inline-block; width: 100%; padding: 10px 0; /* Botón un poco más delgado */
-            background: #27ae60; color: white; text-decoration: none;
-            border-radius: 12px; font-weight: 600; transition: background 0.2s;
-            font-family: 'Inter', sans-serif; font-size: 0.95rem;
-        }
-        .btn-action:hover { background: #219150; }
-
-        @media (max-width: 900px) {
-            .hero-container { flex-direction: column-reverse; text-align: center; padding: 30px 20px; }
-            .hero-image-container { max-width: 100%; }
-            .hero-buttons { justify-content: center; }
-        }
+        .btn-adopt { margin-top: auto; display: block; width: 100%; padding: 10px; background: var(--primary); color: white; text-align: center; text-decoration: none; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; }
+        .btn-adopt:hover { background: #d35400; }
     </style>
 </head>
 <body>
 
     <header class="header">
         <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-            </div>
-            <ul class="nav-links">
+            <div class="nav-brand"><a href="index.html" class="logo">🐕 The Loyal Nest</a></div>
+            <ul class="nav-list">
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="search-pets.html" class="active">Buscar Mascotas</a></li>
-                <li><a href="shelters-map.html">Refugios</a></li>
+                <li><a href="search-pets.html" style="color:var(--primary);">Adoptar</a></li>
+                <li><a href="map.html">Mapa</a></li>
                 <li><a href="education.html">Educación</a></li>
-                <li class="nav-auth">
-                    <a href="auth.html" id="nav-login" class="btn-outline">Iniciar Sesión</a>
-                    <div id="nav-user" style="display:none; gap:10px; align-items:center;">
-                        <span style="font-weight:600; color:#555;">Mi Cuenta</span>
-                        <button class="btn-outline" onclick="cerrarSesion()" style="padding:0.3rem 1rem; border:1px solid #ccc; font-size:0.9rem;">Salir</button>
-                    </div>
-                </li>
             </ul>
+            <div id="nav-auth-buttons" style="display:flex; gap:10px;"></div>
         </nav>
     </header>
 
-    <section class="hero">
-         <div class="hero-container">
-             <div class="hero-content">
-                <span style="color: #777; font-weight: 600; display: block; margin-bottom: 10px;">Buscar mascotas</span>
-                <h1>Adopta con confianza y enamórate del catálogo</h1>
-                <p>Explora perros y gatos listos para un hogar. Filtra por especie, raza o tamaño y envía tu solicitud sin salir de esta página.</p>
-                <div class="hero-buttons">
-                    <a href="#petsContainer" class="btn-primary">Ver catálogo completo</a>
-                </div>
-             </div>
-             <div class="hero-image-container">
-                 <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&q=80" alt="Perro feliz" class="hero-image">
-                 </div>
-         </div>
+    <section class="search-container">
+        <div class="filters-card">
+            <div class="filter-group">
+                <label>Especie</label>
+                <select id="filtroEspecie" class="form-select">
+                    <option value="todos">Todos</option>
+                    <option value="Perro">Perros</option>
+                    <option value="Gato">Gatos</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Edad</label>
+                <select id="filtroEdad" class="form-select">
+                    <option value="todos">Cualquiera</option>
+                    <option value="cachorro">Cachorro (< 1 año)</option>
+                    <option value="adulto">Adulto (1 - 7 años)</option>
+                </select>
+            </div>
+            <button onclick="aplicarFiltros()" class="btn-search">Buscar</button>
+        </div>
     </section>
 
-    <div class="filters-container">
-        <button class="pill active" onclick="filtrarEspecie(this, '')">Todos</button>
-        <button class="pill" onclick="filtrarEspecie(this, 'perro')">Perros 🐶</button>
-        <button class="pill" onclick="filtrarEspecie(this, 'gato')">Gatos 🐱</button>
-
-        <select id="filterSize" class="modern-select">
-            <option value="">Cualquier tamaño</option>
-            <option value="pequeño">Pequeño</option>
-            <option value="mediano">Mediano</option>
-            <option value="grande">Grande</option>
-        </select>
-        
-        <div class="search-wrapper">
-            <i class="fas fa-search"></i>
-            <input type="text" id="filterSearch" class="modern-input" placeholder="Buscar por nombre...">
+    <div id="petsGrid" class="pets-grid">
         </div>
+
+    <div id="noResults" style="text-align:center; display:none; padding:40px;">
+        <h3 style="color:#777;">No encontramos mascotas con esos filtros 😢</h3>
+        <p>Intenta cambiar los criterios de búsqueda.</p>
     </div>
 
-    <div id="petsContainer" class="pets-grid"></div>
-
-    <script src="js/auth.js"></script> 
+    <script src="js/auth.js"></script>
     <script>
-        // Mismos datos, solo para probar que las fichas se ven bien
-        const petsData = [
-            { id: 1, name: "Bruno", species: "perro", breed: "Labrador", size: "grande", age: "3 años", desc: "Bruno es un labrador ideal para familias activas.", tags: ["juguetón", "sociable"], img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&q=80" },
-            { id: 2, name: "Maya", species: "perro", breed: "Corgi", size: "pequeño", age: "9 meses", desc: "Pequeña pero con mucha personalidad. Ama los trucos.", tags: ["tierna", "curiosa"], img: "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=500&q=80" },
-            { id: 3, name: "Coco", species: "perro", breed: "Poodle", size: "pequeño", age: "2 años", desc: "Perfecto para depas, muy limpio y educado.", tags: ["cariñoso", "listo"], img: "https://images.unsplash.com/photo-1591769225440-811ad7d6eca6?w=500&q=80" },
-            { id: 4, name: "Rocky", species: "perro", breed: "Pastor Alemán", size: "grande", age: "4 años", desc: "Guardián noble que busca aventuras.", tags: ["leal", "protector"], img: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=500&q=80" },
-            { id: 5, name: "Luna", species: "gato", breed: "Mestizo", size: "pequeño", age: "1 año", desc: "Gatita negra muy elegante y tranquila.", tags: ["tranquila", "misteriosa"], img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500&q=80" },
-            { id: 6, name: "Michi", species: "gato", breed: "Atigrado", size: "mediano", age: "6 meses", desc: "Torbellino de energía, ideal para jugar.", tags: ["juguetón", "activo"], img: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=500&q=80" },
-            { id: 7, name: "Simba", species: "gato", breed: "Persa", size: "mediano", age: "3 años", desc: "Rey de la casa, busca un sofá cómodo.", tags: ["peludo", "noble"], img: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=500&q=80" },
-            { id: 8, name: "Nieve", species: "gato", breed: "Blanco", size: "pequeño", age: "2 años", desc: "Tímida al principio pero muy dulce.", tags: ["dulce", "tímida"], img: "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=500&q=80" }
+        document.addEventListener("DOMContentLoaded", function() {
+            cargarMascotas();
+        });
+
+        // DATOS DE PRUEBA (Para que no se vea vacío si es la primera vez)
+        const mascotasDefault = [
+            { nombre: "Bruno", tipo: "Perro", edad: 2, foto: "https://placedog.net/300/300?id=1", desc: "Muy juguetón" },
+            { nombre: "Misha", tipo: "Gato", edad: 1, foto: "https://placekitten.com/300/300", desc: "Tranquila y cariñosa" },
+            { nombre: "Rocky", tipo: "Perro", edad: 5, foto: "https://placedog.net/300/300?id=3", desc: "Guardián leal" }
         ];
 
-        const container = document.getElementById('petsContainer');
-        let currentSpecies = "";
-        let currentSize = "";
-        let currentSearch = "";
+        function cargarMascotas() {
+            // 1. LEER DATABASE DEL NAVEGADOR
+            // Combinamos las que agregaste tú (localStorage) con las de prueba
+            const mascotasGuardadas = JSON.parse(localStorage.getItem('petsDB')) || [];
+            const todasLasMascotas = [...mascotasDefault, ...mascotasGuardadas];
 
-        function renderPets() {
-            container.innerHTML = "";
-            const filtered = petsData.filter(pet => {
-                const matchSpecies = currentSpecies === "" || pet.species === currentSpecies;
-                const matchSize = currentSize === "" || pet.size === currentSize;
-                const matchSearch = pet.name.toLowerCase().includes(currentSearch);
-                return matchSpecies && matchSize && matchSearch;
-            });
+            mostrarMascotas(todasLasMascotas);
+        }
 
-            if(filtered.length === 0) {
-                container.innerHTML = "<p style='grid-column:1/-1; text-align:center; color:#777; padding:20px; font-size:1.1rem;'>No encontramos mascotas con esos filtros.</p>";
+        function mostrarMascotas(lista) {
+            const grid = document.getElementById('petsGrid');
+            const noResults = document.getElementById('noResults');
+            grid.innerHTML = '';
+
+            if (lista.length === 0) {
+                noResults.style.display = 'block';
                 return;
             }
+            noResults.style.display = 'none';
 
-            filtered.forEach(pet => {
-                const tagsHTML = pet.tags.map(tag => `<span class="tag"><i class="fas fa-tag" style="font-size:0.8rem;"></i> ${tag}</span>`).join('');
-                const card = `
-                    <article class="pet-card">
-                        <div class="pet-img-container">
-                            <img src="${pet.img}" class="pet-img" alt="${pet.name}">
-                            <span class="badge">${pet.species === 'perro' ? 'Perro' : 'Gato'}</span>
-                        </div>
-                        <div class="pet-info">
-                            <h3 class="pet-name">${pet.name}</h3>
-                            <div class="pet-meta">${pet.breed} · ${pet.age}</div>
-                            <p style="font-size:0.9rem; color:#666; margin-bottom:15px; min-height:45px;">${pet.desc}</p>
-                            <div class="tags">${tagsHTML}</div>
-                            <a href="pet-profile.html?id=${pet.id}" class="btn-action">Ver Perfil / Adoptar</a>
-                        </div>
-                    </article>
+            lista.forEach(pet => {
+                // Crear tarjeta HTML (RF14)
+                const card = document.createElement('div');
+                card.className = 'pet-card';
+                card.innerHTML = `
+                    <img src="${pet.foto || 'https://via.placeholder.com/300'}" class="pet-img" alt="${pet.nombre}">
+                    <div class="pet-info">
+                        <span class="pet-tag">${pet.tipo}</span>
+                        <h3 class="pet-name">${pet.nombre}</h3>
+                        <p class="pet-details">${pet.edad} años • Iztapalapa</p>
+                        <button onclick="verPerfil('${pet.nombre}')" class="btn-adopt">Ver Perfil</button>
+                    </div>
                 `;
-                container.innerHTML += card;
+                grid.appendChild(card);
             });
         }
 
-        function filtrarEspecie(boton, especie) {
-            document.querySelectorAll('.pill').forEach(btn => btn.classList.remove('active'));
-            boton.classList.add('active');
-            currentSpecies = especie;
-            renderPets();
+        // LÓGICA DE FILTROS (RF13)
+        function aplicarFiltros() {
+            const especie = document.getElementById('filtroEspecie').value;
+            // Recuperamos la lista completa de nuevo
+            const mascotasGuardadas = JSON.parse(localStorage.getItem('petsDB')) || [];
+            const todasLasMascotas = [...mascotasDefault, ...mascotasGuardadas];
+
+            // Filtramos
+            const filtradas = todasLasMascotas.filter(pet => {
+                if (especie !== 'todos' && pet.tipo !== especie) return false;
+                return true;
+            });
+
+            mostrarMascotas(filtradas);
         }
 
-        document.getElementById('filterSize').addEventListener('change', (e) => {
-            currentSize = e.target.value;
-            renderPets();
-        });
+        // SIMULACIÓN DE PERFIL COMPLETO (RF14)
+        function verPerfil(nombreMascota) {
+            // En un proyecto final, esto iría a 'pet-profile.html?id=...'
+            // Para el prototipo, mostramos un alert con los datos
+            const mascotasGuardadas = JSON.parse(localStorage.getItem('petsDB')) || [];
+            const todas = [...mascotasDefault, ...mascotasGuardadas];
+            const mascota = todas.find(p => p.nombre === nombreMascota);
 
-        document.getElementById('filterSearch').addEventListener('input', (e) => {
-            currentSearch = e.target.value.toLowerCase();
-            renderPets();
-        });
-
-        if (typeof cerrarSesion === 'undefined') {
-            window.cerrarSesion = function() {
-                localStorage.removeItem("usuarioLogueado");
-                window.location.href = "auth.html";
-            };
+            if(mascota) {
+                alert(`🐶 PERFIL DE ${mascota.nombre.toUpperCase()}\n\nEdad: ${mascota.edad} años\nTipo: ${mascota.tipo}\nHistoria: ${mascota.desc || "Sin descripción"}\n\n[Aquí iría el botón de 'Solicitar Adopción']`);
+            }
         }
-
-        document.addEventListener("DOMContentLoaded", renderPets);
-
     </script>
 </body>
 </html>
