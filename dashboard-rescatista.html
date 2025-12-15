@@ -100,7 +100,7 @@
                     </tr>
                 </thead>
                 <tbody id="petsBody">
-                    </tbody>
+                </tbody>
             </table>
             <p id="emptyMsg" style="text-align:center; color:#999; padding:20px; display:none;">No tienes mascotas registradas aún.</p>
         </section>
@@ -122,10 +122,13 @@
             <label>Edad (Años):</label>
             <input type="number" id="petAge" class="modal-input" placeholder="Ej. 2">
 
-            <label>Foto (URL):</label>
-            <input type="text" id="petPhoto" class="modal-input" placeholder="Pega un link de imagen (ej. imgur)">
-            <small style="color:#888; display:block; margin-bottom:10px;">Tip: Usa 'https://placedog.net/300' para probar.</small>
-
+            <label>Foto de la Mascota:</label>
+            <input type="file" id="petImageFile" class="modal-input" accept="image/*">
+            
+            <div style="margin-bottom:15px; text-align:center;">
+                <img id="imagePreview" src="" style="display:none; max-width:100%; max-height:150px; border-radius:8px; border:1px solid #ddd;">
+            </div>
+            <input type="hidden" id="petImageBase64">
             <label>Historia / Descripción:</label>
             <textarea id="petDesc" class="modal-textarea" rows="3" placeholder="Cuenta su historia..."></textarea>
 
@@ -160,6 +163,26 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             cargarMascotas();
+
+            // --- LÓGICA PARA LEER LA FOTO AL SELECCIONARLA ---
+            const fileInput = document.getElementById('petImageFile');
+            const preview = document.getElementById('imagePreview');
+            const hiddenInput = document.getElementById('petImageBase64');
+
+            if(fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            preview.src = evt.target.result;
+                            preview.style.display = 'block';
+                            hiddenInput.value = evt.target.result; // Guardamos el código de la imagen
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
         });
 
         // --- LÓGICA DE MASCOTAS ---
@@ -194,6 +217,14 @@
         }
 
         function abrirModalMascota() {
+            // Limpiar campos previos
+            document.getElementById('petName').value = '';
+            document.getElementById('petAge').value = '';
+            document.getElementById('petImageFile').value = ''; // Limpiar input file
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('petImageBase64').value = '';
+            document.getElementById('petDesc').value = '';
+            
             document.getElementById('modalMascota').style.display = 'flex';
         }
 
@@ -201,10 +232,14 @@
             const nombre = document.getElementById('petName').value;
             const tipo = document.getElementById('petType').value;
             const edad = document.getElementById('petAge').value;
-            const foto = document.getElementById('petPhoto').value;
+            // AQUI ESTÁ EL CAMBIO: Leemos el hidden input, no el text input
+            const foto = document.getElementById('petImageBase64').value;
             const desc = document.getElementById('petDesc').value;
 
             if(!nombre || !edad) return alert("Nombre y edad requeridos");
+            
+            // Validación opcional: Obligar a subir foto
+            // if(!foto) return alert("Por favor sube una foto de la mascota");
 
             const nuevaMascota = { nombre, tipo, edad, foto, desc, estado: 'Disponible' };
             
