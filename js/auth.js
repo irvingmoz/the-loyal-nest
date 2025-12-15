@@ -9,30 +9,26 @@ document.addEventListener("DOMContentLoaded", function() {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // En el Login tus IDs son 'email' y 'password'
             const emailVal = document.getElementById('email').value;
             const passVal = document.getElementById('password').value;
 
-            // Simulamos buscar al usuario en la base de datos local
             const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
             const userFound = usersDB.find(u => u.email === emailVal && u.password === passVal);
 
             if (userFound) {
-                // Login Exitoso
                 localStorage.setItem('sesionActiva', 'true');
                 localStorage.setItem('usuario', userFound.email);
-                localStorage.setItem('userSession', JSON.stringify(userFound)); // Guardamos todos sus datos
+                localStorage.setItem('userSession', JSON.stringify(userFound)); 
                 
-                alert(`¡Bienvenido de nuevo, ${userFound.nombre}!`);
+                alert(`¡Bienvenido, ${userFound.nombre}!`);
 
-                // Redireccionar según el rol
                 if (userFound.rol === 'rescatista') {
                     window.location.href = "dashboard-rescatista.html";
                 } else {
-                    window.location.href = "index.html"; // O dashboard-adoptante.html
+                    window.location.href = "index.html"; 
                 }
             } else {
-                alert("Correo o contraseña incorrectos, o el usuario no existe.");
+                alert("Datos incorrectos o usuario no registrado.");
             }
         });
     }
@@ -43,45 +39,31 @@ document.addEventListener("DOMContentLoaded", function() {
     const registerForm = document.getElementById('registerForm');
 
     if (registerForm) {
-        
-        // A) Lógica visual: Mostrar campos de refugio si elige "Rescatista"
         const roleSelect = document.getElementById('role');
         const divRescatista = document.getElementById('camposRescatista');
 
         if(roleSelect && divRescatista) {
             roleSelect.addEventListener('change', function() {
-                if (this.value === 'rescatista') {
-                    divRescatista.style.display = 'block';
-                } else {
-                    divRescatista.style.display = 'none';
-                }
+                divRescatista.style.display = (this.value === 'rescatista') ? 'block' : 'none';
             });
         }
 
-        // B) Lógica de Guardado
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Obtenemos los valores usando los IDs correctos de tu HTML
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
-            const nombre = document.getElementById('nombre').value;
-            const apPaterno = document.getElementById('apPaterno').value;
             const rol = document.getElementById('role').value;
 
-            // Validar que no exista ya ese correo
             const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
-            const existe = usersDB.find(u => u.email === email);
-
-            if (existe) {
-                alert("Este correo ya está registrado. Por favor inicia sesión.");
+            if (usersDB.find(u => u.email === email)) {
+                alert("Este correo ya existe.");
                 return;
             }
 
-            // Creamos el objeto con TODOS los datos
             const newUser = {
-                nombre: nombre,
-                apellido: apPaterno,
+                nombre: document.getElementById('nombre').value,
+                apellido: document.getElementById('apPaterno').value,
                 email: email,
                 password: password,
                 rol: rol,
@@ -89,7 +71,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 curp: document.getElementById('curp').value,
                 direccion: {
                     calle: document.getElementById('dirCalle').value,
-                    numExt: document.getElementById('dirNumExt').value,
                     colonia: document.getElementById('dirColonia').value,
                     alcaldia: document.getElementById('dirAlcaldia').value,
                     cp: document.getElementById('dirCP').value
@@ -98,83 +79,60 @@ document.addEventListener("DOMContentLoaded", function() {
                 fechaRegistro: new Date().toLocaleDateString()
             };
 
-            // Guardar en localStorage
             usersDB.push(newUser);
             localStorage.setItem('usersDB', JSON.stringify(usersDB));
 
-            alert("¡Cuenta creada con éxito! Ahora serás redirigido al inicio de sesión.");
+            alert("¡Cuenta creada! Inicia sesión ahora.");
             window.location.href = "auth.html";
         });
     }
 
     // =======================================================
-    // 3. VALIDACIÓN INTELIGENTE DE DIRECCIÓN (CDMX) - NUEVO
+    // 3. CONTROL DEL MENÚ (OCULTAR BOTONES SI HAY SESIÓN) - NUEVO
     // =======================================================
-    const inputCP = document.getElementById('dirCP');
-    const selectAlcaldia = document.getElementById('dirAlcaldia');
+    // Esto revisa si ya entraste para limpiar el menú
+    const sesionActiva = localStorage.getItem('sesionActiva');
+    const rutaActual = window.location.pathname;
 
-    if (inputCP && selectAlcaldia) {
+    if (sesionActiva === 'true') {
+        // A) Si ya hay sesión, buscamos el botón de "Iniciar Sesión" y lo ocultamos
+        const botonesMenu = document.querySelectorAll('a, button'); // Buscamos en todos los enlaces y botones
         
-        // A) Cuando escriben el CP, detectamos la zona
-        inputCP.addEventListener('input', function() {
-            const cp = this.value;
-            
-            // Solo actuamos si ya escribieron 5 números
-            if (cp.length === 5) {
-                const primerosDos = cp.substring(0, 2);
-                let alcaldiaDetectada = "";
-
-                // Mapeo básico de CDMX
-                if (primerosDos === "09") alcaldiaDetectada = "Iztapalapa";
-                else if (primerosDos === "08") alcaldiaDetectada = "Iztacalco";
-                else if (primerosDos === "04") alcaldiaDetectada = "Coyoacán";
-                else if (primerosDos === "13") alcaldiaDetectada = "Tláhuac";
-                
-                // Si detectamos una alcaldía conocida, la seleccionamos
-                if (alcaldiaDetectada) {
-                    selectAlcaldia.value = alcaldiaDetectada;
-                    // Efecto visual (borde naranja un segundo)
-                    selectAlcaldia.style.borderColor = "#e67e22"; 
-                    setTimeout(() => selectAlcaldia.style.borderColor = "#ddd", 1000);
-                }
+        botonesMenu.forEach(btn => {
+            // Si el texto del botón dice "Iniciar Sesión" o "Registrarse"... ¡ADIÓS!
+            if (btn.innerText.includes('Iniciar Sesión') || btn.innerText.includes('Registrarse')) {
+                btn.style.display = 'none';
             }
         });
 
-        // B) Candado: Evitar que cambien la alcaldía si no coincide con el CP
-        selectAlcaldia.addEventListener('change', function() {
-            const cp = inputCP.value;
-            const alcaldiaSeleccionada = this.value;
+        // B) Opcional: Agregar botón de "Cerrar Sesión" al menú si no existe
+        const nav = document.querySelector('.nav');
+        if (nav && !document.getElementById('btn-logout-auto')) {
+            const btnLogout = document.createElement('button');
+            btnLogout.id = 'btn-logout-auto';
+            btnLogout.innerText = "Cerrar Sesión";
+            btnLogout.className = "btn-outline"; // Usamos tu clase de estilo
+            btnLogout.style.marginLeft = "10px";
+            btnLogout.style.color = "red";
+            btnLogout.style.borderColor = "red";
+            btnLogout.onclick = cerrarSesion;
+            nav.appendChild(btnLogout);
+        }
 
-            if (cp.length === 5) {
-                const primerosDos = cp.substring(0, 2);
-                
-                // Validación Iztapalapa
-                if (primerosDos === "09" && alcaldiaSeleccionada !== "Iztapalapa") {
-                    alert("El Código Postal " + cp + " pertenece a Iztapalapa. No puedes seleccionar otra alcaldía.");
-                    this.value = "Iztapalapa"; // Lo regresamos a la correcta
-                }
-                // Validación Iztacalco
-                else if (primerosDos === "08" && alcaldiaSeleccionada !== "Iztacalco") {
-                    alert("El Código Postal " + cp + " pertenece a Iztacalco.");
-                    this.value = "Iztacalco";
-                }
-                // Validación Coyoacán
-                else if (primerosDos === "04" && alcaldiaSeleccionada !== "Coyoacán") {
-                    alert("El Código Postal " + cp + " pertenece a Coyoacán.");
-                    this.value = "Coyoacán";
-                }
-                 // Validación Tláhuac
-                 else if (primerosDos === "13" && alcaldiaSeleccionada !== "Tláhuac") {
-                    alert("El Código Postal " + cp + " pertenece a Tláhuac.");
-                    this.value = "Tláhuac";
-                }
+    } else {
+        // C) PROTECCIÓN: Si NO hay sesión y estás en páginas privadas, ¡FUERA!
+        if (rutaActual.includes('shelters-map') || rutaActual.includes('education') || rutaActual.includes('dashboard')) {
+            // Evitamos el bucle infinito si ya estamos en auth
+            if (!rutaActual.includes('auth.html')) {
+                alert("Debes iniciar sesión para ver esta sección.");
+                window.location.href = "auth.html";
             }
-        });
+        }
     }
 
-}); // Fin del DOMContentLoaded
+});
 
-// Función global para cerrar sesión
+// Función para cerrar sesión
 function cerrarSesion() {
     localStorage.removeItem('sesionActiva');
     localStorage.removeItem('usuario');
