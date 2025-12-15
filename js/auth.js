@@ -53,61 +53,47 @@ function registrarUsuario() {
         estatusLegal = document.getElementById('estatusLegal').value.trim();
     }
 
-    // --- VALIDACIONES DE "MANO DURA" 👮‍♂️ ---
-
-    // 1. Nombre y Apellidos (Solo letras)
+    // --- VALIDACIONES ---
     const regexSoloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+    if (!regexSoloLetras.test(nombre)) return alert("Error: Nombre inválido.");
+    if (!regexSoloLetras.test(apPaterno) || !regexSoloLetras.test(apMaterno)) return alert("Error: Apellidos inválidos.");
+    if (edad < 18 || edad > 99) return alert("Error: Debes ser mayor de 18 años.");
     
-    if (!regexSoloLetras.test(nombre)) {
-        return alert("❌ Error en Nombre: No puede contener números ni símbolos.");
-    }
-    if (!regexSoloLetras.test(apPaterno) || !regexSoloLetras.test(apMaterno)) {
-        return alert("❌ Error en Apellidos: No pueden contener números.");
-    }
-
-    // 2. Edad (Mayor de edad)
-    if (edad < 18 || edad > 99) {
-        return alert("❌ Error en Edad: Debes ser mayor de 18 años para registrarte.");
-    }
-
-    // 3. CURP (Formato estricto 18 caracteres)
     const regexCURP = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]{2}$/;
-    if (!regexCURP.test(curp)) {
-        return alert("❌ Error en CURP: Debe tener 18 caracteres y el formato oficial (Ej: AAAA990101HDF...)");
-    }
+    if (!regexCURP.test(curp)) return alert("Error: CURP inválido (18 caracteres requeridos).");
 
-    // 4. DIRECCIÓN COHERENTE (NUEVO) 🏠
-    // Reglas: Mínimo 15 caracteres, debe tener espacios y al menos un número (para calle o CP).
-    const tieneEspacios = /\s/.test(direccion);
-    const tieneNumeros = /\d/.test(direccion);
-    
-    if (direccion.length < 15 || !tieneEspacios || !tieneNumeros) {
-        return alert("❌ Error en Dirección: La dirección no parece válida.\n\nDebe incluir:\n- Calle y Número\n- Colonia\n- Mínimo 15 caracteres");
-    }
+    if (direccion.length < 15) return alert("Error: Dirección muy corta.");
 
-    // 5. Contraseña Fuerte
     const regexPass = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-    if (!regexPass.test(passRaw)) {
-        return alert("❌ Error en Contraseña: Es insegura.\nDebe tener:\n- Mínimo 8 caracteres\n- Una mayúscula\n- Un número\n- Un símbolo (@, #, $, etc.)");
+    if (!regexPass.test(passRaw)) return alert("Error: La contraseña debe tener Mayúscula, Número y Símbolo.");
+
+    if (rol === 'rescatista' && estatusLegal.length < 5) return alert("Error: Falta estatus legal.");
+
+    // --- VALIDACIÓN DE CORREO DUPLICADO (NUEVO) ---
+    // 1. Traemos la lista actual de usuarios (o creamos una vacía)
+    const usuariosExistentes = JSON.parse(localStorage.getItem('usersDB')) || [];
+    
+    // 2. Buscamos si el correo ya existe
+    const usuarioDuplicado = usuariosExistentes.find(u => u.correo === correo);
+    
+    if (usuarioDuplicado) {
+        return alert("❌ Error: Este correo electrónico YA está registrado. Intenta iniciar sesión.");
     }
 
-    // 6. Estatus Legal (Solo para refugios)
-    if (rol === 'rescatista' && estatusLegal.length < 5) {
-        return alert("❌ Error: Debes especificar el estatus legal del refugio correctamente.");
-    }
-
-    // --- SI TODO ESTÁ BIEN, GUARDAMOS ---
+    // --- GUARDADO ---
     const pass = encriptar(passRaw);
+    const nuevoUsuario = { nombre, apPaterno, apMaterno, edad, curp, direccion, correo, pass, rol, estatusLegal };
 
-    const nuevoUsuario = { 
-        nombre, apPaterno, apMaterno, edad, curp, direccion, 
-        correo, pass, rol, estatusLegal 
-    };
-
-    localStorage.setItem('userDB', JSON.stringify(nuevoUsuario));
+    // 3. Agregamos el nuevo usuario a la lista
+    usuariosExistentes.push(nuevoUsuario);
+    
+    // 4. Guardamos la lista completa
+    localStorage.setItem('usersDB', JSON.stringify(usuariosExistentes));
+    
+    // Auto-login
     localStorage.setItem('userSession', JSON.stringify(nuevoUsuario));
 
-    alert("✅ ¡Registro Exitoso! Bienvenido, " + nombre);
+    alert("¡Registro Exitoso! Bienvenido/a.");
     redirigirPorRol(rol);
 }
 
@@ -116,11 +102,15 @@ function iniciarSesion() {
     const passRaw = document.getElementById('password').value;
     const passEnc = encriptar(passRaw);
 
-    const usuarioGuardado = JSON.parse(localStorage.getItem('userDB'));
+    // 1. Buscamos en la LISTA de usuarios
+    const usuariosExistentes = JSON.parse(localStorage.getItem('usersDB')) || [];
+    
+    // 2. Encontramos al usuario correcto
+    const usuarioEncontrado = usuariosExistentes.find(u => u.correo === correo && u.pass === passEnc);
 
-    if (usuarioGuardado && usuarioGuardado.correo === correo && usuarioGuardado.pass === passEnc) {
-        localStorage.setItem('userSession', JSON.stringify(usuarioGuardado));
-        redirigirPorRol(usuarioGuardado.rol);
+    if (usuarioEncontrado) {
+        localStorage.setItem('userSession', JSON.stringify(usuarioEncontrado));
+        redirigirPorRol(usuarioEncontrado.rol);
     } else {
         alert("⚠️ Correo o contraseña incorrectos.");
     }
@@ -128,43 +118,46 @@ function iniciarSesion() {
 
 function recuperarContrasena() {
     const email = prompt("Ingresa tu correo para restablecer:");
-    if (email && email.includes('@')) {
-        alert(`📧 Hemos enviado un enlace de recuperación a ${email}.`);
-    } else if (email) {
-        alert("Por favor ingresa un correo válido.");
-    }
+    if (email) alert(`Hemos enviado un enlace a ${email}.`);
 }
 
 function guardarPerfilEditado() {
+    // Actualiza la sesión actual
     const sesionActual = JSON.parse(localStorage.getItem('userSession'));
     if (!sesionActual) return;
 
-    if(document.getElementById('editNombre')) {
-        sesionActual.nombre = document.getElementById('editNombre').value;
-    }
-    if(document.getElementById('editDireccion')) {
-        // También validamos al editar
-        const nuevaDir = document.getElementById('editDireccion').value;
-        if(nuevaDir.length < 10) return alert("La dirección es muy corta.");
-        sesionActual.direccion = nuevaDir;
-    }
-    if(document.getElementById('editEstatus')) {
-        sesionActual.estatusLegal = document.getElementById('editEstatus').value;
-    }
+    if(document.getElementById('editNombre')) sesionActual.nombre = document.getElementById('editNombre').value;
+    if(document.getElementById('editDireccion')) sesionActual.direccion = document.getElementById('editDireccion').value;
+    if(document.getElementById('editEstatus')) sesionActual.estatusLegal = document.getElementById('editEstatus').value;
 
     localStorage.setItem('userSession', JSON.stringify(sesionActual));
-    localStorage.setItem('userDB', JSON.stringify(sesionActual));
 
-    alert("✅ Perfil actualizado correctamente.");
+    // TAMBIÉN actualiza al usuario en la lista grande (usersDB)
+    const usuariosExistentes = JSON.parse(localStorage.getItem('usersDB')) || [];
+    const index = usuariosExistentes.findIndex(u => u.correo === sesionActual.correo);
+    if(index !== -1) {
+        usuariosExistentes[index] = sesionActual;
+        localStorage.setItem('usersDB', JSON.stringify(usuariosExistentes));
+    }
+
+    alert("Perfil actualizado correctamente.");
     location.reload();
 }
 
 function eliminarCuenta() {
-    if (confirm("⚠️ ¿Estás seguro que deseas ELIMINAR tu cuenta? Esta acción es irreversible.")) {
+    if (confirm("¿Seguro que deseas eliminar tu cuenta?")) {
+        const sesionActual = JSON.parse(localStorage.getItem('userSession'));
+        
+        // Borrar de la lista grande
+        const usuariosExistentes = JSON.parse(localStorage.getItem('usersDB')) || [];
+        const nuevosUsuarios = usuariosExistentes.filter(u => u.correo !== sesionActual.correo);
+        localStorage.setItem('usersDB', JSON.stringify(nuevosUsuarios));
+
+        // Borrar sesión
         localStorage.removeItem('userSession');
-        localStorage.removeItem('userDB');
         localStorage.removeItem('solicitudesAdopcion');
-        alert("Tu cuenta ha sido eliminada.");
+        
+        alert("Cuenta eliminada.");
         window.location.href = 'index.html';
     }
 }
