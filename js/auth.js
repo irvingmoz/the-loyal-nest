@@ -37,25 +37,18 @@ document.addEventListener("DOMContentLoaded", function() {
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         
-        // --- 🔴 NUEVO: LIMPIEZA DE CURP EN TIEMPO REAL ---
-        // Esto evita que escriban símbolos raros mientras teclean
+        // --- LIMPIEZA DE CURP EN TIEMPO REAL ---
         const inputCurp = document.getElementById('curp');
         if (inputCurp) {
             inputCurp.addEventListener('input', function(e) {
-                let valor = e.target.value.toUpperCase(); // Todo a mayúsculas
-                
-                // Esta expresión regular borra todo lo que NO sea letra (A-Z) o número (0-9)
-                valor = valor.replace(/[^A-Z0-9]/g, '');
-                
-                // No permitir más de 18 caracteres visualmente
+                let valor = e.target.value.toUpperCase();
+                valor = valor.replace(/[^A-Z0-9]/g, ''); // Solo letras y números
                 if (valor.length > 18) {
                     valor = valor.slice(0, 18);
                 }
-                
-                e.target.value = valor; // Regresamos el valor limpio al campo
+                e.target.value = valor;
             });
         }
-        // --- FIN DE LIMPIEZA CURP ---
 
         const roleSelect = document.getElementById('role');
         const divRescatista = document.getElementById('camposRescatista');
@@ -69,13 +62,12 @@ document.addEventListener("DOMContentLoaded", function() {
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Obtenemos valores
             const emailRaw = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
             const rol = document.getElementById('role').value;
-            const curpRaw = document.getElementById('curp').value; // Valor del CURP
+            const curpRaw = document.getElementById('curp').value.trim(); // Quitamos espacios extra
 
-            // VALIDACIÓN DE CORREO (Dominios permitidos)
+            // VALIDACIÓN DE CORREO
             const emailLimpio = emailRaw.trim().toLowerCase();
             const dominiosPermitidos = ['gmail.com', 'outlook.com', 'hotmail.com', 'yahoo.com', 'live.com', 'icloud.com'];
             const partesEmail = emailLimpio.split('@');
@@ -89,14 +81,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            // --- 🔴 NUEVO: VALIDACIÓN EXACTA DE CURP ---
-            if (curpRaw.length !== 18) {
-                alert("⚠️ La CURP debe tener EXACTAMENTE 18 caracteres alfanuméricos.");
-                return; // Detiene el registro si no son 18
+            // --- 🔴 NUEVA VALIDACIÓN CURP OPCIONAL ---
+            // Solo entramos al IF si el usuario escribió algo (longitud > 0)
+            if (curpRaw.length > 0) { 
+                if (curpRaw.length !== 18) {
+                    alert("⚠️ Si ingresas la CURP, debe tener EXACTAMENTE 18 caracteres. Si no la tienes, deja el campo vacío.");
+                    return; // Detiene el registro si escribió una CURP incompleta
+                }
             }
             // --- FIN VALIDACIÓN CURP ---
 
-            // Validación contraseña
             if (password.length < 8) {
                 alert("⚠️ La contraseña debe tener al menos 8 caracteres.");
                 return;
@@ -114,13 +108,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 email: emailLimpio,
                 password: password,
                 rol: rol,
-                curp: curpRaw, // Guardamos la CURP validada
+                curp: curpRaw, // Guardará la CURP o un texto vacío ""
                 edad: document.getElementById('edad').value,
                 direccion: {
                     calle: document.getElementById('dirCalle') ? document.getElementById('dirCalle').value : '',
-                    // Nota: Asegúrate de que los IDs de dirección coincidan con tu HTML, 
-                    // si usas un solo textarea con id="direccion", cambia esto a:
-                    // direccionCompleta: document.getElementById('direccion').value
                 },
                 estatusLegal: rol === 'rescatista' ? document.getElementById('estatusLegal').value : "",
                 fechaRegistro: new Date().toLocaleDateString()
