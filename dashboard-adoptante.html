@@ -102,7 +102,7 @@
             <ul class="nav-list">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="search-pets.html">Adoptar</a></li>
-                <li><a href="map.html">Mapa</a></li>
+                <li><a href="shelters-map.html">Refugios</a></li>
                 <li><a href="education.html">Educación</a></li>
             </ul>
 
@@ -116,12 +116,11 @@
         <div class="dashboard-header">
             <div>
                 <h1>Mis Solicitudes de Adopción</h1>
-                <p>Aquí puedes ver el estado de tus trámites en tiempo real.</p>
+                <p>Bienvenido, <span id="userNameDisplay" style="font-weight:bold; color:#e67e22;">Usuario</span>.</p>
             </div>
             
             <div style="display:flex; gap:10px;">
                 <button onclick="abrirModalPerfil()" class="btn-outline" style="background:#fff;">✏️ Editar Perfil</button>
-                <button onclick="eliminarCuenta()" class="btn-outline" style="border-color:red; color:red; background:#fff;">🗑️ Eliminar Cuenta</button>
             </div>
         </div>
 
@@ -132,10 +131,11 @@
                         <th>Mascota</th>
                         <th>Fecha</th>
                         <th>Estado</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    </tbody>
+                </tbody>
             </table>
             
             <p id="emptyMsg" style="display:none; text-align:center; color:#999; margin-top:20px;">
@@ -147,13 +147,10 @@
     <div id="modalPerfil">
         <div class="modal-content">
             <h2>Editar Mi Perfil</h2>
-            <p style="font-size:0.9rem; color:#666; margin-bottom:20px;">Actualiza tu información personal.</p>
+            <p style="font-size:0.9rem; color:#666; margin-bottom:20px;">Actualiza tu nombre. Tu dirección registrada se mantendrá segura.</p>
             
             <label style="display:block; margin-bottom:5px; font-weight:600;">Nombre Completo:</label>
             <input type="text" id="editNombre" class="modal-input">
-            
-            <label style="display:block; margin-bottom:5px; font-weight:600;">Dirección:</label>
-            <input type="text" id="editDireccion" class="modal-input">
             
             <div style="text-align:right;">
                 <button onclick="guardarPerfilEditado()" class="modal-btn-save">Guardar Cambios</button>
@@ -165,57 +162,98 @@
     <script src="js/auth.js"></script>
     
     <script>
-       // En dashboard-adoptante.html (dentro del script)
+        document.addEventListener("DOMContentLoaded", function() {
+            // Verificamos si hay sesión
+            const sesion = JSON.parse(localStorage.getItem('userSession'));
+            if (!sesion) {
+                window.location.href = "auth.html";
+                return;
+            }
 
-document.addEventListener("DOMContentLoaded", function() {
-    checkSession(); // Asegura que auth.js cargó la sesión
-    
-    const sesion = JSON.parse(localStorage.getItem('userSession'));
-    const solicitudesTotales = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
-    
-    // FILTRO DE PRIVACIDAD: Solo mostramos las de ESTE usuario
-    const misSolicitudes = solicitudesTotales.filter(sol => sol.usuario === sesion.correo);
+            // Mostrar nombre en el saludo
+            document.getElementById('userNameDisplay').innerText = sesion.nombre;
 
-    const tbody = document.getElementById('tableBody');
-    const emptyMsg = document.getElementById('emptyMsg');
+            // CARGAR SOLICITUDES
+            // Usamos 'solicitudesDB' para coincidir con search-pets.html
+            const solicitudesTotales = JSON.parse(localStorage.getItem('solicitudesDB')) || [];
+            
+            // FILTRO: Mostramos solo las que coinciden con mi email
+            const misSolicitudes = solicitudesTotales.filter(sol => sol.idAdoptante === sesion.email);
 
-    if (misSolicitudes.length === 0) {
-        if(emptyMsg) emptyMsg.style.display = 'block';
-    } else {
-        if(emptyMsg) emptyMsg.style.display = 'none';
-        
-        misSolicitudes.forEach(sol => {
-            const foto = sol.foto || 'https://via.placeholder.com/50'; 
-            const row = `
-                <tr>
-                    <td>
-                        <img src="${foto}" class="pet-thumb">
-                        <strong>${sol.mascota}</strong>
-                    </td>
-                    <td>${sol.fecha}</td>
-                    <td><span class="status-badge">${sol.estado}</span></td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
+            const tbody = document.getElementById('tableBody');
+            const emptyMsg = document.getElementById('emptyMsg');
+
+            tbody.innerHTML = '';
+
+            if (misSolicitudes.length === 0) {
+                if(emptyMsg) emptyMsg.style.display = 'block';
+            } else {
+                if(emptyMsg) emptyMsg.style.display = 'none';
+                
+                misSolicitudes.forEach(sol => {
+                    const foto = sol.fotoMascota || 'https://via.placeholder.com/50'; 
+                    const row = `
+                        <tr>
+                            <td>
+                                <img src="${foto}" class="pet-thumb">
+                                <strong>${sol.mascota}</strong>
+                            </td>
+                            <td>${sol.fecha}</td>
+                            <td><span class="status-badge">${sol.estado}</span></td>
+                            <td>
+                                <button onclick="cancelarSolicitud(${sol.id})" style="color:red; background:none; border:none; cursor:pointer;">Cancelar</button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
         });
-    }
-});
-        // Función para abrir el modal y pre-llenar datos (RF04)
+
+        function cancelarSolicitud(id) {
+            if(confirm("¿Seguro que quieres cancelar esta solicitud?")) {
+                let solicitudes = JSON.parse(localStorage.getItem('solicitudesDB')) || [];
+                solicitudes = solicitudes.filter(s => s.id !== id);
+                localStorage.setItem('solicitudesDB', JSON.stringify(solicitudes));
+                location.reload();
+            }
+        }
+
+        // --- LÓGICA DE EDICIÓN DE PERFIL INTELIGENTE ---
         function abrirModalPerfil() {
             const sesion = JSON.parse(localStorage.getItem('userSession'));
             if(sesion) {
-                // Combinamos nombre y apellidos para mostrar en el input
-                const nombreCompleto = sesion.nombre + " " + (sesion.apPaterno || "") + " " + (sesion.apMaterno || "");
-                
-                document.getElementById('editNombre').value = nombreCompleto.trim();
-                document.getElementById('editDireccion').value = sesion.direccion || "";
-                
-                // Mostrar el modal
+                // Solo permitimos editar nombre por ahora para no romper la dirección compleja
+                document.getElementById('editNombre').value = sesion.nombre;
                 document.getElementById('modalPerfil').style.display = 'flex';
-            } else {
-                alert("Debes iniciar sesión primero.");
-                window.location.href = 'auth.html';
             }
+        }
+
+        function guardarPerfilEditado() {
+            // 1. Obtenemos la sesión actual COMPLETA (con dirección y todo)
+            let sesionActual = JSON.parse(localStorage.getItem('userSession'));
+            
+            // 2. Obtenemos el nuevo nombre
+            const nuevoNombre = document.getElementById('editNombre').value;
+            
+            if(!nuevoNombre) return alert("El nombre no puede estar vacío");
+
+            // 3. Actualizamos SOLO el nombre
+            sesionActual.nombre = nuevoNombre;
+
+            // 4. Guardamos en userSession
+            localStorage.setItem('userSession', JSON.stringify(sesionActual));
+            
+            // 5. Guardamos en la base de datos general (usersDB)
+            let usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
+            const index = usersDB.findIndex(u => u.email === sesionActual.email);
+            if (index !== -1) {
+                usersDB[index] = sesionActual; // Reemplazamos conservando todo lo demás
+                localStorage.setItem('usersDB', JSON.stringify(usersDB));
+            }
+
+            alert("Perfil actualizado correctamente.");
+            location.reload();
         }
     </script>
 </body>
