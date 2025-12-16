@@ -37,12 +37,28 @@ document.addEventListener("DOMContentLoaded", function() {
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         
-        // --- LIMPIEZA DE CURP EN TIEMPO REAL ---
+        // --- 🔴 NUEVO: SOLO LETRAS EN NOMBRES Y APELLIDOS ---
+        // Lista de campos que NO deben tener números
+        const camposTexto = ['nombre', 'apPaterno', 'apMaterno'];
+        
+        camposTexto.forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', function(e) {
+                    // Esta expresión regular dice: "Reemplaza todo lo que NO sea letra o espacio"
+                    // Incluye acentos (áéíóú) y la ñ
+                    e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+                });
+            }
+        });
+        // --- FIN SOLO LETRAS ---
+
+        // --- LIMPIEZA DE CURP ---
         const inputCurp = document.getElementById('curp');
         if (inputCurp) {
             inputCurp.addEventListener('input', function(e) {
                 let valor = e.target.value.toUpperCase();
-                valor = valor.replace(/[^A-Z0-9]/g, ''); // Solo letras y números
+                valor = valor.replace(/[^A-Z0-9]/g, '');
                 if (valor.length > 18) {
                     valor = valor.slice(0, 18);
                 }
@@ -65,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const emailRaw = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
             const rol = document.getElementById('role').value;
-            const curpRaw = document.getElementById('curp').value.trim(); // Quitamos espacios extra
+            const curpRaw = document.getElementById('curp').value.trim();
 
             // VALIDACIÓN DE CORREO
             const emailLimpio = emailRaw.trim().toLowerCase();
@@ -81,15 +97,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            // --- 🔴 NUEVA VALIDACIÓN CURP OPCIONAL ---
-            // Solo entramos al IF si el usuario escribió algo (longitud > 0)
+            // VALIDACIÓN CURP OPCIONAL
             if (curpRaw.length > 0) { 
                 if (curpRaw.length !== 18) {
-                    alert("⚠️ Si ingresas la CURP, debe tener EXACTAMENTE 18 caracteres. Si no la tienes, deja el campo vacío.");
-                    return; // Detiene el registro si escribió una CURP incompleta
+                    alert("⚠️ Si ingresas la CURP, debe tener EXACTAMENTE 18 caracteres.");
+                    return; 
                 }
             }
-            // --- FIN VALIDACIÓN CURP ---
 
             if (password.length < 8) {
                 alert("⚠️ La contraseña debe tener al menos 8 caracteres.");
@@ -105,13 +119,15 @@ document.addEventListener("DOMContentLoaded", function() {
             const newUser = {
                 nombre: document.getElementById('nombre').value,
                 apellido: document.getElementById('apPaterno').value,
+                // Agregamos apellido materno al objeto guardado si existe
+                apellidoMat: document.getElementById('apMaterno') ? document.getElementById('apMaterno').value : '',
                 email: emailLimpio,
                 password: password,
                 rol: rol,
-                curp: curpRaw, // Guardará la CURP o un texto vacío ""
+                curp: curpRaw,
                 edad: document.getElementById('edad').value,
                 direccion: {
-                    calle: document.getElementById('dirCalle') ? document.getElementById('dirCalle').value : '',
+                    calle: document.getElementById('dirCalle') ? document.getElementById('dirCalle').value : document.getElementById('direccion').value,
                 },
                 estatusLegal: rol === 'rescatista' ? document.getElementById('estatusLegal').value : "",
                 fechaRegistro: new Date().toLocaleDateString()
