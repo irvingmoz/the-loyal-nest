@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            // Convertimos a minúsculas para evitar problemas de mayúsculas/minúsculas
             const emailVal = document.getElementById('email').value.trim().toLowerCase();
             const passVal = document.getElementById('password').value;
 
@@ -21,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 
                 alert(`¡Bienvenido, ${userFound.nombre}!`);
 
-                // Redireccionar según rol
                 if (userFound.rol === 'rescatista') {
                     window.location.href = "dashboard-rescatista.html";
                 } else {
@@ -34,10 +32,31 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =======================================================
-    // 2. LÓGICA DE REGISTRO (CON VALIDACIÓN DE CORREO)
+    // 2. LÓGICA DE REGISTRO
     // =======================================================
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
+        
+        // --- 🔴 NUEVO: LIMPIEZA DE CURP EN TIEMPO REAL ---
+        // Esto evita que escriban símbolos raros mientras teclean
+        const inputCurp = document.getElementById('curp');
+        if (inputCurp) {
+            inputCurp.addEventListener('input', function(e) {
+                let valor = e.target.value.toUpperCase(); // Todo a mayúsculas
+                
+                // Esta expresión regular borra todo lo que NO sea letra (A-Z) o número (0-9)
+                valor = valor.replace(/[^A-Z0-9]/g, '');
+                
+                // No permitir más de 18 caracteres visualmente
+                if (valor.length > 18) {
+                    valor = valor.slice(0, 18);
+                }
+                
+                e.target.value = valor; // Regresamos el valor limpio al campo
+            });
+        }
+        // --- FIN DE LIMPIEZA CURP ---
+
         const roleSelect = document.getElementById('role');
         const divRescatista = document.getElementById('camposRescatista');
 
@@ -50,47 +69,40 @@ document.addEventListener("DOMContentLoaded", function() {
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Obtenemos valores crudos
+            // Obtenemos valores
             const emailRaw = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
             const rol = document.getElementById('role').value;
+            const curpRaw = document.getElementById('curp').value; // Valor del CURP
 
-            // --- 🔴 NUEVA VALIDACIÓN: SOLO CORREOS REALES ---
-            
-            // 1. Limpiamos el correo (minúsculas y sin espacios)
+            // VALIDACIÓN DE CORREO (Dominios permitidos)
             const emailLimpio = emailRaw.trim().toLowerCase();
-
-            // 2. Lista de dominios permitidos (Whitelist)
             const dominiosPermitidos = ['gmail.com', 'outlook.com', 'hotmail.com', 'yahoo.com', 'live.com', 'icloud.com'];
-
-            // 3. Separamos el correo en dos partes: [nombre] @ [dominio]
             const partesEmail = emailLimpio.split('@');
 
-            // Verificamos que tenga arroba y estructura básica
             if (partesEmail.length !== 2 || partesEmail[0] === "" || partesEmail[1] === "") {
                 alert("⚠️ El formato del correo electrónico no es válido.");
                 return;
             }
-
-            const dominioUsuario = partesEmail[1]; // Ejemplo: "gmail.com"
-
-            // 4. Preguntamos si el dominio está en nuestra lista
-            if (!dominiosPermitidos.includes(dominioUsuario)) {
-                alert("🔒 Por seguridad, solo aceptamos registros con correos de: \n- Gmail\n- Outlook\n- Hotmail\n- Yahoo\n- iCloud");
-                return; // Detiene el código aquí si el correo no es válido
+            if (!dominiosPermitidos.includes(partesEmail[1])) {
+                alert("🔒 Por seguridad, solo aceptamos correos de: Gmail, Outlook, Hotmail, Yahoo o iCloud.");
+                return;
             }
-            // --- FIN DE LA VALIDACIÓN DE CORREO ---
 
+            // --- 🔴 NUEVO: VALIDACIÓN EXACTA DE CURP ---
+            if (curpRaw.length !== 18) {
+                alert("⚠️ La CURP debe tener EXACTAMENTE 18 caracteres alfanuméricos.");
+                return; // Detiene el registro si no son 18
+            }
+            // --- FIN VALIDACIÓN CURP ---
 
-            // Validación básica de contraseña
+            // Validación contraseña
             if (password.length < 8) {
                 alert("⚠️ La contraseña debe tener al menos 8 caracteres.");
                 return;
             }
 
             const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
-            
-            // Verificamos si ya existe (usando el email limpio)
             if (usersDB.find(u => u.email === emailLimpio)) {
                 alert("Este correo ya está registrado.");
                 return;
@@ -99,14 +111,16 @@ document.addEventListener("DOMContentLoaded", function() {
             const newUser = {
                 nombre: document.getElementById('nombre').value,
                 apellido: document.getElementById('apPaterno').value,
-                email: emailLimpio, // Guardamos el email ya validado y en minúsculas
+                email: emailLimpio,
                 password: password,
                 rol: rol,
+                curp: curpRaw, // Guardamos la CURP validada
                 edad: document.getElementById('edad').value,
                 direccion: {
-                    calle: document.getElementById('dirCalle').value,
-                    colonia: document.getElementById('dirColonia').value,
-                    alcaldia: document.getElementById('dirAlcaldia').value
+                    calle: document.getElementById('dirCalle') ? document.getElementById('dirCalle').value : '',
+                    // Nota: Asegúrate de que los IDs de dirección coincidan con tu HTML, 
+                    // si usas un solo textarea con id="direccion", cambia esto a:
+                    // direccionCompleta: document.getElementById('direccion').value
                 },
                 estatusLegal: rol === 'rescatista' ? document.getElementById('estatusLegal').value : "",
                 fechaRegistro: new Date().toLocaleDateString()
@@ -128,8 +142,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const rutaActual = window.location.pathname;
 
     if (sesionActiva === 'true' && userSession) {
-        
-        // A) Ocultar botones de Login/Registro
         const botonesMenu = document.querySelectorAll('a, button, .btn-outline'); 
         botonesMenu.forEach(btn => {
             const texto = (btn.innerText || btn.textContent).toLowerCase();
@@ -140,13 +152,10 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
 
-        // B) AGREGAR BOTÓN "MI PANEL" Y "CERRAR SESIÓN"
         const nav = document.querySelector('.nav');
         const navContainer = document.getElementById('nav-auth-buttons') || nav;
 
         if (navContainer && !document.getElementById('btn-panel-auto')) {
-            
-            // 1. Crear botón MI PANEL
             const btnPanel = document.createElement('a');
             btnPanel.id = 'btn-panel-auto';
             btnPanel.innerText = "👤 Mi Panel";
@@ -161,7 +170,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 btnPanel.href = "dashboard-adoptante.html"; 
             }
 
-            // 2. Crear botón CERRAR SESIÓN
             const btnLogout = document.createElement('a'); 
             btnLogout.id = 'btn-logout-auto';
             btnLogout.innerText = "Salir";
@@ -179,7 +187,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
     } else {
-        // C) PROTECCIÓN DE PÁGINAS PRIVADAS
         if (rutaActual.includes('shelters-map') || rutaActual.includes('education') || rutaActual.includes('dashboard')) {
             if (!rutaActual.includes('auth.html')) {
                 alert("Debes iniciar sesión para ver esta sección.");
