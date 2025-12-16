@@ -29,7 +29,7 @@
         .profile-img { width: 100%; height: 400px; object-fit: cover; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .profile-info h1 { font-size: 2.5rem; color: var(--secondary); margin-bottom: 10px; }
         .breed { color: var(--primary); font-weight: 600; font-size: 1.1rem; margin-bottom: 20px; display: block; }
-        .description { line-height: 1.6; color: #555; margin-bottom: 30px; }
+        .description { line-height: 1.6; color: #555; margin-bottom: 20px; }
         
         .btn-adopt { display: block; width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; text-align: center; transition: background 0.3s; }
         .btn-adopt:hover { background: #d35400; }
@@ -88,6 +88,17 @@
                     <h1>${pet.name}</h1>
                     <span class="breed">${pet.breed} • ${pet.age}</span>
                     <p class="description">${pet.desc}</p>
+                    
+                    <div style="background-color: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; padding: 12px; margin-bottom: 20px; display: flex; align-items: start; gap: 10px;">
+                        <i class="fas fa-syringe" style="color: #2e7d32; font-size: 1.2rem; margin-top: 2px;"></i>
+                        <div>
+                            <h4 style="margin: 0 0 4px 0; color: #2e7d32; font-size: 0.95rem;">Estado de Salud: Excelente</h4>
+                            <p style="margin: 0; color: #444; font-size: 0.9rem;">
+                                Cuenta con todas sus vacunas al día. <br>
+                                <strong>Próximo refuerzo:</strong> En 3 meses.
+                            </p>
+                        </div>
+                    </div>
                     <div style="background:#fff3e0; padding:15px; border-radius:10px; margin-bottom:20px;">
                         <strong>📍 Refugio:</strong> Huellitas Seguras<br>
                         <strong>📞 Contacto:</strong> 55-1234-5678
@@ -99,7 +110,7 @@
             container.innerHTML = "<h2>Mascota no encontrada 😢</h2>";
         }
 
-        // 4. FUNCIÓN GUARDAR SOLICITUD (TAREA 2)
+        // 4. FUNCIÓN GUARDAR SOLICITUD
         function enviarSolicitud() {
             // Crear objeto solicitud
             const nuevaSolicitud = {
