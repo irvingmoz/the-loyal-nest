@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 input.addEventListener('input', function(e) {
                     // Esta expresión regular dice: "Reemplaza todo lo que NO sea letra o espacio"
                     // Incluye acentos (áéíóú) y la ñ
-                    e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+                    e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '').slice(0, 20);
                 });
             }
         });
