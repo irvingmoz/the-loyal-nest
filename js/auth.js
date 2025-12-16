@@ -1,14 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     // =======================================================
-    // 1. LÓGICA DE LOGIN (Para auth.html)
+    // 1. LÓGICA DE LOGIN
     // =======================================================
     const loginForm = document.getElementById('loginForm');
-
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-
             const emailVal = document.getElementById('email').value;
             const passVal = document.getElementById('password').value;
 
@@ -22,10 +20,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 
                 alert(`¡Bienvenido, ${userFound.nombre}!`);
 
+                // Redireccionar según rol
                 if (userFound.rol === 'rescatista') {
                     window.location.href = "dashboard-rescatista.html";
                 } else {
-                    window.location.href = "index.html"; 
+                    window.location.href = "search-pets.html"; // Los adoptantes van directo a buscar
                 }
             } else {
                 alert("Datos incorrectos o usuario no registrado.");
@@ -34,10 +33,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =======================================================
-    // 2. LÓGICA DE REGISTRO (Para register.html)
+    // 2. LÓGICA DE REGISTRO
     // =======================================================
     const registerForm = document.getElementById('registerForm');
-
     if (registerForm) {
         const roleSelect = document.getElementById('role');
         const divRescatista = document.getElementById('camposRescatista');
@@ -55,18 +53,11 @@ document.addEventListener("DOMContentLoaded", function() {
             const password = document.getElementById('registerPassword').value;
             const rol = document.getElementById('role').value;
 
-            // --- VALIDACIÓN DE CONTRASEÑA (NUEVO) ---
+            // Validación básica de contraseña
             if (password.length < 8) {
-                alert("⚠️ La contraseña es muy corta.\nDebe tener al menos 8 caracteres.");
-                return; // Detiene el registro aquí
+                alert("⚠️ La contraseña debe tener al menos 8 caracteres.");
+                return;
             }
-            
-            // Opcional: Validar que tenga al menos un número
-            if (!/\d/.test(password)) {
-                 alert("⚠️ Por seguridad, la contraseña debe incluir al menos un número.");
-                 return;
-            }
-            // ----------------------------------------
 
             const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
             if (usersDB.find(u => u.email === email)) {
@@ -81,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 password: password,
                 rol: rol,
                 edad: document.getElementById('edad').value,
-                curp: document.getElementById('curp').value,
                 direccion: {
                     calle: document.getElementById('dirCalle').value,
                     colonia: document.getElementById('dirColonia').value,
@@ -94,20 +84,22 @@ document.addEventListener("DOMContentLoaded", function() {
             usersDB.push(newUser);
             localStorage.setItem('usersDB', JSON.stringify(usersDB));
 
-            alert("¡Cuenta creada exitosamente! Inicia sesión ahora.");
+            alert("¡Cuenta creada! Inicia sesión ahora.");
             window.location.href = "auth.html";
         });
     }
 
     // =======================================================
-    // 3. CONTROL DEL MENÚ
+    // 3. CONTROL DEL MENÚ INTELIGENTE (EL CAMBIO CLAVE)
     // =======================================================
     const sesionActiva = localStorage.getItem('sesionActiva');
+    const userSession = JSON.parse(localStorage.getItem('userSession')); // Datos del usuario
     const rutaActual = window.location.pathname;
 
-    if (sesionActiva === 'true') {
-        const botonesMenu = document.querySelectorAll('a, button, .btn-outline'); 
+    if (sesionActiva === 'true' && userSession) {
         
+        // A) Ocultar botones de Login/Registro
+        const botonesMenu = document.querySelectorAll('a, button, .btn-outline'); 
         botonesMenu.forEach(btn => {
             const texto = (btn.innerText || btn.textContent).toLowerCase();
             if (texto.includes('iniciar sesion') || 
@@ -117,26 +109,49 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
 
+        // B) AGREGAR BOTÓN "MI PANEL" Y "CERRAR SESIÓN"
         const nav = document.querySelector('.nav');
-        if (nav && !document.getElementById('btn-logout-auto')) {
+        // Buscamos un contenedor específico o usamos el nav directo
+        const navContainer = document.getElementById('nav-auth-buttons') || nav;
+
+        if (navContainer && !document.getElementById('btn-panel-auto')) {
+            
+            // 1. Crear botón MI PANEL
+            const btnPanel = document.createElement('a');
+            btnPanel.id = 'btn-panel-auto';
+            btnPanel.innerText = "👤 Mi Panel";
+            btnPanel.className = "btn-outline";
+            btnPanel.style.marginRight = "10px";
+            btnPanel.style.borderColor = "#e67e22";
+            btnPanel.style.color = "#e67e22";
+            
+            // Decidir a dónde va el link según el rol
+            if (userSession.rol === 'rescatista') {
+                btnPanel.href = "dashboard-rescatista.html";
+            } else {
+                btnPanel.href = "dashboard-adoptante.html"; // <--- AQUÍ ESTÁ TU SOLUCIÓN
+            }
+
+            // 2. Crear botón CERRAR SESIÓN
             const btnLogout = document.createElement('a'); 
             btnLogout.id = 'btn-logout-auto';
-            btnLogout.innerText = "Cerrar Sesión";
+            btnLogout.innerText = "Salir";
             btnLogout.className = "btn-outline"; 
             btnLogout.href = "#"; 
-            btnLogout.style.marginLeft = "10px";
-            btnLogout.style.color = "#d35400";
-            btnLogout.style.borderColor = "#d35400";
-            
+            btnLogout.style.color = "red";
+            btnLogout.style.borderColor = "red";
             btnLogout.addEventListener('click', function(e) {
                 e.preventDefault(); 
                 cerrarSesion();
             });
 
-            nav.appendChild(btnLogout);
+            // Agregarlos al menú
+            navContainer.appendChild(btnPanel);
+            navContainer.appendChild(btnLogout);
         }
 
     } else {
+        // C) PROTECCIÓN DE PÁGINAS PRIVADAS
         if (rutaActual.includes('shelters-map') || rutaActual.includes('education') || rutaActual.includes('dashboard')) {
             if (!rutaActual.includes('auth.html')) {
                 alert("Debes iniciar sesión para ver esta sección.");
@@ -144,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     }
-
 });
 
 function cerrarSesion() {
