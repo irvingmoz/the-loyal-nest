@@ -55,6 +55,19 @@ document.addEventListener("DOMContentLoaded", function() {
             const password = document.getElementById('registerPassword').value;
             const rol = document.getElementById('role').value;
 
+            // --- VALIDACIÓN DE CONTRASEÑA (NUEVO) ---
+            if (password.length < 8) {
+                alert("⚠️ La contraseña es muy corta.\nDebe tener al menos 8 caracteres.");
+                return; // Detiene el registro aquí
+            }
+            
+            // Opcional: Validar que tenga al menos un número
+            if (!/\d/.test(password)) {
+                 alert("⚠️ Por seguridad, la contraseña debe incluir al menos un número.");
+                 return;
+            }
+            // ----------------------------------------
+
             const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
             if (usersDB.find(u => u.email === email)) {
                 alert("Este correo ya existe.");
@@ -73,7 +86,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     calle: document.getElementById('dirCalle').value,
                     colonia: document.getElementById('dirColonia').value,
                     alcaldia: document.getElementById('dirAlcaldia').value
-                    // ELIMINADO: cp: document.getElementById('dirCP').value (Ya no existe en HTML)
                 },
                 estatusLegal: rol === 'rescatista' ? document.getElementById('estatusLegal').value : "",
                 fechaRegistro: new Date().toLocaleDateString()
@@ -82,67 +94,50 @@ document.addEventListener("DOMContentLoaded", function() {
             usersDB.push(newUser);
             localStorage.setItem('usersDB', JSON.stringify(usersDB));
 
-            alert("¡Cuenta creada! Inicia sesión ahora.");
+            alert("¡Cuenta creada exitosamente! Inicia sesión ahora.");
             window.location.href = "auth.html";
         });
     }
 
     // =======================================================
-    // 3. CONTROL DEL MENÚ (OCULTAR BOTONES SI HAY SESIÓN) - CORREGIDO
+    // 3. CONTROL DEL MENÚ
     // =======================================================
     const sesionActiva = localStorage.getItem('sesionActiva');
     const rutaActual = window.location.pathname;
 
     if (sesionActiva === 'true') {
-        
-        // A) Buscamos botones por etiqueta (a, button) y clase (.btn-outline)
         const botonesMenu = document.querySelectorAll('a, button, .btn-outline'); 
         
         botonesMenu.forEach(btn => {
-            // Convertimos el texto a minúsculas para asegurar que lo encuentre
-            // sin importar si escribiste "Iniciar Sesión" o "Iniciar sesión"
             const texto = (btn.innerText || btn.textContent).toLowerCase();
-
             if (texto.includes('iniciar sesion') || 
                 texto.includes('iniciar sesión') || 
                 texto.includes('registrarse')) {
-                
-                // Lo ocultamos forzosamente
                 btn.style.display = 'none';
             }
         });
 
-        // B) Agregar botón de "Cerrar Sesión" si no existe
         const nav = document.querySelector('.nav');
-        // Verificamos que exista el nav y que no hayamos agregado el botón ya
         if (nav && !document.getElementById('btn-logout-auto')) {
-            
-            // Creamos un elemento <a> para que se vea igual a los enlaces del menú
             const btnLogout = document.createElement('a'); 
             btnLogout.id = 'btn-logout-auto';
             btnLogout.innerText = "Cerrar Sesión";
             btnLogout.className = "btn-outline"; 
-            btnLogout.href = "#"; // Para que parezca link
-            
-            // Estilos para que resalte (opcional)
+            btnLogout.href = "#"; 
             btnLogout.style.marginLeft = "10px";
             btnLogout.style.color = "#d35400";
             btnLogout.style.borderColor = "#d35400";
             
-            // Acción al hacer click
             btnLogout.addEventListener('click', function(e) {
                 e.preventDefault(); 
                 cerrarSesion();
             });
 
-            // Lo agregamos al menú
             nav.appendChild(btnLogout);
         }
 
     } else {
-        // C) PROTECCIÓN: Si NO hay sesión y estás en páginas privadas
         if (rutaActual.includes('shelters-map') || rutaActual.includes('education') || rutaActual.includes('dashboard')) {
-            // Evitamos bucle infinito si ya estamos en auth
             if (!rutaActual.includes('auth.html')) {
                 alert("Debes iniciar sesión para ver esta sección.");
                 window.location.href = "auth.html";
@@ -152,7 +147,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
-// Función global para cerrar sesión
 function cerrarSesion() {
     localStorage.removeItem('sesionActiva');
     localStorage.removeItem('usuario');
