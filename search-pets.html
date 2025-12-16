@@ -128,6 +128,7 @@
     </div>
 
     <script src="js/auth.js"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             cargarMascotas();
@@ -253,44 +254,59 @@
             mostrarMascotas(filtradas);
         }
 
+        // --- LÓGICA DE SOLICITUD DE ADOPCIÓN (CORREGIDA) ---
+
         function verPerfil(nombreMascota) {
+            // 1. Verificamos la sesión
+            const sesion = JSON.parse(localStorage.getItem('userSession'));
+
+            if (!sesion) {
+                alert("Debes iniciar sesión para adoptar.");
+                window.location.href = "auth.html";
+                return;
+            }
+
+            // 2. Buscamos la mascota en ambas listas
             const mascotasGuardadas = JSON.parse(localStorage.getItem('petsDB')) || [];
             const todas = [...mascotasDefault, ...mascotasGuardadas];
             const mascota = todas.find(p => p.nombre === nombreMascota);
 
             if(mascota) {
                 const confirmar = confirm(`🐶 PERFIL DE ${mascota.nombre.toUpperCase()}\n\n📍 Ubicación: ${mascota.ubicacion || "Desconocida"}\n📏 Tamaño: ${mascota.tamano || "N/A"}\n🎂 Edad: ${mascota.edad} años\n📝 Historia: ${mascota.desc || "Sin descripción"}\n\n¿Quieres enviar una Solicitud de Adopción?`);
-                if(confirmar) registrarSolicitud(mascota);
+                
+                if(confirmar) {
+                    registrarSolicitud(mascota, sesion);
+                }
             }
         }
-// En search-pets.html
 
-function registrarSolicitud(mascota) {
-    const sesion = JSON.parse(localStorage.getItem('userSession'));
-    
-    // Validación de seguridad
-    if(!sesion || sesion.rol !== 'adoptante') {
-        alert("Debes iniciar sesión como Adoptante para solicitar.");
-        window.location.href = 'auth.html';
-        return;
-    }
+        function registrarSolicitud(mascota, usuario) {
+            
+            // Verificación extra de rol (opcional, pero recomendada)
+            if(usuario.rol === 'rescatista') {
+                const seguro = confirm("Estás conectado como Rescatista. ¿Quieres adoptar como usuario normal?");
+                if(!seguro) return;
+            }
 
-    const solicitudes = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
-    
-    // AQUI ESTÁ EL CAMBIO CLAVE: Guardamos quién la pidió
-    const nuevaSolicitud = {
-        usuario: sesion.correo, // <--- ESTO ES LO NUEVO
-        mascota: mascota.nombre,
-        foto: mascota.foto,
-        fecha: new Date().toLocaleDateString(),
-        estado: "En Revisión"
-    };
+            // Usamos 'solicitudesDB' para que coincida con el dashboard
+            const solicitudes = JSON.parse(localStorage.getItem('solicitudesDB')) || [];
+            
+            const nuevaSolicitud = {
+                id: Date.now(), // ID único
+                mascota: mascota.nombre,
+                fotoMascota: mascota.foto || 'https://via.placeholder.com/50', // Propiedad corregida
+                idRescatista: mascota.creador || 'sistema', 
+                idAdoptante: usuario.email, // Propiedad corregida para el filtro
+                nombreAdoptante: usuario.nombre,
+                fecha: new Date().toLocaleDateString(),
+                estado: "En Revisión"
+            };
 
-    solicitudes.push(nuevaSolicitud);
-    localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudes));
+            solicitudes.push(nuevaSolicitud);
+            localStorage.setItem('solicitudesDB', JSON.stringify(solicitudes));
 
-    alert(`¡Solicitud enviada para adoptar a ${mascota.nombre}!\nRevisa el estado en 'Mi Panel'.`);
-}
+            alert(`¡Solicitud enviada para adoptar a ${mascota.nombre}!\nRevisa el estado en 'Mi Panel'.`);
+        }
     </script>
 </body>
 </html>
