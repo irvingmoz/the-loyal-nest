@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", function() {
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const emailVal = document.getElementById('email').value;
+            // Convertimos a minúsculas para evitar problemas de mayúsculas/minúsculas
+            const emailVal = document.getElementById('email').value.trim().toLowerCase();
             const passVal = document.getElementById('password').value;
 
             const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (userFound.rol === 'rescatista') {
                     window.location.href = "dashboard-rescatista.html";
                 } else {
-                    window.location.href = "search-pets.html"; // Los adoptantes van directo a buscar
+                    window.location.href = "search-pets.html"; 
                 }
             } else {
                 alert("Datos incorrectos o usuario no registrado.");
@@ -33,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =======================================================
-    // 2. LÓGICA DE REGISTRO
+    // 2. LÓGICA DE REGISTRO (CON VALIDACIÓN DE CORREO)
     // =======================================================
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
@@ -49,9 +50,37 @@ document.addEventListener("DOMContentLoaded", function() {
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const email = document.getElementById('registerEmail').value;
+            // Obtenemos valores crudos
+            const emailRaw = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
             const rol = document.getElementById('role').value;
+
+            // --- 🔴 NUEVA VALIDACIÓN: SOLO CORREOS REALES ---
+            
+            // 1. Limpiamos el correo (minúsculas y sin espacios)
+            const emailLimpio = emailRaw.trim().toLowerCase();
+
+            // 2. Lista de dominios permitidos (Whitelist)
+            const dominiosPermitidos = ['gmail.com', 'outlook.com', 'hotmail.com', 'yahoo.com', 'live.com', 'icloud.com'];
+
+            // 3. Separamos el correo en dos partes: [nombre] @ [dominio]
+            const partesEmail = emailLimpio.split('@');
+
+            // Verificamos que tenga arroba y estructura básica
+            if (partesEmail.length !== 2 || partesEmail[0] === "" || partesEmail[1] === "") {
+                alert("⚠️ El formato del correo electrónico no es válido.");
+                return;
+            }
+
+            const dominioUsuario = partesEmail[1]; // Ejemplo: "gmail.com"
+
+            // 4. Preguntamos si el dominio está en nuestra lista
+            if (!dominiosPermitidos.includes(dominioUsuario)) {
+                alert("🔒 Por seguridad, solo aceptamos registros con correos de: \n- Gmail\n- Outlook\n- Hotmail\n- Yahoo\n- iCloud");
+                return; // Detiene el código aquí si el correo no es válido
+            }
+            // --- FIN DE LA VALIDACIÓN DE CORREO ---
+
 
             // Validación básica de contraseña
             if (password.length < 8) {
@@ -60,15 +89,17 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
-            if (usersDB.find(u => u.email === email)) {
-                alert("Este correo ya existe.");
+            
+            // Verificamos si ya existe (usando el email limpio)
+            if (usersDB.find(u => u.email === emailLimpio)) {
+                alert("Este correo ya está registrado.");
                 return;
             }
 
             const newUser = {
                 nombre: document.getElementById('nombre').value,
                 apellido: document.getElementById('apPaterno').value,
-                email: email,
+                email: emailLimpio, // Guardamos el email ya validado y en minúsculas
                 password: password,
                 rol: rol,
                 edad: document.getElementById('edad').value,
@@ -84,16 +115,16 @@ document.addEventListener("DOMContentLoaded", function() {
             usersDB.push(newUser);
             localStorage.setItem('usersDB', JSON.stringify(usersDB));
 
-            alert("¡Cuenta creada! Inicia sesión ahora.");
+            alert("¡Cuenta verificada y creada! Inicia sesión ahora.");
             window.location.href = "auth.html";
         });
     }
 
     // =======================================================
-    // 3. CONTROL DEL MENÚ INTELIGENTE (EL CAMBIO CLAVE)
+    // 3. CONTROL DEL MENÚ INTELIGENTE
     // =======================================================
     const sesionActiva = localStorage.getItem('sesionActiva');
-    const userSession = JSON.parse(localStorage.getItem('userSession')); // Datos del usuario
+    const userSession = JSON.parse(localStorage.getItem('userSession')); 
     const rutaActual = window.location.pathname;
 
     if (sesionActiva === 'true' && userSession) {
@@ -111,7 +142,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // B) AGREGAR BOTÓN "MI PANEL" Y "CERRAR SESIÓN"
         const nav = document.querySelector('.nav');
-        // Buscamos un contenedor específico o usamos el nav directo
         const navContainer = document.getElementById('nav-auth-buttons') || nav;
 
         if (navContainer && !document.getElementById('btn-panel-auto')) {
@@ -125,11 +155,10 @@ document.addEventListener("DOMContentLoaded", function() {
             btnPanel.style.borderColor = "#e67e22";
             btnPanel.style.color = "#e67e22";
             
-            // Decidir a dónde va el link según el rol
             if (userSession.rol === 'rescatista') {
                 btnPanel.href = "dashboard-rescatista.html";
             } else {
-                btnPanel.href = "dashboard-adoptante.html"; // <--- AQUÍ ESTÁ TU SOLUCIÓN
+                btnPanel.href = "dashboard-adoptante.html"; 
             }
 
             // 2. Crear botón CERRAR SESIÓN
@@ -145,7 +174,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 cerrarSesion();
             });
 
-            // Agregarlos al menú
             navContainer.appendChild(btnPanel);
             navContainer.appendChild(btnLogout);
         }
