@@ -197,15 +197,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 alert("📍 El nombre de la colonia es muy corto.");
                 return;
             }
-            // --- VALIDACIÓN DE NÚMERO EXTERIOR ---
-            const numExtCheck = document.getElementById('dirNumExt').value.trim();
-            
-            // Verifica si hay algo que NO sea un número
-            // \D significa "No Dígito"
-            if (/\D/.test(numExtCheck)) {
-                alert("📍 El Número Exterior solo acepta dígitos numéricos (0-9).");
-                return;
-            }
+         
 
             // =======================================================
         // --- FIN DEL BLOQUE ---
