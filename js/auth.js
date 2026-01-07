@@ -73,25 +73,44 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // 2. Función interna para detectar "teclazos"
             function esTextoHumano(texto, campo) {
-                // A. Longitud mínima (evita "a", "z")
-                if (texto.length < 2) return `El ${campo} es muy corto.`;
+                const txt = texto.toLowerCase();
 
-                // B. Debe tener vocales (evita "sdfgh", "klmn", "brrr")
-                const tieneVocales = /[aeiouáéíóúü]/i;
-                if (!tieneVocales.test(texto)) return `El ${campo} no parece real (le faltan vocales).`;
+                // A. Longitud mínima
+                if (txt.length < 2) return `El ${campo} es muy corto.`;
 
-                // C. No letras repetidas 3 veces seguidas (evita "aaa", "jjjj")
-                const repetidas = /(.)\1{2,}/; 
-                if (repetidas.test(texto)) return `El ${campo} tiene letras repetidas inválidas (ej. 'aaa').`;
+                // B. Debe tener vocales
+                const tieneVocales = /[aeiouáéíóúü]/;
+                if (!tieneVocales.test(txt)) return `El ${campo} no parece real (le faltan vocales).`;
 
-                // D. No exceso de consonantes seguidas (evita "asdfg")
-                const excesoConsonantes = /[bcdfghjklmnñpqrstvwxyz]{4,}/i;
-                if (excesoConsonantes.test(texto)) return `El ${campo} parece un error de teclado (muchas consonantes).`;
-                // E. Anti-Flojera (Bloquea si TODA la palabra es la misma letra repetida)
-                // Bloquea: "aa", "bb", "zz", "aaaa"
-                // Permite: "Aaron" (porque tiene 'r'), "Isaac" (porque tiene 's')
-                if (/^(\w)\1+$/.test(texto)) {
-                    return `El ${campo} no es válido (no pongas la misma letra repetida).`;
+                // C. No letras repetidas seguidas (Anti "aa", "bbb")
+                // Permite "ll" (Lluvia) o "rr" (Perro) o "nn" (Anna), pero no "aa", "ee", "ii"
+                // Esta Regex busca vocales repetidas o más de 2 consonantes iguales
+                if (/([aeiouáéíóú])\1/.test(txt)) return `El ${campo} tiene vocales repetidas (ej. 'aa').`;
+                if (/([^aeiouáéíóúlrn])\1/.test(txt)) return `El ${campo} tiene caracteres repetidos inválidos.`;
+                if (/(.)\1{2,}/.test(txt)) return `El ${campo} tiene demasiadas letras repetidas.`;
+
+                // D. No exceso de consonantes
+                const excesoConsonantes = /[bcdfghjklmnñpqrstvwxyz]{4,}/;
+                if (excesoConsonantes.test(txt)) return `El ${campo} parece un error de teclado.`;
+
+                // --- REGLAS NUEVAS PARA EVITAR "aq", "qx", etc. ---
+
+                // E. Regla de la Q (Debe ir seguida de u)
+                // Bloquea: "aq", "qat", "qeso"
+                if (txt.includes('q') && !txt.includes('qu')) {
+                    return `El ${campo} está mal escrito (la 'q' debe ir seguida de 'u').`;
+                }
+
+                // F. Regla Estricta para 2 Letras
+                // Si son solo 2 letras, la segunda NO puede ser una consonante rara final.
+                // Permitidos finales: Vocales, n, l, r, s, z, x, y (ej: Al, Bo, Ty, Oz, Ax)
+                // Bloqueados finales: q, w, t, p, d, f, g, h, j, k, c, v, b, m
+                if (txt.length === 2) {
+                    const letraFinal = txt[1];
+                    const finalesValidos = /[aeiouáéíóúynlrszx]/;
+                    if (!finalesValidos.test(letraFinal)) {
+                        return `El ${campo} de dos letras parece incompleto o inválido (ej. '${texto}').`;
+                    }
                 }
 
                 return null; // Pasó todas las pruebas
