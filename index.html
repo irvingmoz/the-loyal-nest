@@ -3,124 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Loyal Nest - Hogares para Mascotas Necesitadas</title>
-
+    <title>The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        /* Estilos específicos para la landing page */
-        :root { --primary: #e67e22; --primary-dark: #d35400; --white: #ffffff; --gray: #6b7280; --gray-light: #f3f4f6; --gray-lighter: #f9fafb; --dark: #111827; --radius-xl: 1rem; --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-        
-        .hero {
-            background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 25%, #7c3aed 50%, var(--primary-dark) 100%);
-            color: var(--white);
-            text-align: center;
-            padding: 140px 2rem 80px;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path fill="%23ffffff" fill-opacity="0.03" d="M500,500 Q700,300 900,500 Q700,700 500,500 Z"/></svg>');
-            background-size: cover;
-        }
-        .hero-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; }
-        .hero h1 {
-            font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .hero-subtitle { font-size: 1.5rem; font-weight: 400; margin-bottom: 2.5rem; opacity: 0.9; line-height: 1.6; }
-        .cta-buttons { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4rem; }
-        .btn-hero {
-            padding: 1.25rem 2.5rem; font-size: 1.125rem; font-weight: 600; border-radius: 50px;
-            text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.75rem;
-        }
-        .btn-hero-primary { background: var(--white); color: var(--primary); box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3); }
-        .btn-hero-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(255, 255, 255, 0.4); }
-        .btn-hero-secondary {
-            background: rgba(255, 255, 255, 0.15); color: var(--white); border: 2px solid rgba(255, 255, 255, 0.3); backdrop-filter: blur(10px);
-        }
-        .btn-hero-secondary:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-3px); }
-        .hero-stats {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; max-width: 600px; margin: 0 auto;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .stat { text-align: center; }
-        .stat-number {
-            display: block; font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .stat-label { font-size: 0.875rem; opacity: 0.8; font-weight: 500; }
-        
-        /* Problem Section */
-        .problem-section { padding: 6rem 2rem; background: var(--white); }
-        .problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; max-width: 1200px; margin: 0 auto; }
-        .problem-card { text-align: center; padding: 2rem; }
-        .problem-icon { font-size: 4rem; margin-bottom: 1.5rem; opacity: 0.8; }
-        .problem-card h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--dark); }
-        .problem-card p { color: var(--gray); line-height: 1.6; }
-
-        /* Solution Section */
-        .solution-section { padding: 6rem 2rem; background: linear-gradient(135deg, var(--gray-lighter) 0%, var(--white) 100%); text-align: center; }
-        .solution-section h2 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--dark); }
-        .solution-section .subtitle { font-size: 1.25rem; color: var(--gray); margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .solution-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto 3rem; }
-        .solution-feature { background: var(--white); padding: 2rem; border-radius: var(--radius-xl); box-shadow: var(--shadow); transition: transform 0.3s ease; }
-        .solution-feature:hover { transform: translateY(-5px); }
-        .solution-feature-icon { font-size: 3rem; margin-bottom: 1rem; }
-        .solution-feature h4 { font-size: 1.25rem; margin-bottom: 1rem; color: var(--dark); }
-        .solution-feature p { color: var(--gray); font-size: 0.875rem; line-height: 1.5; }
-
-        /* Testimonials */
-        .testimonials-section { padding: 6rem 2rem; background: var(--white); }
-        .testimonials-section h2 { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: var(--dark); }
-        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
-        .testimonial-card { background: var(--gray-lighter); padding: 2rem; border-radius: var(--radius-xl); border-left: 4px solid var(--primary); }
-        .testimonial-text { font-style: italic; color: var(--gray-dark); margin-bottom: 1.5rem; line-height: 1.6; }
-        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
-        .author-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: white; }
-        .author-info h4 { margin: 0; color: var(--dark); }
-        .author-info p { margin: 0; color: var(--gray); font-size: 0.875rem; }
-
-        /* Final CTA */
-        .final-cta { padding: 6rem 2rem; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: var(--white); text-align: center; }
-        .final-cta h2 { font-size: 2.5rem; margin-bottom: 1rem; }
-        .final-cta p { font-size: 1.25rem; margin-bottom: 2.5rem; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .trust-badges { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 2rem; opacity: 0.8; }
-        .trust-badge { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
-
-        /* Footer */
-        .footer { background-color: #111827; color: white; padding: 4rem 2rem; }
-        .footer-content { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 4rem; justify-content: space-between; }
-        .footer-section h3 { color: var(--primary); margin-top: 0; }
-        .footer-section h4 { margin-bottom: 1.5rem; font-size: 1.1rem; }
-        .footer-section ul { list-style: none; padding: 0; margin: 0; }
-        .footer-section ul li { margin-bottom: 0.75rem; }
-        .footer-section ul li a { color: #9ca3af; text-decoration: none; transition: color 0.3s; }
-        .footer-section ul li a:hover { color: var(--primary); }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .hero-subtitle { font-size: 1.25rem; }
-            .cta-buttons { flex-direction: column; align-items: center; }
-            .btn-hero { width: 100%; max-width: 300px; justify-content: center; }
-            .hero-stats { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 480px) {
-            .hero { padding: 120px 1rem 60px; }
-            .hero h1 { font-size: 2rem; }
-            .hero-stats { grid-template-columns: 1fr; }
-            .stat-number { font-size: 2rem; }
-        }
-    </style>
 </head>
 <body>
-    <header class="header">
+    <!-- Header/Navbar -->
+<header class="header">
         <nav class="nav">
             <div class="nav-brand">
                 <a href="index.html" class="logo">🐕 The Loyal Nest</a>
@@ -130,6 +20,8 @@
                 <li><a href="search-pets.html">Buscar Mascotas</a></li>
                 <li><a href="shelters-map.html">Refugios</a></li>
                 <li><a href="education.html">📚 Educación</a></li>
+
+                <li><a href="#" id="adminBtn" class="btn-outline">🔒 Admin</a></li>
 
                 <li class="nav-auth">
                     <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
@@ -149,7 +41,7 @@
             <div class="nav-toggle">
                 <span></span>
                 <span></span>
-                <span></span>
+                <span></span
             </div>
         </nav>
     </header>
@@ -163,146 +55,130 @@
             </p>
             
 <div class="cta-buttons">
-    <a href="search-pets.html" class="btn-hero btn-hero-primary start-story-btn" style="background: var(--white); color: black; font-weight: bold;">
-        🐾 Comenzar Mi Historia
-        <span style="font-size: 0.875rem; opacity: 0.8;">→</span>
+    <a href="search-pets.html" class="btn-hero btn-hero-primary ...le="background: var(--white); color: black; font-weight: bold;">
+        🐾 Comenzar 
+    </a>
+    <a href="#how-it-works" class="btn-hero btn-hero-secondary ...le="background: var(--primary); color: white; font-weight: bold;">
+        📖 Conocer Más
     </a>
 </div>
 
 
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-number">1247+</span>
-                    <span class="stat-label">Familias Felices</span>
+        </div>
+        <div class="hero-image">
+            <div class="image-placeholder">
+                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=600&fit=crop" 
+                     alt="Mascotas felices" 
+                     class="hero-img">
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">1,200+</div>
+                    <div class="stat-label">Mascotas Rescatadas</div>
                 </div>
-                <div class="stat">
-                    <span class="stat-number">356+</span>
-                    <span class="stat-label">Refugios Aliados</span>
+                <div class="stat-item">
+                    <div class="stat-number">850+</div>
+                    <div class="stat-label">Adopciones Exitosas</div>
                 </div>
-                <div class="stat">
-                    <span class="stat-number">99%</span>
-                    <span class="stat-label">Éxito en Adopciones</span>
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">Satisfacción</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Soporte</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="problem-section">
-        <div class="problem-grid">
-            <div class="problem-card">
-                <div class="problem-icon">😔</div>
-                <h3>Miles Esperan</h3>
-                <p>Más de 500,000 mascotas en México esperan un hogar. Muchas nunca conocerán el calor de una familia.</p>
-            </div>
-            <div class="problem-card">
-                <div class="problem-icon">🏠</div>
-                <h3>Refugios Saturados</h3>
-                <p>Los refugios trabajan al máximo de su capacidad. Cada espacio liberado significa salvar otra vida.</p>
-            </div>
-            <div class="problem-card">
-                <div class="problem-icon">💔</div>
-                <h3>Familias Inseguras</h3>
-                <p>Muchas personas quieren adoptar pero no saben por dónde empezar o temen no encontrar a su compañero ideal.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="solution-section">
-        <h2>La Solución que Transforma Vidas</h2>
-        <p class="subtitle">The Loyal Nest hace que el proceso de adopción sea seguro, simple y significativo</p>
-
-        <div class="solution-features">
-            <div class="solution-feature">
-                <div class="solution-feature-icon">🔒</div>
-                <h4>Proceso Verificado</h4>
-                <p>Verificamos a adoptantes y refugios para garantizar el bienestar de cada mascota.</p>
-            </div>
-            <div class="solution-feature">
-                <div class="solution-feature-icon">💞</div>
-                <h4>Match Perfecto</h4>
-                <p>Nuestro sistema te ayuda a encontrar a tu compañero ideal según tu estilo de vida.</p>
-            </div>
-            <div class="solution-feature">
-                <div class="solution-feature-icon">📱</div>
-                <h4>Seguimiento Continuo</h4>
-                <p>Acompañamos cada adopción con soporte y recursos para una transición exitosa.</p>
-            </div>
-        </div>
-
-        <a href="search-pets.html" class="btn-hero btn-hero-primary" style="background: var(--white); color: black; font-weight: bold;">
-            🐕 Encontrar Mi Compañero Ideal
-        </a>
-    </section>
-
-    <section class="testimonials-section">
-        <h2>Historias que Inspiran</h2>
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <p class="testimonial-text">"Adoptar a Luna cambió nuestra vida por completo. El proceso fue tan sencillo y el equipo nos apoyó en cada paso. ¡Gracias The Loyal Nest!"</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">👩</div>
-                    <div class="author-info">
-                        <h4>Ana Rodríguez</h4>
-                        <p>Adoptante desde 2023</p>
-                    </div>
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2>¿Cómo Funciona?</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon">🔍</div>
+                    <h3>Busca</h3>
+                    <p>Explora nuestro catálogo de mascotas disponibles para adopción.</p>
                 </div>
-            </div>
-            <div class="testimonial-card">
-                <p class="testimonial-text">"Como refugio, The Loyal Nest nos ha ayudado a encontrar hogares responsables para más de 50 mascotas. La plataforma es increíblemente eficiente."</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">🏠</div>
-                    <div class="author-info">
-                        <h4>Refugio Patitas</h4>
-                        <p>Aliado desde 2022</p>
-                    </div>
+                <div class="step-card">
+                    <div class="step-icon">💝</div>
+                    <h3>Conecta</h3>
+                    <p>Contacta con el refugio o rescatista para conocer más sobre tu futura mascota.</p>
                 </div>
-            </div>
-            <div class="testimonial-card">
-                <p class="testimonial-text">"No podía decidirme por adoptar hasta que usé The Loyal Nest. El sistema de compatibilidad me ayudó a encontrar a Max, mi mejor amigo."</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">👨</div>
-                    <div class="author-info">
-                        <h4>Carlos Méndez</h4>
-                        <p>Adoptante desde 2024</p>
-                    </div>
+                <div class="step-card">
+                    <div class="step-icon">🏠</div>
+                    <h3>Adopta</h3>
+                    <p>Completa el proceso de adopción y dale un hogar lleno de amor.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="final-cta">
-        <h2>¿Listo para Cambiar una Vida?</h2>
-        <p>Únete a nuestra comunidad de amantes de los animales y descubre la alegría de darle un hogar a una mascota necesitada.</p>
-        <div class="cta-buttons">
-            <a href="search-pets.html" class="btn-hero btn-hero-primary" style="background: var(--white); color: black; font-weight: bold;">
-                🐾 Comenzar Mi Historia
-                <span style="font-size: 0.875rem; opacity: 0.8;">→</span>
-            </a>
-        </div>
-        <div class="trust-badges">
-            <div class="trust-badge">✅ Proceso 100% Seguro</div>
-            <div class="trust-badge">🆓 Completamente Gratuito</div>
-            <div class="trust-badge">⚡ Registro en 2 Minutos</div>
+    <!-- Featured Pets -->
+    <section class="featured-pets">
+        <div class="container">
+            <div class="section-header">
+                <h2>Mascotas Destacadas</h2>
+                <p>Conoce algunos de nuestros amigos que buscan hogar</p>
+            </div>
+            
+            <div class="pets-grid" id="featuredPets">
+                <!-- Pet cards will be generated by JS -->
+            </div>
+            
+            <div class="section-cta">
+                <a href="search-pets.html" class="btn-primary">
+                    Ver Todas las Mascotas 🐾
+                </a>
+            </div>
         </div>
     </section>
 
+    <!-- Call to Action -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>¿Eres un Rescatista?</h2>
+                <p>Únete a nuestra comunidad y ayuda a más mascotas a encontrar un hogar.</p>
+                <div class="cta-buttons">
+                    <a href="register.html" class="btn-primary">Registrarse como Rescatista</a>
+                    <a href="education.html" class="btn-outline">Recursos Educativos</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section" style="flex:2;">
+                <div class="footer-section">
                     <h3>🐕 The Loyal Nest</h3>
-                    <p>Conectando corazones con patitas desde 2024.</p>
+                    <p>Conectando corazones, cambiando vidas.</p>
                 </div>
-                <div class="footer-section" style="flex:1;">
-                    <h4>Explorar</h4>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
                     <ul>
-                        <li><a href="auth.html">Iniciar Sesión</a></li>
-                        <li><a href="register.html">Registrarse</a></li>
-                        <li><a href="education.html">Cómo Funciona</a></li>
+                        <li><a href="search-pets.html">Buscar Mascotas</a></li>
+                        <li><a href="shelters-map.html">Refugios</a></li>
+                        <li><a href="education.html">Educación</a></li>
                     </ul>
                 </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p>📧 info@theloyalnest.com</p>
+                    <p>📱 +52 55 1234 5678</p>
+                </div>
             </div>
-            <div style="border-top: 1px solid #374151; margin-top: 40px; padding-top: 20px; text-align: center; color: #9ca3af; font-size: 0.9rem;">
+            <div class="footer-bottom" style="text-align: center; color: #9ca3af; font-size: 0.9rem;">
                 &copy; 2025 The Loyal Nest. Todos los derechos reservados.
             </div>
         </div>
@@ -318,25 +194,29 @@
             stats.forEach(stat => {
                 const hasPercent = stat.textContent.includes('%');
                 const hasPlus = stat.textContent.includes('+');
-                const text = stat.textContent.replace('%', '').replace('+', '');
-                const target = parseInt(text, 10);
-                if (isNaN(target)) return;
-                let current = 0;
-                const increment = target / 50;
+                const hasSlash = stat.textContent.includes('/');
+                
+                if (hasSlash) return; // No animar 24/7
+                
+                const finalValue = parseInt(stat.textContent.replace(/[^\d]/g, ''));
+                let currentValue = 0;
+                const increment = finalValue / 100;
+                
                 const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= target) {
-                        current = target;
+                    currentValue += increment;
+                    if (currentValue >= finalValue) {
+                        currentValue = finalValue;
                         clearInterval(timer);
                     }
-                    let suffix = '';
-                    if (hasPercent) suffix = '%';
-                    else if (hasPlus) suffix = '+';
-                    stat.textContent = Math.floor(current) + suffix;
-                }, 40);
+                    
+                    let displayValue = Math.floor(currentValue).toLocaleString();
+                    if (hasPercent) displayValue += '%';
+                    if (hasPlus) displayValue += '+';
+                    stat.textContent = displayValue;
+                }, 20);
             });
 
-            // Scroll suave
+            // Scroll suave para enlaces internos
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     const href = this.getAttribute('href');
@@ -349,5 +229,34 @@
             });
         });
     </script>
+
+    <script>
+        // Acceso rápido a Admin (solo para demo; NO es seguridad real en GitHub Pages)
+        document.addEventListener('DOMContentLoaded', function () {
+            const adminBtn = document.getElementById('adminBtn');
+            if (!adminBtn) return;
+
+            adminBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const pass = prompt('Contraseña de administrador:');
+                if (!pass) return;
+
+                // ⚠️ Cambia esta contraseña a la que tú quieras
+                if (pass === 'ADMIN123') {
+                    sessionStorage.setItem('isAdmin', '1');
+                    window.location.href = 'dashboard-admin.html';
+                } else {
+                    alert('Contraseña incorrecta.');
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>
+
+    </script>
+</body>
+</html>
+
