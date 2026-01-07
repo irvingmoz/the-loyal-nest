@@ -156,46 +156,49 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
 // =======================================================
-            // 🛡️ BLOQUE ANTI-RANDOM (Direcciones)
+          // =======================================================
+            // 🛡️ VALIDACIÓN BLINDADA PARA DIRECCIONES (Calle y Colonia)
             // =======================================================
-            const calleCheck = document.getElementById('dirCalle').value.trim();
-            const coloniaCheck = document.getElementById('dirColonia').value.trim();
+            const calleInput = document.getElementById('dirCalle').value.trim();
+            const coloniaInput = document.getElementById('dirColonia').value.trim();
 
-            // 1. Regla de Oro: ¿Tiene letras? (Bloquea "12345")
-            const tieneLetras = /[a-zA-ZáéíóúÁÉÍÓÚñÑ]/;
-            if (!tieneLetras.test(calleCheck)) {
-                alert("📍 La calle debe tener nombre, no solo números."); return;
-            }
-            if (!tieneLetras.test(coloniaCheck)) {
-                alert("📍 La colonia debe tener nombre, no solo números."); return;
+            // Función auxiliar para detectar "aaaaa", "zzzzz", "bbbb"
+            function tieneRepeticiones(texto) {
+                // Detecta si hay 3 letras iguales seguidas (ej: "aaa")
+                return /(.)\1{2,}/.test(texto);
             }
 
-            // 2. Regla Anti-Flojera: ¿Es todo la misma letra? (Bloquea "aaaaa", "zzzz")
-            // Esta es la que te faltaba
-            if (/^(\w)\1+$/.test(calleCheck)) {
-                alert("📍 La calle no es válida (no repitas la misma letra)."); return;
+            // --- VALIDACIÓN CALLE ---
+            if (tieneRepeticiones(calleInput)) {
+                alert("📍 La CALLE es inválida: No escribas letras repetidas (ej. 'aaa').");
+                return; 
             }
-            if (/^(\w)\1+$/.test(coloniaCheck)) {
-                alert("📍 La colonia no es válida (no repitas la misma letra)."); return;
+            // Debe tener vocales
+            if (!/[aeiouáéíóúü]/i.test(calleInput)) {
+                alert("📍 La CALLE parece falsa (no tiene vocales)."); 
+                return;
+            }
+            // Debe tener letras, no solo números
+            if (!/[a-zA-ZáéíóúñÑ]/.test(calleInput)) {
+                alert("📍 La CALLE debe tener nombre, no solo números."); 
+                return;
             }
 
-            // 3. Regla Anti-Teclazo: ¿Tiene vocales? (Bloquea "sdfgh")
-            const tieneVocales = /[aeiouáéíóúü]/i;
-            if (!tieneVocales.test(calleCheck) || !tieneVocales.test(coloniaCheck)) {
-                alert("📍 La dirección parece falsa (le faltan vocales)."); return;
+            // --- VALIDACIÓN COLONIA ---
+            if (tieneRepeticiones(coloniaInput)) {
+                alert("📍 La COLONIA es inválida: No escribas letras repetidas (ej. 'aaaa').");
+                return; 
+            }
+            if (!/[aeiouáéíóúü]/i.test(coloniaInput)) {
+                alert("📍 La COLONIA parece falsa (no tiene vocales)."); 
+                return;
+            }
+            if (coloniaInput.length < 4) {
+                alert("📍 El nombre de la colonia es muy corto.");
+                return;
             }
 
-            // 4. Regla de Repetición Interna (Bloquea "Caaalle" o "Reeforma")
-            // No permite 3 letras iguales seguidas
-            const repetidas = /(.)\1{2,}/;
-            if (repetidas.test(calleCheck) || repetidas.test(coloniaCheck)) {
-                alert("📍 La dirección tiene demasiadas letras repetidas (ej. 'aaa')."); return;
-            }
-            
-            // 5. Longitud Mínima
-            if (calleCheck.length < 4 || coloniaCheck.length < 4) {
-                alert("📍 La dirección es muy corta, sé más específico."); return;
-            }
+            // =======================================================
         // --- FIN DEL BLOQUE ---
             
             // 4. Guardar Usuario
