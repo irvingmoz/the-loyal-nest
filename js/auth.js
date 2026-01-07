@@ -62,11 +62,52 @@ document.addEventListener("DOMContentLoaded", function() {
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
             console.log("📩 Botón presionado");
+// =======================================================
+            // 🛡️ BLOQUE ANTI-RANDOM (Nombres y Apellidos)
+            // =======================================================
+            
+            // 1. Capturamos los datos ahora mismo
+            const nombreTxt = document.getElementById('nombre').value.trim();
+            const apPatTxt = document.getElementById('apPaterno').value.trim();
+            const apMatTxt = document.getElementById('apMaterno').value.trim();
 
+            // 2. Función interna para detectar "teclazos"
+            function esTextoHumano(texto, campo) {
+                // A. Longitud mínima (evita "a", "z")
+                if (texto.length < 2) return `El ${campo} es muy corto.`;
+
+                // B. Debe tener vocales (evita "sdfgh", "klmn", "brrr")
+                const tieneVocales = /[aeiouáéíóúü]/i;
+                if (!tieneVocales.test(texto)) return `El ${campo} no parece real (le faltan vocales).`;
+
+                // C. No letras repetidas 3 veces seguidas (evita "aaa", "jjjj")
+                const repetidas = /(.)\1{2,}/; 
+                if (repetidas.test(texto)) return `El ${campo} tiene letras repetidas inválidas (ej. 'aaa').`;
+
+                // D. No exceso de consonantes seguidas (evita "asdfg")
+                const excesoConsonantes = /[bcdfghjklmnñpqrstvwxyz]{4,}/i;
+                if (excesoConsonantes.test(texto)) return `El ${campo} parece un error de teclado (muchas consonantes).`;
+
+                return null; // Pasó todas las pruebas
+            }
+
+            // 3. Ejecutamos la validación
+            const errNom = esTextoHumano(nombreTxt, "Nombre");
+            if (errNom) { alert("⚠️ " + errNom); return; }
+
+            const errPat = esTextoHumano(apPatTxt, "Apellido Paterno");
+            if (errPat) { alert("⚠️ " + errPat); return; }
+
+            const errMat = esTextoHumano(apMatTxt, "Apellido Materno");
+            if (errMat) { alert("⚠️ " + errMat); return; }
+            
+            // =======================================================
             const emailRaw = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
             const rol = document.getElementById('role').value;
             const curpRaw = document.getElementById('curp').value.trim();
+
+            
 
             // 1. Validar Correo
             const emailLimpio = emailRaw.trim().toLowerCase();
