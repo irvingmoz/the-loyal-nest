@@ -349,9 +349,66 @@
       });
     });
   </script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Detecta usuario en sesión (según tu proyecto)
+    function readJSON(key) {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      try { return JSON.parse(raw); } catch { return null; }
+    }
+
+    function getSessionUser() {
+      return readJSON('userSession') || readJSON('tl_user') || readJSON('currentUser') || null;
+    }
+
+    function isLoggedIn() {
+      if (getSessionUser()) return true;
+      const sesionActiva = localStorage.getItem('sesionActiva');
+      return !!(sesionActiva && sesionActiva !== 'false' && sesionActiva !== '0');
+    }
+
+    function getRole(user) {
+      return String(user?.rol || user?.role || user?.tipo || user?.type || user?.userType || '').toLowerCase();
+    }
+
+    function getDashboardUrl(role) {
+      // rescatista si contiene "rescat"
+      if (role.includes('rescat')) return 'dashboard-rescatista.html';
+      // por defecto adoptante
+      return 'dashboard-adoptante.html';
+    }
+
+    // Elementos del index
+    const navAuth = document.getElementById('navAuth') || document.querySelector('.nav-auth');
+    const userMenu = document.getElementById('userMenu');
+    const userNameEl = document.getElementById('userName');
+    const dashLink = document.getElementById('userDashboardLink');
+
+    const logged = isLoggedIn();
+    const user = getSessionUser();
+    const role = getRole(user);
+
+    if (logged) {
+      if (navAuth) navAuth.style.display = 'none';
+      if (userMenu) userMenu.style.display = 'block';
+
+      const name = user?.nombre || user?.name || user?.username || user?.email || 'Mi cuenta';
+      if (userNameEl) userNameEl.textContent = name;
+
+      // ✅ AQUÍ el cambio que pediste:
+      if (dashLink) dashLink.href = getDashboardUrl(role);
+    } else {
+      if (navAuth) navAuth.style.display = '';
+      if (userMenu) userMenu.style.display = 'none';
+    }
+  });
+</script>
+
   <script src="js/session-ui.js"></script>
 
 </body>
 </html>
+
 
 
