@@ -4,21 +4,27 @@ document.addEventListener("DOMContentLoaded", function() {
     // 0. FUNCIONES DE VALIDACIÓN AUXILIARES
     // =======================================================
     
-    // Función mejorada para validar CURP (Formato + Anti-Trampas)
+    // Función "A prueba de balas" para la CURP
     function esCurpValida(curp) {
-        if (!curp) return true; // Si es opcional y está vacío, es válido
+        if (!curp) return true; // Si está vacío (y es opcional), pasa.
 
         // 1. Longitud exacta
         if (curp.length !== 18) return false;
 
-        // 2. Filtro Anti-Trampas: Evita caracteres repetidos (ej: AAAAA...)
-        if (/^(\w)\1+$/.test(curp)) {
-            return false;
-        }
+        // 2. Anti-Trampas (Caracteres repetidos como 00000 o AAAAA)
+        if (/^(\w)\1+$/.test(curp)) return false;
 
-        // 3. Regex Oficial
-        const re = /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|BC|BS|CC|CL|CM|CS|CH|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/;
-        return curp.match(re);
+        // 3. Estructura Manual (Los primeros 4 deben ser LETRAS)
+        const primeros4 = curp.substring(0, 4);
+        const digitosFecha = curp.substring(4, 10);
+
+        // Si los primeros 4 NO son letras (A-Z) -> Falso
+        if (!/^[A-Z]{4}$/.test(primeros4)) return false;
+
+        // Si los siguientes 6 NO son números -> Falso
+        if (!/^\d{6}$/.test(digitosFecha)) return false;
+
+        return true;
     }
 
     // =======================================================
@@ -41,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 
                 alert(`¡Bienvenido, ${userFound.nombre}!`);
 
+                // Redirección según rol
                 if (userFound.rol === 'rescatista') {
                     window.location.href = "dashboard-rescatista.html";
                 } else if (userFound.rol === 'administrador') {
@@ -60,41 +67,38 @@ document.addEventListener("DOMContentLoaded", function() {
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         
-        // --- 🔴 SOLO LETRAS EN NOMBRES Y APELLIDOS ---
+        // --- SOLO LETRAS EN NOMBRES Y APELLIDOS ---
         const camposTexto = ['nombre', 'apPaterno', 'apMaterno'];
-        
         camposTexto.forEach(id => {
             const input = document.getElementById(id);
             if (input) {
                 input.addEventListener('input', function(e) {
-                    // Reemplaza todo lo que NO sea letra o espacio
                     e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '').slice(0, 30);
                 });
             }
         });
 
-        // --- LIMPIEZA VISUAL DE CURP ---
+        // --- LIMPIEZA DE CURP (Mayúsculas y sin símbolos) ---
         const inputCurp = document.getElementById('curp');
         if (inputCurp) {
             inputCurp.addEventListener('input', function(e) {
                 let valor = e.target.value.toUpperCase();
-                valor = valor.replace(/[^A-Z0-9]/g, ''); // Solo letras y números
-                if (valor.length > 18) {
-                    valor = valor.slice(0, 18);
-                }
+                valor = valor.replace(/[^A-Z0-9]/g, '');
+                if (valor.length > 18) valor = valor.slice(0, 18);
                 e.target.value = valor;
             });
         }
 
+        // --- MOSTRAR CAMPOS EXTRA SI ES RESCATISTA ---
         const roleSelect = document.getElementById('role');
         const divRescatista = document.getElementById('camposRescatista');
-
         if(roleSelect && divRescatista) {
             roleSelect.addEventListener('change', function() {
                 divRescatista.style.display = (this.value === 'rescatista') ? 'block' : 'none';
             });
         }
 
+        // --- ENVÍO DEL FORMULARIO ---
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -103,24 +107,20 @@ document.addEventListener("DOMContentLoaded", function() {
             const rol = document.getElementById('role').value;
             const curpRaw = document.getElementById('curp').value.trim();
 
-            // VALIDACIÓN DE CORREO
+            // Validación de Correo
             const emailLimpio = emailRaw.trim().toLowerCase();
             const dominiosPermitidos = ['gmail.com', 'outlook.com', 'hotmail.com', 'yahoo.com', 'live.com', 'icloud.com'];
             const partesEmail = emailLimpio.split('@');
 
-            if (partesEmail.length !== 2 || partesEmail[0] === "" || partesEmail[1] === "") {
-                alert("⚠️ El formato del correo electrónico no es válido.");
-                return;
-            }
-            if (!dominiosPermitidos.includes(partesEmail[1])) {
+            if (partesEmail.length !== 2 || !dominiosPermitidos.includes(partesEmail[1])) {
                 alert("🔒 Por seguridad, solo aceptamos correos de: Gmail, Outlook, Hotmail, Yahoo o iCloud.");
                 return;
             }
 
-            // VALIDACIÓN CURP ESTRICTA
+            // Validación de CURP Estricta
             if (curpRaw.length > 0) { 
                 if (!esCurpValida(curpRaw)) {
-                    alert("⚠️ CURP inválida.\n\nVerifica que:\n1. Tenga 18 caracteres.\n2. No sean caracteres repetidos.\n3. Cumpla con el formato oficial (4 letras iniciales, fecha, etc).");
+                    alert("⚠️ ERROR EN CURP:\n\n- No se permiten puros números/ceros.\n- Debe empezar con 4 letras.\n- Debe tener 18 caracteres.");
                     return; 
                 }
             }
@@ -130,21 +130,21 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
+            // Verificar duplicados
             const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
             if (usersDB.find(u => u.email === emailLimpio)) {
                 alert("Este correo ya está registrado.");
                 return;
             }
 
-            // Obteniendo dirección de forma segura
+            // Construir dirección
             let direccionCompleta = "";
             const calle = document.getElementById('dirCalle');
             if (calle) {
                 direccionCompleta = `${calle.value} ${document.getElementById('dirNumExt').value}, ${document.getElementById('dirColonia').value}, ${document.getElementById('dirAlcaldia').value}`;
-            } else if (document.getElementById('direccion')) {
-                direccionCompleta = document.getElementById('direccion').value;
             }
 
+            // Guardar Usuario
             const newUser = {
                 nombre: document.getElementById('nombre').value,
                 apellido: document.getElementById('apPaterno').value,
@@ -152,9 +152,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 email: emailLimpio,
                 password: password,
                 rol: rol,
-                curp: curpRaw, // Guardamos la CURP validada
+                curp: curpRaw,
                 edad: document.getElementById('edad').value,
-                direccion: direccionCompleta, // Dirección unificada
+                direccion: direccionCompleta,
                 estatusLegal: rol === 'rescatista' ? document.getElementById('estatusLegal').value : "",
                 fechaRegistro: new Date().toLocaleDateString()
             };
@@ -168,92 +168,58 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // =======================================================
-    // 3. CONTROL DEL MENÚ INTELIGENTE
+    // 3. MENÚ INTELIGENTE (NAVBAR)
     // =======================================================
     const sesionActiva = localStorage.getItem('sesionActiva');
     const userSession = JSON.parse(localStorage.getItem('userSession')); 
     const rutaActual = window.location.pathname;
 
     if (sesionActiva === 'true' && userSession) {
-        // Ocultar botones de Login/Registro
-        const botonesMenu = document.querySelectorAll('a, button, .btn-outline'); 
-        botonesMenu.forEach(btn => {
-            const texto = (btn.innerText || btn.textContent).toLowerCase();
-            if (texto.includes('iniciar sesion') || 
-                texto.includes('iniciar sesión') || 
-                texto.includes('registrarse')) {
-                btn.style.display = 'none';
-            }
+        // Ocultar botones de login
+        document.querySelectorAll('a, button').forEach(btn => {
+            const txt = (btn.innerText || '').toLowerCase();
+            if (txt.includes('iniciar ses') || txt.includes('registrarse')) btn.style.display = 'none';
         });
 
-        const nav = document.querySelector('.nav');
-        // Buscar el contenedor de botones o usar el nav como fallback
-        const navContainer = document.getElementById('nav-auth-buttons') || document.querySelector('.nav-list') || nav;
-
+        // Insertar botones de usuario
+        const navContainer = document.getElementById('nav-auth-buttons') || document.querySelector('.nav-list');
         if (navContainer && !document.getElementById('btn-panel-auto')) {
-            // Crear Botón "Mi Panel"
             const btnPanel = document.createElement('a');
             btnPanel.id = 'btn-panel-auto';
-            btnPanel.innerText = `👤 ${userSession.nombre.split(' ')[0]}`; // Solo primer nombre
+            btnPanel.innerText = `👤 ${userSession.nombre.split(' ')[0]}`;
             btnPanel.className = "btn-outline";
-            btnPanel.style.marginRight = "10px";
-            btnPanel.style.borderColor = "#e67e22";
-            btnPanel.style.color = "#e67e22";
-            btnPanel.style.textDecoration = "none";
+            btnPanel.style.cssText = "margin-right:10px; border-color:#e67e22; color:#e67e22; text-decoration:none;";
             
-            if (userSession.rol === 'rescatista') {
-                btnPanel.href = "dashboard-rescatista.html";
-            } else if (userSession.rol === 'administrador') {
-                btnPanel.href = "dashboard-admin.html";
-            } else {
-                btnPanel.href = "dashboard-adoptante.html"; 
-            }
+            if (userSession.rol === 'rescatista') btnPanel.href = "dashboard-rescatista.html";
+            else if (userSession.rol === 'administrador') btnPanel.href = "dashboard-admin.html";
+            else btnPanel.href = "dashboard-adoptante.html"; 
 
-            // Crear Botón "Salir"
             const btnLogout = document.createElement('a'); 
-            btnLogout.id = 'btn-logout-auto';
             btnLogout.innerText = "Salir";
             btnLogout.className = "btn-outline"; 
             btnLogout.href = "#"; 
-            btnLogout.style.color = "red";
-            btnLogout.style.borderColor = "red";
-            btnLogout.style.textDecoration = "none";
-            btnLogout.addEventListener('click', function(e) {
-                e.preventDefault(); 
-                cerrarSesion();
-            });
+            btnLogout.style.cssText = "color:red; border-color:red; text-decoration:none;";
+            btnLogout.onclick = cerrarSesion;
 
-            // Insertar botones en el DOM
-            // Si es una lista (ul), creamos li. Si es div, metemos directo.
             if (navContainer.tagName === 'UL') {
-                const liPanel = document.createElement('li');
-                liPanel.appendChild(btnPanel);
-                navContainer.appendChild(liPanel);
-
-                const liLogout = document.createElement('li');
-                liLogout.appendChild(btnLogout);
-                navContainer.appendChild(liLogout);
+                const li = document.createElement('li'); li.appendChild(btnPanel); navContainer.appendChild(li);
+                const li2 = document.createElement('li'); li2.appendChild(btnLogout); navContainer.appendChild(li2);
             } else {
                 navContainer.appendChild(btnPanel);
                 navContainer.appendChild(btnLogout);
             }
         }
-
     } else {
         // Protección de rutas privadas
         if (rutaActual.includes('dashboard')) {
-            alert("Debes iniciar sesión para ver esta sección.");
             window.location.href = "auth.html";
         }
     }
 });
 
-// Función global para cerrar sesión
 function cerrarSesion() {
     if(confirm("¿Seguro que deseas cerrar sesión?")) {
-        localStorage.removeItem('sesionActiva');
-        localStorage.removeItem('usuario');
-        localStorage.removeItem('userSession');
+        localStorage.clear(); // Limpieza total para evitar conflictos
         window.location.href = "index.html";
     }
 }
