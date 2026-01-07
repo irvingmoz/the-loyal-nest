@@ -108,7 +108,8 @@
           <h3 style="margin:0 0 10px;">Agregar mascota</h3>
           <form id="petForm">
             <div class="form-row">
-              <input class="input" id="petNombre" placeholder="Nombre (ej. Luna)" required />
+              <input class="input" id="petNombre" placeholder="Nombre (ej. Luna)" required maxlength="15" />
+              
               <select id="petTipo" required>
                 <option value="">Tipo</option>
                 <option value="Perro">Perro</option>
@@ -118,7 +119,8 @@
             </div>
 
             <div class="form-row">
-              <input class="input" id="petEdad" type="number" step="0.1" min="0" placeholder="Edad (años)" required />
+              <input class="input" id="petEdad" type="number" step="1" min="0" max="20" placeholder="Edad (años)" required />
+              
               <select id="petTamano" required>
                 <option value="">Tamaño</option>
                 <option value="Pequeño">Pequeño</option>
@@ -128,15 +130,15 @@
             </div>
 
             <div class="form-row one">
-              <input class="input" id="petUbicacion" placeholder="Ubicación (ej. Iztapalapa)" required />
+              <input class="input" id="petUbicacion" placeholder="Ubicación (Solo letras)" required maxlength="20" pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo se permiten letras y espacios" />
             </div>
 
             <div class="form-row one">
-              <input class="input" id="petFoto" placeholder="URL de foto (opcional)" />
+              <input class="input" id="petFoto" type="url" placeholder="URL de foto (opcional)" />
             </div>
 
             <div class="form-row one">
-              <textarea id="petDesc" placeholder="Descripción (opcional)"></textarea>
+              <textarea id="petDesc" placeholder="Descripción (opcional)" maxlength="100"></textarea>
             </div>
 
             <div class="form-actions">
