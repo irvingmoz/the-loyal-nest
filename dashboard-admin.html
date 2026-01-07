@@ -108,7 +108,7 @@
           <h3 style="margin:0 0 10px;">Agregar mascota</h3>
           <form id="petForm">
             <div class="form-row">
-              <input class="input" id="petNombre" placeholder="Nombre (ej. Luna)" required maxlength="15" />
+              <input class="input" id="petNombre" placeholder="Nombre (ej. Luna)" required maxlength="15" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" title="Solo letras y espacios" />
               
               <select id="petTipo" required>
                 <option value="">Tipo</option>
