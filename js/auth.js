@@ -1,154 +1,66 @@
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("🟢 auth.js cargado correctamente");
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración | The Loyal Nest</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-container { max-width: 1200px; margin: 40px auto; padding: 20px; }
+        .stat-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
+        .stat-icon { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+        .stat-num { font-size: 2rem; font-weight: bold; color: #e67e22; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">🐕 Admin Panel</a>
+            <button onclick="cerrarSesion()" style="color:red; border:none; background:none; cursor:pointer; font-weight:bold;">Salir</button>
+        </nav>
+    </header>
 
-    // =======================================================
-    // 0. FUNCIONES DE VALIDACIÓN
-    // =======================================================
-    function esCurpValida(curp) {
-        if (!curp) return true; 
-        if (curp.length !== 18) return false;
-        if (/^(\w)\1+$/.test(curp)) return false; // Anti-trampas
-        const primeros4 = curp.substring(0, 4);
-        const digitosFecha = curp.substring(4, 10);
-        if (!/^[A-Z]{4}$/.test(primeros4)) return false;
-        if (!/^\d{6}$/.test(digitosFecha)) return false;
-        return true;
-    }
+    <main class="admin-container">
+        <h1>👋 Bienvenido, Administrador</h1>
+        <p>Aquí tienes el control total del sistema.</p>
 
-    // =======================================================
-    // 1. LÓGICA DE LOGIN (CON BLOQUE DE SEGURIDAD)
-    // =======================================================
-    const loginForm = document.getElementById('loginForm');
-    
-    // 🛡️ SOLO EJECUTAR ESTO SI EXISTE EL FORMULARIO DE LOGIN
-    if (loginForm) {
-        console.log("🔹 Formulario de Login detectado");
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const emailVal = document.getElementById('email').value.trim().toLowerCase();
-            const passVal = document.getElementById('password').value;
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
+            <div class="stat-card">
+                <span class="stat-icon">👥</span>
+                <div class="stat-num" id="countUsers">0</div>
+                <div>Usuarios Registrados</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">🐾</span>
+                <div class="stat-num" id="countPets">0</div>
+                <div>Mascotas en Sistema</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">📝</span>
+                <div class="stat-num">0</div>
+                <div>Reportes</div>
+            </div>
+        </div>
+    </main>
 
-            const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
-            const userFound = usersDB.find(u => u.email === emailVal && u.password === passVal);
-
-            if (userFound) {
-                localStorage.setItem('sesionActiva', 'true');
-                localStorage.setItem('usuario', userFound.email);
-                localStorage.setItem('userSession', JSON.stringify(userFound)); 
-                
-                alert(`¡Bienvenido, ${userFound.nombre}!`);
-
-                if (userFound.rol === 'rescatista') window.location.href = "dashboard-rescatista.html";
-                else if (userFound.rol === 'administrador') window.location.href = "dashboard-admin.html";
-                else window.location.href = "dashboard-adoptante.html"; 
-            } else {
-                alert("Datos incorrectos o usuario no registrado.");
-            }
-        });
-    }
-
-    // =======================================================
-    // 2. LÓGICA DE REGISTRO (CON BLOQUE DE SEGURIDAD)
-    // =======================================================
-    const registerForm = document.getElementById('registerForm');
-
-    // 🛡️ SOLO EJECUTAR ESTO SI EXISTE EL FORMULARIO DE REGISTRO
-    if (registerForm) {
-        console.log("🔹 Formulario de Registro detectado");
-
-        // --- Validaciones Visuales (Solo Letras) ---
-        ['nombre', 'apPaterno', 'apMaterno'].forEach(id => {
-            const input = document.getElementById(id);
-            if (input) {
-                input.addEventListener('input', (e) => {
-                    e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '').slice(0, 30);
-                });
-            }
-        });
-
-        // --- Limpieza CURP ---
-        const inputCurp = document.getElementById('curp');
-        if (inputCurp) {
-            inputCurp.addEventListener('input', (e) => {
-                e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 18);
-            });
+    <script>
+        // Verificar sesión al cargar
+        const session = JSON.parse(localStorage.getItem('userSession'));
+        if (!session || session.rol !== 'administrador') {
+            alert("⛔ Acceso denegado.");
+            window.location.href = "index.html";
         }
 
-        // --- Mostrar campos Rescatista ---
-        const roleSelect = document.getElementById('role');
-        const divRescatista = document.getElementById('camposRescatista');
-        if(roleSelect && divRescatista) {
-            roleSelect.addEventListener('change', function() {
-                divRescatista.style.display = (this.value === 'rescatista') ? 'block' : 'none';
-            });
+        // Cargar contadores
+        const users = JSON.parse(localStorage.getItem('usersDB')) || [];
+        const pets = JSON.parse(localStorage.getItem('petsDB')) || [];
+        document.getElementById('countUsers').innerText = users.length;
+        document.getElementById('countPets').innerText = pets.length;
+
+        function cerrarSesion() {
+            localStorage.clear();
+            window.location.href = "index.html";
         }
-
-        // --- EL EVENTO PRINCIPAL DEL REGISTRO ---
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            console.log("📩 Botón de registro presionado");
-
-            const emailRaw = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const rol = document.getElementById('role').value;
-            const curpRaw = document.getElementById('curp').value.trim();
-
-            // 1. Validar Correo
-            const emailLimpio = emailRaw.trim().toLowerCase();
-            const partesEmail = emailLimpio.split('@');
-            if (partesEmail.length !== 2) {
-                alert("Correo inválido"); return;
-            }
-
-            // 2. Validar CURP
-            if (curpRaw.length > 0 && !esCurpValida(curpRaw)) {
-                alert("⚠️ CURP INVÁLIDA.\nDebe tener 18 caracteres y estructura correcta (4 letras al inicio).");
-                return; 
-            }
-
-            // 3. Validar Contraseña
-            if (password.length < 8) {
-                alert("La contraseña debe tener al menos 8 caracteres.");
-                return;
-            }
-
-            // 4. Guardar
-            const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
-            if (usersDB.find(u => u.email === emailLimpio)) {
-                alert("Este correo ya existe.");
-                return;
-            }
-
-            // Construir dirección de forma segura
-            let dir = "";
-            if(document.getElementById('dirCalle')) {
-                dir = document.getElementById('dirCalle').value + ", " + document.getElementById('dirColonia').value;
-            }
-
-            const newUser = {
-                nombre: document.getElementById('nombre').value,
-                apellido: document.getElementById('apPaterno').value,
-                email: emailLimpio,
-                password: password,
-                rol: rol,
-                curp: curpRaw,
-                direccion: dir,
-                estatusLegal: rol === 'rescatista' ? document.getElementById('estatusLegal').value : ""
-            };
-
-            usersDB.push(newUser);
-            localStorage.setItem('usersDB', JSON.stringify(usersDB));
-            
-            console.log("✅ Usuario creado:", newUser);
-            alert("¡Cuenta creada! Inicia sesión.");
-            
-            // Forzar redirección
-            window.location.href = "auth.html";
-        });
-    }
-
-    // =======================================================
-    // 3. MENÚ (Navbar)
-    // =======================================================
-    // (Tu código de menú aquí, no suele causar fallos críticos)
-});
+    </script>
+</body>
+</html>
