@@ -59,25 +59,74 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Dirección (Calle y Número)</label>
-                    <input type="text" id="dirCalle" class="form-control" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group" style="flex:1">
-                        <label>Colonia</label>
-                        <input type="text" id="dirColonia" class="form-control" required>
-                    </div>
-                    <div class="form-group" style="flex:1">
-                        <label>Alcaldía</label>
-                        <select id="dirAlcaldia" class="form-control">
-                            <option>Iztapalapa</option>
-                            <option>Coyoacán</option>
-                            <option>Otra</option>
-                        </select>
-                    </div>
-                </div>
+  <label style="font-weight:600; font-size:0.9rem; color:#444; margin-bottom:5px; display:block;">Dirección Completa</label>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 15px;">
+                    
+                    <div class="form-row" style="margin-bottom: 10px;">
+                        <div class="form-group" style="flex: 2;">
+                            <label style="font-size:0.8rem">Calle / Avenida</label>
+                            <input 
+                                type="text" 
+                                id="dirCalle" 
+                                class="form-control" 
+                                required 
+                                minlength="5" 
+                                placeholder="Solo letras y números"
+                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\.\-]/g, '')"
+                            >
+                        </div>
 
+                        <div class="form-group" style="flex: 1;">
+                            <label style="font-size:0.8rem">No. Ext</label>
+                            <input 
+                                type="text" 
+                                id="dirNumExt" 
+                                class="form-control" 
+                                required 
+                                maxlength="10"
+                                placeholder="Ej. 10"
+                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9\-\/]/g, '')"
+                            >
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label style="font-size:0.8rem">No. Int (Op)</label>
+                            <input 
+                                type="text" 
+                                id="dirNumInt" 
+                                class="form-control"
+                                maxlength="10"
+                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9\-\/]/g, '')"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1">
+                            <label style="font-size:0.8rem">Colonia</label>
+                            <input 
+                                type="text" 
+                                id="dirColonia" 
+                                class="form-control" 
+                                required 
+                                minlength="5"
+                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\.]/g, '')"
+                            >
+                        </div>
+                        <div class="form-group" style="flex:1">
+                            <label style="font-size:0.8rem">Alcaldía</label>
+                            <select id="dirAlcaldia" class="form-control" required>
+                                <option value="">Seleccionar...</option>
+                                <option>Iztapalapa</option>
+                                <option>Coyoacán</option>
+                                <option>Gustavo A. Madero</option>
+                                <option>Cuauhtémoc</option>
+                                <option>Benito Juárez</option>
+                                <option>Otra</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label>Correo Electrónico</label>
                     <input type="email" id="registerEmail" class="form-control" required>
