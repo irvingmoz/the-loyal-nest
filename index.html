@@ -278,10 +278,23 @@
     }
 
     function resolveDashboardLink(user) {
-      const rol = (user?.rol || user?.role || '').toLowerCase();
-      if (rol === 'rescatista') return 'dashboard-rescatista.html';
-      if (rol === 'adoptante') return 'dashboard-adoptante.html';
-      if (rol === 'administrador' || rol === 'admin') return 'dashboard-admin.html';
+      // ✅ CAMBIO ÚNICO: más robusto, detecta adoptante/rescatista aunque venga con mayúsculas o variantes
+      const rolRaw =
+        user?.rol ??
+        user?.role ??
+        user?.tipoUsuario ??
+        user?.tipo ??
+        user?.userType ??
+        '';
+
+      const rol = String(rolRaw).toLowerCase().trim();
+
+      if (rol.includes('rescat')) return 'dashboard-rescatista.html';
+      if (rol.includes('adopt')) return 'dashboard-adoptante.html';
+
+      // (Opcional) si algún día lo usas:
+      if (rol.includes('admin')) return 'dashboard-admin.html';
+
       // fallback
       return 'dashboard-adoptante.html';
     }
@@ -302,13 +315,8 @@
         const name = user?.nombre || user?.name || user?.username || user?.email || 'Mi cuenta';
         if (userNameEl) userNameEl.textContent = name;
 
-        if (dashLink) {
-          dashLink.href = resolveDashboardLink(user);
-          dashLink.addEventListener('click', (e) => {
-            // Evita # si todavía está así
-            if (!dashLink.href) e.preventDefault();
-          });
-        }
+        // ✅ AQUÍ queda el link correcto según rol
+        if (dashLink) dashLink.href = resolveDashboardLink(user);
       } else {
         if (navAuth) navAuth.style.display = 'block';
         if (userMenu) userMenu.style.display = 'none';
@@ -349,66 +357,11 @@
       });
     });
   </script>
-  <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Detecta usuario en sesión (según tu proyecto)
-    function readJSON(key) {
-      const raw = localStorage.getItem(key);
-      if (!raw) return null;
-      try { return JSON.parse(raw); } catch { return null; }
-    }
-
-    function getSessionUser() {
-      return readJSON('userSession') || readJSON('tl_user') || readJSON('currentUser') || null;
-    }
-
-    function isLoggedIn() {
-      if (getSessionUser()) return true;
-      const sesionActiva = localStorage.getItem('sesionActiva');
-      return !!(sesionActiva && sesionActiva !== 'false' && sesionActiva !== '0');
-    }
-
-    function getRole(user) {
-      return String(user?.rol || user?.role || user?.tipo || user?.type || user?.userType || '').toLowerCase();
-    }
-
-    function getDashboardUrl(role) {
-      // rescatista si contiene "rescat"
-      if (role.includes('rescat')) return 'dashboard-rescatista.html';
-      // por defecto adoptante
-      return 'dashboard-adoptante.html';
-    }
-
-    // Elementos del index
-    const navAuth = document.getElementById('navAuth') || document.querySelector('.nav-auth');
-    const userMenu = document.getElementById('userMenu');
-    const userNameEl = document.getElementById('userName');
-    const dashLink = document.getElementById('userDashboardLink');
-
-    const logged = isLoggedIn();
-    const user = getSessionUser();
-    const role = getRole(user);
-
-    if (logged) {
-      if (navAuth) navAuth.style.display = 'none';
-      if (userMenu) userMenu.style.display = 'block';
-
-      const name = user?.nombre || user?.name || user?.username || user?.email || 'Mi cuenta';
-      if (userNameEl) userNameEl.textContent = name;
-
-      // ✅ AQUÍ el cambio que pediste:
-      if (dashLink) dashLink.href = getDashboardUrl(role);
-    } else {
-      if (navAuth) navAuth.style.display = '';
-      if (userMenu) userMenu.style.display = 'none';
-    }
-  });
-</script>
 
   <script src="js/session-ui.js"></script>
-
 </body>
 </html>
+
 
 
 
