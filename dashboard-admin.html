@@ -2,86 +2,65 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin | The Loyal Nest</title>
+    <title>Panel de Administración | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-container { max-width: 1200px; margin: 40px auto; padding: 20px; }
+        .stat-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
+        .stat-icon { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+        .stat-num { font-size: 2rem; font-weight: bold; color: #e67e22; }
+    </style>
 </head>
-<body class="dashboard-page">
-<header class="header">
-    <nav class="nav">
-        <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-        <ul class="nav-links">
-            <li><a href="search-pets.html">Buscar</a></li>
-            <li><a href="adoption-requests.html">Solicitudes</a></li>
-            <li class="nav-user" style="display:none; gap:8px; align-items:center;">
-                <span class="nav-user-name"></span>
-                <button class="btn-outline" data-action="logout">Salir</button>
-            </li>
-        </ul>
-        <button id="notificationBell" class="btn-notification" aria-label="Notificaciones">
-            🔔 <span id="notificationCount" class="notification-badge">0</span>
-        </button>
-    </nav>
-</header>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">🐕 Admin Panel</a>
+            <button onclick="cerrarSesion()" style="color:red; border:none; background:none; cursor:pointer; font-weight:bold;">Salir</button>
+        </nav>
+    </header>
 
-<main class="main-content" style="margin-top:90px;">
-    <section class="panel">
-        <header class="panel__header">
-            <div>
-                <p class="muted">Panel</p>
-                <h1>Administración</h1>
+    <main class="admin-container">
+        <h1>👋 Bienvenido, Administrador</h1>
+        <p>Aquí tienes el control total del sistema.</p>
+
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
+            <div class="stat-card">
+                <span class="stat-icon">👥</span>
+                <div class="stat-num" id="countUsers">0</div>
+                <div>Usuarios Registrados</div>
             </div>
-        </header>
-        <div class="stats-grid">
-            <div class="stat-card"><span class="stat-number" data-stat="users">--</span><span class="stat-label">Usuarios</span></div>
-            <div class="stat-card"><span class="stat-number" data-stat="shelters">--</span><span class="stat-label">Refugios</span></div>
-            <div class="stat-card"><span class="stat-number" data-stat="reports">--</span><span class="stat-label">Reportes</span></div>
+            <div class="stat-card">
+                <span class="stat-icon">🐾</span>
+                <div class="stat-num" id="countPets">0</div>
+                <div>Mascotas en Sistema</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">📝</span>
+                <div class="stat-num">0</div>
+                <div>Reportes</div>
+            </div>
         </div>
-    </section>
+    </main>
 
-    <section class="panel" id="perfil">
-        <header class="panel__header"><h2>Mi perfil</h2></header>
-        <form class="form-grid" id="profileForm">
-            <label>Nombre<input name="name" required></label>
-            <label>Correo<input type="email" name="email" required></label>
-            <label>Foto<input type="file" name="avatar" accept="image/*"></label>
-            <button class="btn-primary" type="submit">Guardar cambios</button>
-        </form>
-    </section>
-
-    <section class="panel" id="reporte-admin">
-        <header class="panel__header">
-            <h2>Reportes del sistema</h2>
-            <div class="panel__actions">
-                <button id="exportCsv" class="btn-outline">Exportar CSV</button>
-            </div>
-        </header>
-        <canvas id="reportCanvas" height="200"></canvas>
-    </section>
-</main>
-
-<ul id="notificationList" class="notification-list"></ul>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="js/session.js"></script>
-<script src="js/notifications.js"></script>
-<script src="js/reports.js"></script>
-<script>
-    const user = requireAuth(['administrador']);
-    if (user) {
-        const form = document.getElementById('profileForm');
-        if (form) {
-            form.name.value = user.name || '';
-            form.email.value = user.email || '';
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const data = new FormData(form);
-                await apiFetch(`/profiles/${user.id}`, { method: 'PUT', body: data });
-                alert('Perfil actualizado');
-            });
+    <script>
+        // Verificar sesión al cargar
+        const session = JSON.parse(localStorage.getItem('userSession'));
+        if (!session || session.rol !== 'administrador') {
+            alert("⛔ Acceso denegado.");
+            window.location.href = "index.html";
         }
-    }
-</script>
+
+        // Cargar contadores
+        const users = JSON.parse(localStorage.getItem('usersDB')) || [];
+        const pets = JSON.parse(localStorage.getItem('petsDB')) || [];
+        document.getElementById('countUsers').innerText = users.length;
+        document.getElementById('countPets').innerText = pets.length;
+
+        function cerrarSesion() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
 </body>
 </html>
