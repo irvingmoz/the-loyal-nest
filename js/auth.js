@@ -1,6 +1,27 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     // =======================================================
+    // 0. FUNCIONES DE VALIDACIÓN AUXILIARES
+    // =======================================================
+    
+    // Función mejorada para validar CURP (Formato + Anti-Trampas)
+    function esCurpValida(curp) {
+        if (!curp) return true; // Si es opcional y está vacío, es válido
+
+        // 1. Longitud exacta
+        if (curp.length !== 18) return false;
+
+        // 2. Filtro Anti-Trampas: Evita caracteres repetidos (ej: AAAAA...)
+        if (/^(\w)\1+$/.test(curp)) {
+            return false;
+        }
+
+        // 3. Regex Oficial
+        const re = /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|BC|BS|CC|CL|CM|CS|CH|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/;
+        return curp.match(re);
+    }
+
+    // =======================================================
     // 1. LÓGICA DE LOGIN
     // =======================================================
     const loginForm = document.getElementById('loginForm');
@@ -22,8 +43,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 if (userFound.rol === 'rescatista') {
                     window.location.href = "dashboard-rescatista.html";
+                } else if (userFound.rol === 'administrador') {
+                    window.location.href = "dashboard-admin.html";
                 } else {
-                    window.location.href = "search-pets.html"; 
+                    window.location.href = "dashboard-adoptante.html"; 
                 }
             } else {
                 alert("Datos incorrectos o usuario no registrado.");
@@ -37,28 +60,25 @@ document.addEventListener("DOMContentLoaded", function() {
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         
-        // --- 🔴 NUEVO: SOLO LETRAS EN NOMBRES Y APELLIDOS ---
-        // Lista de campos que NO deben tener números
+        // --- 🔴 SOLO LETRAS EN NOMBRES Y APELLIDOS ---
         const camposTexto = ['nombre', 'apPaterno', 'apMaterno'];
         
         camposTexto.forEach(id => {
             const input = document.getElementById(id);
             if (input) {
                 input.addEventListener('input', function(e) {
-                    // Esta expresión regular dice: "Reemplaza todo lo que NO sea letra o espacio"
-                    // Incluye acentos (áéíóú) y la ñ
-                    e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '').slice(0, 20);
+                    // Reemplaza todo lo que NO sea letra o espacio
+                    e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '').slice(0, 30);
                 });
             }
         });
-        // --- FIN SOLO LETRAS ---
 
-        // --- LIMPIEZA DE CURP ---
+        // --- LIMPIEZA VISUAL DE CURP ---
         const inputCurp = document.getElementById('curp');
         if (inputCurp) {
             inputCurp.addEventListener('input', function(e) {
                 let valor = e.target.value.toUpperCase();
-                valor = valor.replace(/[^A-Z0-9]/g, '');
+                valor = valor.replace(/[^A-Z0-9]/g, ''); // Solo letras y números
                 if (valor.length > 18) {
                     valor = valor.slice(0, 18);
                 }
@@ -97,10 +117,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            // VALIDACIÓN CURP OPCIONAL
+            // VALIDACIÓN CURP ESTRICTA
             if (curpRaw.length > 0) { 
-                if (curpRaw.length !== 18) {
-                    alert("⚠️ Si ingresas la CURP, debe tener EXACTAMENTE 18 caracteres.");
+                if (!esCurpValida(curpRaw)) {
+                    alert("⚠️ CURP inválida.\n\nVerifica que:\n1. Tenga 18 caracteres.\n2. No sean caracteres repetidos.\n3. Cumpla con el formato oficial (4 letras iniciales, fecha, etc).");
                     return; 
                 }
             }
@@ -116,19 +136,25 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
+            // Obteniendo dirección de forma segura
+            let direccionCompleta = "";
+            const calle = document.getElementById('dirCalle');
+            if (calle) {
+                direccionCompleta = `${calle.value} ${document.getElementById('dirNumExt').value}, ${document.getElementById('dirColonia').value}, ${document.getElementById('dirAlcaldia').value}`;
+            } else if (document.getElementById('direccion')) {
+                direccionCompleta = document.getElementById('direccion').value;
+            }
+
             const newUser = {
                 nombre: document.getElementById('nombre').value,
                 apellido: document.getElementById('apPaterno').value,
-                // Agregamos apellido materno al objeto guardado si existe
                 apellidoMat: document.getElementById('apMaterno') ? document.getElementById('apMaterno').value : '',
                 email: emailLimpio,
                 password: password,
                 rol: rol,
-                curp: curpRaw,
+                curp: curpRaw, // Guardamos la CURP validada
                 edad: document.getElementById('edad').value,
-                direccion: {
-                    calle: document.getElementById('dirCalle') ? document.getElementById('dirCalle').value : document.getElementById('direccion').value,
-                },
+                direccion: direccionCompleta, // Dirección unificada
                 estatusLegal: rol === 'rescatista' ? document.getElementById('estatusLegal').value : "",
                 fechaRegistro: new Date().toLocaleDateString()
             };
@@ -149,6 +175,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const rutaActual = window.location.pathname;
 
     if (sesionActiva === 'true' && userSession) {
+        // Ocultar botones de Login/Registro
         const botonesMenu = document.querySelectorAll('a, button, .btn-outline'); 
         botonesMenu.forEach(btn => {
             const texto = (btn.innerText || btn.textContent).toLowerCase();
@@ -160,23 +187,29 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         const nav = document.querySelector('.nav');
-        const navContainer = document.getElementById('nav-auth-buttons') || nav;
+        // Buscar el contenedor de botones o usar el nav como fallback
+        const navContainer = document.getElementById('nav-auth-buttons') || document.querySelector('.nav-list') || nav;
 
         if (navContainer && !document.getElementById('btn-panel-auto')) {
+            // Crear Botón "Mi Panel"
             const btnPanel = document.createElement('a');
             btnPanel.id = 'btn-panel-auto';
-            btnPanel.innerText = "👤 Mi Panel";
+            btnPanel.innerText = `👤 ${userSession.nombre.split(' ')[0]}`; // Solo primer nombre
             btnPanel.className = "btn-outline";
             btnPanel.style.marginRight = "10px";
             btnPanel.style.borderColor = "#e67e22";
             btnPanel.style.color = "#e67e22";
+            btnPanel.style.textDecoration = "none";
             
             if (userSession.rol === 'rescatista') {
                 btnPanel.href = "dashboard-rescatista.html";
+            } else if (userSession.rol === 'administrador') {
+                btnPanel.href = "dashboard-admin.html";
             } else {
                 btnPanel.href = "dashboard-adoptante.html"; 
             }
 
+            // Crear Botón "Salir"
             const btnLogout = document.createElement('a'); 
             btnLogout.id = 'btn-logout-auto';
             btnLogout.innerText = "Salir";
@@ -184,28 +217,43 @@ document.addEventListener("DOMContentLoaded", function() {
             btnLogout.href = "#"; 
             btnLogout.style.color = "red";
             btnLogout.style.borderColor = "red";
+            btnLogout.style.textDecoration = "none";
             btnLogout.addEventListener('click', function(e) {
                 e.preventDefault(); 
                 cerrarSesion();
             });
 
-            navContainer.appendChild(btnPanel);
-            navContainer.appendChild(btnLogout);
+            // Insertar botones en el DOM
+            // Si es una lista (ul), creamos li. Si es div, metemos directo.
+            if (navContainer.tagName === 'UL') {
+                const liPanel = document.createElement('li');
+                liPanel.appendChild(btnPanel);
+                navContainer.appendChild(liPanel);
+
+                const liLogout = document.createElement('li');
+                liLogout.appendChild(btnLogout);
+                navContainer.appendChild(liLogout);
+            } else {
+                navContainer.appendChild(btnPanel);
+                navContainer.appendChild(btnLogout);
+            }
         }
 
     } else {
-        if (rutaActual.includes('shelters-map') || rutaActual.includes('education') || rutaActual.includes('dashboard')) {
-            if (!rutaActual.includes('auth.html')) {
-                alert("Debes iniciar sesión para ver esta sección.");
-                window.location.href = "auth.html";
-            }
+        // Protección de rutas privadas
+        if (rutaActual.includes('dashboard')) {
+            alert("Debes iniciar sesión para ver esta sección.");
+            window.location.href = "auth.html";
         }
     }
 });
 
+// Función global para cerrar sesión
 function cerrarSesion() {
-    localStorage.removeItem('sesionActiva');
-    localStorage.removeItem('usuario');
-    localStorage.removeItem('userSession');
-    window.location.href = "index.html";
+    if(confirm("¿Seguro que deseas cerrar sesión?")) {
+        localStorage.removeItem('sesionActiva');
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('userSession');
+        window.location.href = "index.html";
+    }
 }
