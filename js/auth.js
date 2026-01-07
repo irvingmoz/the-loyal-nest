@@ -89,6 +89,38 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
+            // --- INICIO DE VALIDACIÓN DE TEXTO ---
+        
+        const calle = document.getElementById('dirCalle').value.trim();
+        const colonia = document.getElementById('dirColonia').value.trim();
+
+        // 1. REGLA: Debe contener al menos una letra (Bloquea "12345")
+        const tieneLetras = /[a-zA-ZáéíóúñÑ]/;
+        
+        if (!tieneLetras.test(calle)) {
+            alert("📍 La calle no es válida: Debe contener letras, no solo números.");
+            return;
+        }
+        if (!tieneLetras.test(colonia)) {
+            alert("📍 La colonia no es válida: Debe contener letras.");
+            return;
+        }
+
+        // 2. REGLA: No puede tener letras repetidas 4 veces seguidas (Bloquea "qqqq", "aaaa")
+        const letrasRepetidas = /(.)\1{3,}/;
+
+        if (letrasRepetidas.test(calle) || letrasRepetidas.test(colonia)) {
+            alert("📍 La dirección parece falsa (letras repetidas excesivamente). Escribe una dirección real.");
+            return;
+        }
+
+        // 3. REGLA: Longitud mínima lógica
+        if (calle.length < 5) {
+            alert("📍 El nombre de la calle es muy corto.");
+            return;
+        }
+
+        // --- FIN DE VALIDACIÓN ---
             // 4. Guardar Usuario
             const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
             
