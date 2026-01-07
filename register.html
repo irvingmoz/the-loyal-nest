@@ -3,175 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro Completo | The Loyal Nest</title>
+    <title>Registro | The Loyal Nest</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilos base */
-        :root { --primary: #e67e22; --primary-hover: #d35400; --text-dark: #333; --bg-light: #f9f9f9; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-light); margin: 0; color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; }
-        
-        /* Navbar */
-        .header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1200px; margin: 0 auto; }
-        .nav-brand .logo { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); text-decoration: none; }
-        .nav-list { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
-        .nav-list li a { text-decoration: none; color: #555; font-weight: 500; transition: color 0.3s; }
-        .nav-list li a:hover { color: var(--primary); }
-        .btn-outline { padding: 8px 20px; border: 1px solid #ccc; border-radius: 50px; text-decoration: none; color: #333; font-weight: 500; transition: 0.3s; }
-        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-
-        /* Formulario Layout */
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; display: flex; flex-direction: column; min-height: 100vh; margin: 0; }
+        .header { background: #fff; padding: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .nav { display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto; }
+        .logo { font-weight: bold; font-size: 1.5rem; text-decoration: none; color: #333; }
         .auth-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
-        .auth-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 500px; }
-        .auth-card h1 { color: var(--primary); margin-bottom: 10px; font-size: 1.8rem; text-align: center; }
-        
-        /* Grid del formulario */
-        .form-row { display: flex; gap: 15px; } 
-        .form-group { margin-bottom: 15px; text-align: left; flex: 1; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: #444; }
-        
-        /* Estilo especial para etiquetas pequeñas dentro de la dirección */
-        .label-sm { font-size: 0.75rem; color: #666; margin-bottom: 4px; display: block; font-weight: 600; }
-        
-        .form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; box-sizing: border-box; font-family: inherit; }
-        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1); }
-        
-        .btn-full { width: 100%; padding: 14px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s; margin-top: 10px; }
-        .btn-full:hover { background-color: var(--primary-hover); }
-        
-        /* Link footer */
-        .auth-footer { text-align:center; margin-top:20px; font-size:0.9rem; color: #666; }
-        .auth-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .auth-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        .form-group { margin-bottom: 15px; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-full { width: 100%; padding: 12px; background: #e67e22; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .form-row { display: flex; gap: 10px; }
     </style>
 </head>
 <body>
     <header class="header">
         <nav class="nav">
-            <div class="nav-brand"><a href="index.html" class="logo">🐕 The Loyal Nest</a></div>
-            <ul class="nav-list">
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="search-pets.html">Adoptar</a></li>
-                <li><a href="education.html">Educación</a></li>
-            </ul>
-            <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
+            <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+            <a href="index.html" style="text-decoration:none; color:#555;">Volver al Inicio</a>
         </nav>
     </header>
 
     <main class="auth-container">
         <div class="auth-card">
-            <h1>Crea tu cuenta</h1>
-            <p style="text-align:center; color:#666; margin-bottom:20px;">Únete para adoptar o rescatar mascotas.</p>
+            <h1 style="text-align:center; color:#e67e22;">Crear Cuenta</h1>
             
             <form id="registerForm">
                 <div class="form-group">
                     <label>Nombre(s)</label>
-                    <input type="text" id="nombre" class="form-control" required maxlength="30" placeholder="Ej. Ana María">
+                    <input type="text" id="nombre" class="form-control" required placeholder="Ej. Ana">
                 </div>
                 
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Apellido Paterno</label>
-                        <input type="text" id="apPaterno" class="form-control" required maxlength="30" placeholder="Ej. López">
+                    <div class="form-group" style="flex:1">
+                        <label>Apellido P.</label>
+                        <input type="text" id="apPaterno" class="form-control" required>
                     </div>
-                    <div class="form-group">
-                        <label>Apellido Materno</label>
-                        <input type="text" id="apMaterno" class="form-control" required maxlength="30" placeholder="Ej. García">
+                    <div class="form-group" style="flex:1">
+                        <label>Apellido M.</label>
+                        <input type="text" id="apMaterno" class="form-control" required>
                     </div>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group">
+                    <div class="form-group" style="flex:1">
                         <label>Edad</label>
-                        <input 
-                          type="number" 
-                          id="edad" 
-                          class="form-control" 
-                          min="18" 
-                          max="99" 
-                          step="1" 
-                          inputmode="numeric" 
-                          required 
-                          placeholder="18+" 
-                          oninput="this.value = this.value.replace(/\D/g,'').slice(0,2);"
-                        >
+                        <input type="number" id="edad" class="form-control" required min="18" max="99">
                     </div>
-                    <div class="form-group">
-                        <label>CURP <span style="font-weight:400; color:#999;">(Opcional)</span></label>
-                        <input type="text" id="curp" class="form-control" placeholder="18 caracteres" maxlength="18" style="text-transform: uppercase;">
+                    <div class="form-group" style="flex:1">
+                        <label>CURP (Opcional)</label>
+                        <input type="text" id="curp" class="form-control" maxlength="18" placeholder="18 caracteres">
                     </div>
                 </div>
 
-                <label style="font-weight:600; color:#444; margin-bottom:5px; display:block;">Dirección Completa</label>
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 15px;">
-                    
-                    <div class="form-row" style="margin-bottom: 10px;">
-                        <div class="form-group" style="flex: 2;">
-                            <span class="label-sm">Calle / Avenida</span>
-                            <input type="text" id="dirCalle" class="form-control" required maxlength="30" >
-                        </div>
-                        <div class="form-group" style="flex: 1;">
-                            <span class="label-sm">No. Ext</span>
-                            <input type="text" id="dirNumExt" class="form-control" required maxlength="30">
-                        </div>
-                        <div class="form-group" style="flex: 1;">
-                            <span class="label-sm">No. Int <span style="font-weight:400; color:#999;">(Opcional)</span></span>
-                            <input type="text" id="dirNumInt" class="form-control">
-                        </div>
+                <div class="form-group">
+                    <label>Dirección (Calle y Número)</label>
+                    <input type="text" id="dirCalle" class="form-control" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex:1">
+                        <label>Colonia</label>
+                        <input type="text" id="dirColonia" class="form-control" required>
                     </div>
-
-                    <div class="form-row" style="margin-bottom: 10px;">
-                        <div class="form-group" style="width: 100%;">
-                            <span class="label-sm">Colonia</span>
-                            <input type="text" id="dirColonia" class="form-control" required maxlength="20">
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom:0;">
-                        <span class="label-sm">Alcaldía / Municipio</span>
+                    <div class="form-group" style="flex:1">
+                        <label>Alcaldía</label>
                         <select id="dirAlcaldia" class="form-control">
-                            <option value="">Seleccionar...</option>
-                            <option value="Iztapalapa">Iztapalapa</option>
-                            <option value="Iztacalco">Iztacalco</option>
-                            <option value="Coyoacán">Coyoacán</option>
-                            <option value="Tláhuac">Tláhuac</option>
-                            <option value="Otra">Otra</option>
+                            <option>Iztapalapa</option>
+                            <option>Coyoacán</option>
+                            <option>Otra</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" id="registerEmail" class="form-control" required placeholder="nombre@ejemplo.com" maxlength="50">
-                </div>
-                
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="registerPassword" class="form-control" required placeholder="Mínimo 8 caracteres" maxlength="20">
+                    <input type="email" id="registerEmail" class="form-control" required>
                 </div>
 
                 <div class="form-group">
-                    <label>¿Qué deseas hacer?</label>
+                    <label>Contraseña</label>
+                    <input type="password" id="registerPassword" class="form-control" required minlength="8">
+                </div>
+
+                <div class="form-group">
+                    <label>Rol de Usuario</label>
                     <select id="role" class="form-control">
-                        <option value="adoptante">Quiero Adoptar (Adoptante)</option>
-                        <option value="rescatista">Dar en Adopción (Rescatista/Refugio)</option>
-                        <option value="administrador">Soy Administrador (Acceso Total)</option>
+                        <option value="adoptante">Quiero Adoptar</option>
+                        <option value="rescatista">Soy Rescatista / Refugio</option>
+                        <option value="administrador">Soy Administrador (Demo)</option>
                     </select>
                 </div>
 
-                <div id="camposRescatista" style="display: none; background: #fff8f0; padding: 10px; border-radius: 8px; border: 1px dashed #e67e22;">
-                    <div class="form-group" style="margin-bottom:0;">
-                        <label style="color: #e67e22;">Estatus Legal / Nombre del Refugio</label>
-                        <input type="text" id="estatusLegal" class="form-control" placeholder="Ej. Asociación Civil Huellitas">
-                    </div>
+                <div id="camposRescatista" style="display:none; background:#fff3e0; padding:10px; border-radius:5px; margin-bottom:15px;">
+                    <label>Nombre del Refugio</label>
+                    <input type="text" id="estatusLegal" class="form-control">
                 </div>
 
-                <button type="submit" class="btn-full">Crear cuenta</button>
+                <button type="submit" class="btn-full">Registrarse</button>
             </form>
-
-            <div class="auth-footer">
-                ¿Ya tienes cuenta? <a href="auth.html">Inicia sesión aquí</a>
-            </div>
+            <p style="text-align:center; margin-top:15px;">¿Ya tienes cuenta? <a href="auth.html" style="color:#e67e22;">Inicia sesión</a></p>
         </div>
     </main>
 
