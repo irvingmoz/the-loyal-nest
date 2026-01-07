@@ -87,6 +87,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 // D. No exceso de consonantes seguidas (evita "asdfg")
                 const excesoConsonantes = /[bcdfghjklmnñpqrstvwxyz]{4,}/i;
                 if (excesoConsonantes.test(texto)) return `El ${campo} parece un error de teclado (muchas consonantes).`;
+                // E. Anti-Flojera (Bloquea si TODA la palabra es la misma letra repetida)
+                // Bloquea: "aa", "bb", "zz", "aaaa"
+                // Permite: "Aaron" (porque tiene 'r'), "Isaac" (porque tiene 's')
+                if (/^(\w)\1+$/.test(texto)) {
+                    return `El ${campo} no es válido (no pongas la misma letra repetida).`;
+                }
 
                 return null; // Pasó todas las pruebas
             }
