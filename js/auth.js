@@ -89,38 +89,48 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            // --- INICIO DE VALIDACIÓN DE TEXTO ---
+// --- BLOQUE DE VALIDACIÓN ANTI-RANDOM (NUEVO) ---
         
-        const calle = document.getElementById('dirCalle').value.trim();
-        const colonia = document.getElementById('dirColonia').value.trim();
+        const calleCheck = document.getElementById('dirCalle').value.trim();
+        const coloniaCheck = document.getElementById('dirColonia').value.trim();
 
-        // 1. REGLA: Debe contener al menos una letra (Bloquea "12345")
-        const tieneLetras = /[a-zA-ZáéíóúñÑ]/;
+        // 1. Filtro: Debe tener vocales (a,e,i,o,u)
+        // Nadie vive en "bcdfgh"
+        const tieneVocales = /[aeiouáéíóú]/i; 
         
-        if (!tieneLetras.test(calle)) {
-            alert("📍 La calle no es válida: Debe contener letras, no solo números.");
+        if (!tieneVocales.test(calleCheck)) {
+            alert("📍 La calle parece falsa: No tiene vocales.");
             return;
         }
-        if (!tieneLetras.test(colonia)) {
-            alert("📍 La colonia no es válida: Debe contener letras.");
-            return;
-        }
-
-        // 2. REGLA: No puede tener letras repetidas 4 veces seguidas (Bloquea "qqqq", "aaaa")
-        const letrasRepetidas = /(.)\1{3,}/;
-
-        if (letrasRepetidas.test(calle) || letrasRepetidas.test(colonia)) {
-            alert("📍 La dirección parece falsa (letras repetidas excesivamente). Escribe una dirección real.");
+        if (!tieneVocales.test(coloniaCheck)) {
+            alert("📍 La colonia parece falsa: No tiene vocales.");
             return;
         }
 
-        // 3. REGLA: Longitud mínima lógica
-        if (calle.length < 5) {
+        // 2. Filtro: Exceso de consonantes seguidas
+        // Bloquea cosas como "asdfgh" o "qwrtyp" (5 consonantes juntas)
+        const excesoConsonantes = /[bcdfghjklmnñpqrstvwxyz]{5,}/i;
+
+        if (excesoConsonantes.test(calleCheck)) {
+            alert("📍 La calle no se ve real (demasiadas consonantes seguidas).");
+            return;
+        }
+
+        // 3. Filtro: Longitud mínima lógica
+        if (calleCheck.length < 5) {
             alert("📍 El nombre de la calle es muy corto.");
             return;
         }
 
-        // --- FIN DE VALIDACIÓN ---
+        // 4. Filtro: Letras repetidas (Anti "aaaaa")
+        const letrasRepetidas = /(.)\1{3,}/;
+        if (letrasRepetidas.test(calleCheck)) {
+            alert("📍 No escribas letras repetidas (ej. aaaa).");
+            return;
+        }
+
+        // --- FIN DEL BLOQUE ---
+            
             // 4. Guardar Usuario
             const usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
             
