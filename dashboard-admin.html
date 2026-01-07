@@ -1,66 +1,432 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Panel de Administración | The Loyal Nest</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        .admin-container { max-width: 1200px; margin: 40px auto; padding: 20px; }
-        .stat-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
-        .stat-icon { font-size: 2.5rem; display: block; margin-bottom: 10px; }
-        .stat-num { font-size: 2rem; font-weight: bold; color: #e67e22; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel de Administración | The Loyal Nest</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .admin-container { max-width: 1200px; margin: 110px auto 40px; padding: 20px; }
+    .admin-title { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 10px; }
+    .admin-title h1 { margin: 0; }
+
+    .stats-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin: 22px 0 26px; }
+    .stat-card { background: #fff; padding: 18px; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); text-align:center; }
+    .stat-icon { font-size: 1.8rem; display:block; margin-bottom: 6px; }
+    .stat-num { font-size: 1.8rem; font-weight: 800; color: #e67e22; line-height: 1.1; }
+    .stat-label { color:#555; margin-top: 4px; font-weight: 600; font-size: 0.95rem; }
+
+    .section { background:#fff; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); padding: 18px; margin-bottom: 18px; }
+    .section h2 { margin: 0 0 12px; font-size: 1.2rem; }
+    .section p { margin: 0 0 14px; color:#555; }
+
+    .grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 980px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } }
+    @media (max-width: 520px) { .stats-grid { grid-template-columns: 1fr; } }
+
+    .form-row { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .form-row.one { grid-template-columns: 1fr; }
+    .input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 10px; outline: none; }
+    textarea { min-height: 90px; resize: vertical; }
+    .form-actions { display:flex; gap: 10px; align-items:center; }
+    .btn { padding: 10px 14px; border-radius: 10px; border: none; cursor:pointer; font-weight: 700; }
+    .btn-primary2 { background: #e67e22; color: #fff; }
+    .btn-outline2 { background: #fff; border: 1px solid #e67e22; color: #e67e22; }
+    .btn-danger2 { background: #ef4444; color: #fff; }
+    .btn-small { padding: 7px 10px; border-radius: 10px; font-size: 0.9rem; }
+
+    table { width:100%; border-collapse: collapse; }
+    th, td { padding: 10px; border-bottom: 1px solid #eee; text-align:left; vertical-align: middle; }
+    th { font-size: 0.9rem; color:#444; }
+    .pet-thumb { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; background:#f3f4f6; border:1px solid #eee; }
+    .badge { display:inline-block; padding: 6px 10px; border-radius: 999px; font-weight: 700; font-size: 0.85rem; background:#f3f4f6; color:#333; }
+    .badge.pending { background:#fff7ed; color:#9a3412; border:1px solid #fed7aa; }
+    .badge.done { background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; }
+    .badge.rejected { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
+
+    .muted { color:#6b7280; font-size: 0.95rem; }
+    .header .nav { display:flex; justify-content: space-between; align-items:center; }
+    .admin-actions-top { display:flex; gap:10px; align-items:center; }
+  </style>
 </head>
+
 <body>
-    <header class="header">
-        <nav class="nav">
-            <a href="index.html" class="logo">🐕 Admin Panel</a>
-            <button onclick="cerrarSesion()" style="color:red; border:none; background:none; cursor:pointer; font-weight:bold;">Salir</button>
-        </nav>
-    </header>
+  <header class="header">
+    <nav class="nav" style="max-width: 1200px; margin: 0 auto; padding: 1rem 2rem;">
+      <a href="index.html" class="logo">🐕 Admin Panel</a>
 
-    <main class="admin-container">
-        <h1>👋 Bienvenido, Administrador</h1>
-        <p>Aquí tienes el control total del sistema.</p>
+      <div class="admin-actions-top">
+        <button class="btn btn-outline2 btn-small" onclick="irInicio()">Ir al inicio</button>
+        <button class="btn btn-danger2 btn-small" onclick="salirAdmin()">Salir</button>
+      </div>
+    </nav>
+  </header>
 
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
-            <div class="stat-card">
-                <span class="stat-icon">👥</span>
-                <div class="stat-num" id="countUsers">0</div>
-                <div>Usuarios Registrados</div>
+  <main class="admin-container">
+    <div class="admin-title">
+      <div>
+        <h1>Panel de administración</h1>
+        <div class="muted">Acceso rápido (demo). Aquí puedes agregar/eliminar mascotas y gestionar solicitudes.</div>
+      </div>
+    </div>
+
+    <section class="stats-grid" aria-label="Estadísticas">
+      <div class="stat-card">
+        <span class="stat-icon">👥</span>
+        <div class="stat-num" id="countUsers">0</div>
+        <div class="stat-label">Usuarios</div>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">🐾</span>
+        <div class="stat-num" id="countPets">0</div>
+        <div class="stat-label">Mascotas registradas</div>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">⏳</span>
+        <div class="stat-num" id="countPending">0</div>
+        <div class="stat-label">Solicitudes pendientes</div>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">✅</span>
+        <div class="stat-num" id="countNotPending">0</div>
+        <div class="stat-label">Solicitudes atendidas / rechazadas</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>🐾 Gestión de mascotas</h2>
+      <p>Estas son las mascotas guardadas en <code>localStorage["petsDB"]</code> (mascotas registradas por el sistema).</p>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="margin:0 0 10px;">Agregar mascota</h3>
+          <form id="petForm">
+            <div class="form-row">
+              <input class="input" id="petNombre" placeholder="Nombre (ej. Luna)" required />
+              <select id="petTipo" required>
+                <option value="">Tipo</option>
+                <option value="Perro">Perro</option>
+                <option value="Gato">Gato</option>
+                <option value="Otro">Otro</option>
+              </select>
             </div>
-            <div class="stat-card">
-                <span class="stat-icon">🐾</span>
-                <div class="stat-num" id="countPets">0</div>
-                <div>Mascotas en Sistema</div>
+
+            <div class="form-row">
+              <input class="input" id="petEdad" type="number" step="0.1" min="0" placeholder="Edad (años)" required />
+              <select id="petTamano" required>
+                <option value="">Tamaño</option>
+                <option value="Pequeño">Pequeño</option>
+                <option value="Mediano">Mediano</option>
+                <option value="Grande">Grande</option>
+              </select>
             </div>
-            <div class="stat-card">
-                <span class="stat-icon">📝</span>
-                <div class="stat-num">0</div>
-                <div>Reportes</div>
+
+            <div class="form-row one">
+              <input class="input" id="petUbicacion" placeholder="Ubicación (ej. Iztapalapa)" required />
             </div>
+
+            <div class="form-row one">
+              <input class="input" id="petFoto" placeholder="URL de foto (opcional)" />
+            </div>
+
+            <div class="form-row one">
+              <textarea id="petDesc" placeholder="Descripción (opcional)"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary2">Agregar</button>
+              <button type="button" class="btn btn-outline2" onclick="limpiarFormulario()">Limpiar</button>
+            </div>
+          </form>
         </div>
-    </main>
 
-    <script>
-        // Verificar sesión al cargar
-        const session = JSON.parse(localStorage.getItem('userSession'));
-        if (!session || session.rol !== 'administrador') {
-            alert("⛔ Acceso denegado.");
-            window.location.href = "index.html";
-        }
+        <div>
+          <h3 style="margin:0 0 10px;">Listado (con eliminar)</h3>
+          <div style="overflow:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Foto</th>
+                  <th>Nombre</th>
+                  <th>Tipo</th>
+                  <th>Edad</th>
+                  <th>Ubicación</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="petsTableBody"></tbody>
+            </table>
+          </div>
+          <div id="petsEmpty" class="muted" style="margin-top:10px; display:none;">No hay mascotas registradas aún.</div>
+        </div>
+      </div>
+    </section>
 
-        // Cargar contadores
-        const users = JSON.parse(localStorage.getItem('usersDB')) || [];
-        const pets = JSON.parse(localStorage.getItem('petsDB')) || [];
-        document.getElementById('countUsers').innerText = users.length;
-        document.getElementById('countPets').innerText = pets.length;
+    <section class="section">
+      <h2>📝 Solicitudes de adopción</h2>
+      <p>Se guardan en <code>localStorage["solicitudesDB"]</code>. Aquí puedes ver pendientes y marcarlas como atendidas o rechazarlas.</p>
 
-        function cerrarSesion() {
-            localStorage.clear();
-            window.location.href = "index.html";
-        }
-    </script>
+      <div style="overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Mascota</th>
+              <th>Adoptante</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="requestsTableBody"></tbody>
+        </table>
+      </div>
+
+      <div id="reqEmpty" class="muted" style="margin-top:10px; display:none;">No hay solicitudes registradas aún.</div>
+    </section>
+  </main>
+
+  <script>
+    // =========================================================
+    // 1) GUARD DE ADMIN (rápido para demo - NO es seguridad real)
+    // =========================================================
+    (function guardAdmin() {
+      if (sessionStorage.getItem('isAdmin') !== '1') {
+        alert('⛔ Acceso denegado. Entra desde el botón Admin con contraseña.');
+        window.location.href = 'index.html';
+      }
+    })();
+
+    function irInicio() {
+      window.location.href = 'index.html';
+    }
+
+    function salirAdmin() {
+      sessionStorage.removeItem('isAdmin');
+      window.location.href = 'index.html';
+    }
+
+    // =========================================================
+    // 2) Helpers LocalStorage
+    // =========================================================
+    const PETS_KEY = 'petsDB';
+    const USERS_KEY = 'usersDB';
+    const REQ_KEY  = 'solicitudesDB';
+
+    const readLS = (key, fallback) => {
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+      catch { return fallback; }
+    };
+    const writeLS = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+
+    const makeId = () => (crypto?.randomUUID?.() || String(Date.now() + Math.random()));
+
+    // =========================================================
+    // 3) Normalización (asegurar id en mascotas / solicitudes)
+    // =========================================================
+    function ensurePetIds() {
+      const pets = readLS(PETS_KEY, []);
+      let changed = false;
+      pets.forEach(p => {
+        if (!p.id) { p.id = makeId(); changed = true; }
+      });
+      if (changed) writeLS(PETS_KEY, pets);
+    }
+
+    function ensureRequestIds() {
+      const reqs = readLS(REQ_KEY, []);
+      let changed = false;
+      reqs.forEach(r => {
+        if (!r.id) { r.id = makeId(); changed = true; }
+      });
+      if (changed) writeLS(REQ_KEY, reqs);
+    }
+
+    // =========================================================
+    // 4) Stats
+    // =========================================================
+    function refreshStats() {
+      const users = readLS(USERS_KEY, []);
+      const pets  = readLS(PETS_KEY, []);
+      const reqs  = readLS(REQ_KEY, []);
+
+      const pending = reqs.filter(r => String(r.estado || '').toLowerCase() === 'en revisión').length;
+      const notPending = reqs.length - pending;
+
+      document.getElementById('countUsers').textContent = users.length;
+      document.getElementById('countPets').textContent = pets.length;
+      document.getElementById('countPending').textContent = pending;
+      document.getElementById('countNotPending').textContent = notPending;
+    }
+
+    // =========================================================
+    // 5) Mascotas: render + delete + add
+    // =========================================================
+    function renderPets() {
+      const pets = readLS(PETS_KEY, []);
+      const tbody = document.getElementById('petsTableBody');
+      const empty = document.getElementById('petsEmpty');
+
+      tbody.innerHTML = '';
+
+      if (!pets.length) {
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      pets.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><img class="pet-thumb" src="${p.foto || 'https://via.placeholder.com/60'}" alt="${(p.nombre||'Mascota')}" /></td>
+          <td><strong>${p.nombre || ''}</strong></td>
+          <td>${p.tipo || ''}</td>
+          <td>${p.edad ?? ''}</td>
+          <td>${p.ubicacion || ''}</td>
+          <td>
+            <button class="btn btn-danger2 btn-small" data-del="${p.id}">Eliminar</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll('button[data-del]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-del');
+          if (!confirm('¿Seguro que quieres eliminar esta mascota?')) return;
+
+          let pets = readLS(PETS_KEY, []);
+          const petToDelete = pets.find(p => String(p.id) === String(id));
+          const petName = petToDelete?.nombre ? String(petToDelete.nombre) : null;
+
+          pets = pets.filter(p => String(p.id) !== String(id));
+          writeLS(PETS_KEY, pets);
+
+          // Eliminar solicitudes asociadas a la mascota (por nombre)
+          if (petName) {
+            let reqs = readLS(REQ_KEY, []);
+            reqs = reqs.filter(r => String(r.mascota || '') !== petName);
+            writeLS(REQ_KEY, reqs);
+          }
+
+          renderPets();
+          renderRequests();
+          refreshStats();
+        });
+      });
+    }
+
+    function limpiarFormulario() {
+      document.getElementById('petForm').reset();
+    }
+
+    document.getElementById('petForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const nueva = {
+        id: makeId(),
+        nombre: document.getElementById('petNombre').value.trim(),
+        tipo: document.getElementById('petTipo').value,
+        edad: Number(document.getElementById('petEdad').value),
+        tamano: document.getElementById('petTamano').value,
+        ubicacion: document.getElementById('petUbicacion').value.trim(),
+        foto: document.getElementById('petFoto').value.trim(),
+        desc: document.getElementById('petDesc').value.trim(),
+        creador: 'admin',
+        estado: 'Disponible',
+        fechaRegistro: new Date().toLocaleDateString()
+      };
+
+      const pets = readLS(PETS_KEY, []);
+      pets.push(nueva);
+      writeLS(PETS_KEY, pets);
+
+      limpiarFormulario();
+      renderPets();
+      refreshStats();
+      alert('✅ Mascota agregada.');
+    });
+
+    // =========================================================
+    // 6) Solicitudes: render + update status + delete
+    // =========================================================
+    function badgeClass(estado) {
+      const s = String(estado || '').toLowerCase();
+      if (s === 'en revisión') return 'badge pending';
+      if (s === 'atendida') return 'badge done';
+      if (s === 'rechazada') return 'badge rejected';
+      return 'badge';
+    }
+
+    function renderRequests() {
+      const reqs = readLS(REQ_KEY, []);
+      const tbody = document.getElementById('requestsTableBody');
+      const empty = document.getElementById('reqEmpty');
+
+      tbody.innerHTML = '';
+
+      if (!reqs.length) {
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      reqs.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${r.mascota || ''}</strong></td>
+          <td>${r.nombreAdoptante || r.idAdoptante || ''}</td>
+          <td>${r.fecha || ''}</td>
+          <td><span class="${badgeClass(r.estado)}">${r.estado || ''}</span></td>
+          <td style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-primary2 btn-small" data-act="done" data-id="${r.id}">Marcar atendida</button>
+            <button class="btn btn-outline2 btn-small" data-act="reject" data-id="${r.id}">Rechazar</button>
+            <button class="btn btn-danger2 btn-small" data-act="delete" data-id="${r.id}">Eliminar</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll('button[data-act]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          const act = btn.getAttribute('data-act');
+
+          let reqs = readLS(REQ_KEY, []);
+          const i = reqs.findIndex(x => String(x.id) === String(id));
+          if (i === -1) return;
+
+          if (act === 'delete') {
+            if (!confirm('¿Eliminar esta solicitud?')) return;
+            reqs = reqs.filter(x => String(x.id) !== String(id));
+          } else if (act === 'done') {
+            reqs[i].estado = 'Atendida';
+          } else if (act === 'reject') {
+            reqs[i].estado = 'Rechazada';
+          }
+
+          writeLS(REQ_KEY, reqs);
+          renderRequests();
+          refreshStats();
+        });
+      });
+    }
+
+    // =========================================================
+    // 7) Init
+    // =========================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      ensurePetIds();
+      ensureRequestIds();
+      refreshStats();
+      renderPets();
+      renderRequests();
+    });
+  </script>
 </body>
 </html>
