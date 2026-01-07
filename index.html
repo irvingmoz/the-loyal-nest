@@ -1,267 +1,318 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Loyal Nest</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Loyal Nest</title>
 
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Fix de estilos SOLO para este index (sin romper otras páginas) -->
+  <style>
+    /* 1) Subtítulo visible (tu style.css lo deja blanco) */
+    .hero .hero-subtitle { color: var(--gray); }
+
+    /* 2) Imagen del hero bonita y consistente */
+    .hero-img {
+      width: 100%;
+      height: 460px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      display: block;
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-img { height: 280px; }
+    }
+
+    /* 3) How it works (no existía CSS para tus clases) */
+    .how-it-works { padding: 4rem 0; }
+    .how-it-works h2 { text-align: center; font-size: 2.5rem; margin-bottom: 2rem; }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .step-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      text-align: center;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .step-icon { font-size: 2.6rem; margin-bottom: 1rem; }
+
+    /* 4) Encabezado y CTA de secciones */
+    .section-header { text-align: center; margin-bottom: 2rem; }
+    .section-cta { text-align: center; margin-top: 2rem; }
+
+    /* 5) CTA final (no existía CSS para tus clases) */
+    .cta-section { background: var(--gray-light); padding: 4rem 0; }
+    .cta-content { text-align: center; max-width: 850px; margin: 0 auto; }
+    .cta-content .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.25rem;
+    }
+
+    /* Admin discretito al final */
+    .admin-hidden {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      opacity: 0.55;
+      text-align: center;
+    }
+    .admin-hidden a { color: #9ca3af; text-decoration: none; }
+    .admin-hidden a:hover { opacity: 0.9; text-decoration: underline; }
+  </style>
 </head>
+
 <body>
-    <!-- Header/Navbar -->
-<header class="header">
-        <nav class="nav">
-            <div class="nav-brand">
-                <a href="index.html" class="logo">🐕 The Loyal Nest</a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html" class="active">Inicio</a></li>
-                <li><a href="search-pets.html">Buscar Mascotas</a></li>
-                <li><a href="shelters-map.html">Refugios</a></li>
-                <li><a href="education.html">📚 Educación</a></li>
+  <!-- Header/Navbar -->
+  <header class="header">
+    <nav class="nav">
+      <div class="nav-brand">
+        <a href="index.html" class="logo">🐕 The Loyal Nest</a>
+      </div>
 
-                <li class="nav-auth">
-                    <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
-                    <a href="register.html" class="btn-primary">Registrarse</a>
-                </li>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Inicio</a></li>
+        <li><a href="search-pets.html">Buscar Mascotas</a></li>
+        <li><a href="shelters-map.html">Refugios</a></li>
+        <li><a href="education.html">📚 Educación</a></li>
 
-                <li id="userMenu" class="nav-user" style="display: none;">
-                    <span class="user-info">
-                        <strong id="userName">Mi cuenta</strong>
-                    </span>
-                    <div class="user-menu">
-                        <a href="#" id="userDashboardLink" class="menu-item">Ir a mi panel</a>
-                        <button type="button" class="menu-item logout" onclick="cerrarSesion()">Cerrar sesión</button>
-                    </div>
-                </li>
-            </ul>
-            <div class="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
-    </header>
+        <li class="nav-auth">
+          <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
+          <a href="register.html" class="btn-primary">Registrarse</a>
+        </li>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Cambia Vidas, Adopta Amor</h1>
-            <p class="hero-subtitle">
-                Conectamos mascotas necesitadas con hogares extraordinarios.
-                Cada adopción es una segunda oportunidad llena de amor incondicional.
-            </p>
+        <li id="userMenu" class="nav-user" style="display: none;">
+          <span class="user-info">
+            <strong id="userName">Mi cuenta</strong>
+          </span>
+          <div class="user-menu">
+            <a href="#" id="userDashboardLink" class="menu-item">Ir a mi panel</a>
+            <button type="button" class="menu-item logout" onclick="cerrarSesion()">Cerrar sesión</button>
+          </div>
+        </li>
+      </ul>
 
-            <div class="cta-buttons">
-                <a href="search-pets.html" class="btn-hero btn-hero-primary"
-                   style="background: var(--white); color: black; font-weight: bold;">
-                    🐾 Comenzar
-                </a>
-                <a href="#how-it-works" class="btn-hero btn-hero-secondary"
-                   style="background: var(--primary); color: white; font-weight: bold;">
-                    📖 Conocer Más
-                </a>
-            </div>
+      <div class="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
 
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Cambia Vidas, Adopta Amor</h1>
+
+      <p class="hero-subtitle">
+        Conectamos mascotas necesitadas con hogares extraordinarios.
+        Cada adopción es una segunda oportunidad llena de amor incondicional.
+      </p>
+
+      <!-- Botones usando clases que SÍ existen en tu style.css -->
+      <div class="hero-actions">
+        <a href="search-pets.html" class="btn-primary btn-large">🐾 Comenzar</a>
+        <a href="#how-it-works" class="btn-outline btn-large">📖 Conocer Más</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <img
+        src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=600&fit=crop"
+        alt="Mascotas felices"
+        class="hero-img"
+      />
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">1,200+</div>
+          <div class="stat-label">Mascotas Rescatadas</div>
         </div>
-        <div class="hero-image">
-            <div class="image-placeholder">
-                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=600&fit=crop"
-                     alt="Mascotas felices"
-                     class="hero-img">
-            </div>
+        <div class="stat-item">
+          <div class="stat-number">850+</div>
+          <div class="stat-label">Adopciones Exitosas</div>
         </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">1,200+</div>
-                    <div class="stat-label">Mascotas Rescatadas</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">850+</div>
-                    <div class="stat-label">Adopciones Exitosas</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">95%</div>
-                    <div class="stat-label">Satisfacción</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Soporte</div>
-                </div>
-            </div>
+        <div class="stat-item">
+          <div class="stat-number">95%</div>
+          <div class="stat-label">Satisfacción</div>
         </div>
-    </section>
-
-    <!-- How It Works -->
-    <section id="how-it-works" class="how-it-works">
-        <div class="container">
-            <h2>¿Cómo Funciona?</h2>
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-icon">🔍</div>
-                    <h3>Busca</h3>
-                    <p>Explora nuestro catálogo de mascotas disponibles para adopción.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-icon">💝</div>
-                    <h3>Conecta</h3>
-                    <p>Contacta con el refugio o rescatista para conocer más sobre tu futura mascota.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-icon">🏠</div>
-                    <h3>Adopta</h3>
-                    <p>Completa el proceso de adopción y dale un hogar lleno de amor.</p>
-                </div>
-            </div>
+        <div class="stat-item">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Soporte</div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Featured Pets -->
-    <section class="featured-pets">
-        <div class="container">
-            <div class="section-header">
-                <h2>Mascotas Destacadas</h2>
-                <p>Conoce algunos de nuestros amigos que buscan hogar</p>
-            </div>
+  <!-- How It Works -->
+  <section id="how-it-works" class="how-it-works">
+    <div class="container">
+      <h2>¿Cómo Funciona?</h2>
 
-            <div class="pets-grid" id="featuredPets">
-                <!-- Pet cards will be generated by JS -->
-            </div>
-
-            <div class="section-cta">
-                <a href="search-pets.html" class="btn-primary">
-                    Ver Todas las Mascotas 🐾
-                </a>
-            </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-icon">🔍</div>
+          <h3>Busca</h3>
+          <p>Explora nuestro catálogo de mascotas disponibles para adopción.</p>
         </div>
-    </section>
 
-    <!-- Call to Action -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>¿Eres un Rescatista?</h2>
-                <p>Únete a nuestra comunidad y ayuda a más mascotas a encontrar un hogar.</p>
-                <div class="cta-buttons">
-                    <a href="register.html" class="btn-primary">Registrarse como Rescatista</a>
-                    <a href="education.html" class="btn-outline">Recursos Educativos</a>
-                </div>
-            </div>
+        <div class="step-card">
+          <div class="step-icon">💝</div>
+          <h3>Conecta</h3>
+          <p>Contacta con el refugio o rescatista para conocer más sobre tu futura mascota.</p>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>🐕 The Loyal Nest</h3>
-                    <p>Conectando corazones, cambiando vidas.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Enlaces</h4>
-                    <ul>
-                        <li><a href="search-pets.html">Buscar Mascotas</a></li>
-                        <li><a href="shelters-map.html">Refugios</a></li>
-                        <li><a href="education.html">Educación</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contacto</h4>
-                    <p>📧 info@theloyalnest.com</p>
-                    <p>📱 +52 55 1234 5678</p>
-                </div>
-            </div>
-
-            <div class="footer-bottom" style="text-align: center; color: #9ca3af; font-size: 0.9rem;">
-                &copy; 2025 The Loyal Nest. Todos los derechos reservados.
-
-                <!-- Acceso Admin (discreto al final final) -->
-                <div style="margin-top: 8px; font-size: 0.75rem; opacity: 0.55;">
-                    <a href="#" id="adminFooterBtn" style="color: #9ca3af; text-decoration: none;">Admin</a>
-                </div>
-            </div>
+        <div class="step-card">
+          <div class="step-icon">🏠</div>
+          <h3>Adopta</h3>
+          <p>Completa el proceso de adopción y dale un hogar lleno de amor.</p>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
 
-    <script src="js/script.js"></script>
-    <script src="js/auth.js"></script>
+  <!-- Featured Pets -->
+  <section class="featured-pets">
+    <div class="container">
+      <div class="section-header">
+        <h2>Mascotas Destacadas</h2>
+        <p>Conoce algunos de nuestros amigos que buscan hogar</p>
+      </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Animación de contadores
-            const stats = document.querySelectorAll('.stat-number');
-            stats.forEach(stat => {
-                const hasPercent = stat.textContent.includes('%');
-                const hasPlus = stat.textContent.includes('+');
-                const hasSlash = stat.textContent.includes('/');
+      <!-- ✅ IMPORTANTE: tu JS usa "petsGrid", no "featuredPets" -->
+      <div class="pets-grid" id="petsGrid"></div>
 
-                if (hasSlash) return; // No animar 24/7
+      <div class="section-cta">
+        <a href="search-pets.html" class="btn-primary">Ver Todas las Mascotas 🐾</a>
+      </div>
+    </div>
+  </section>
 
-                const finalValue = parseInt(stat.textContent.replace(/[^\d]/g, ''));
-                let currentValue = 0;
-                const increment = finalValue / 100;
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>¿Eres un Rescatista?</h2>
+        <p>Únete a nuestra comunidad y ayuda a más mascotas a encontrar un hogar.</p>
 
-                const timer = setInterval(() => {
-                    currentValue += increment;
-                    if (currentValue >= finalValue) {
-                        currentValue = finalValue;
-                        clearInterval(timer);
-                    }
+        <div class="cta-buttons">
+          <a href="register.html" class="btn-primary">Registrarse como Rescatista</a>
+          <a href="education.html" class="btn-outline">Recursos Educativos</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-                    let displayValue = Math.floor(currentValue).toLocaleString();
-                    if (hasPercent) displayValue += '%';
-                    if (hasPlus) displayValue += '+';
-                    stat.textContent = displayValue;
-                }, 20);
-            });
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>🐕 The Loyal Nest</h3>
+          <p>Conectando corazones, cambiando vidas.</p>
+        </div>
 
-            // Scroll suave para enlaces internos
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    const href = this.getAttribute('href');
-                    if (!href || href === '#') return;
-                    const target = document.querySelector(href);
-                    if (!target) return;
-                    e.preventDefault();
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                });
-            });
-        });
-    </script>
+        <div class="footer-section">
+          <h4>Enlaces</h4>
+          <ul>
+            <li><a href="search-pets.html">Buscar Mascotas</a></li>
+            <li><a href="shelters-map.html">Refugios</a></li>
+            <li><a href="education.html">Educación</a></li>
+          </ul>
+        </div>
 
-    <script>
-        // Acceso Admin (discreto, desde el footer) - demo, no es seguridad real en GitHub Pages
-        document.addEventListener('DOMContentLoaded', function () {
-            const adminBtn = document.getElementById('adminFooterBtn');
-            if (!adminBtn) return;
+        <div class="footer-section">
+          <h4>Contacto</h4>
+          <p>📧 info@theloyalnest.com</p>
+          <p>📱 +52 55 1234 5678</p>
+        </div>
+      </div>
 
-            adminBtn.addEventListener('click', function (e) {
-                e.preventDefault();
+      <div class="footer-bottom">
+        &copy; 2025 The Loyal Nest. Todos los derechos reservados.
 
-                const pass = prompt('Contraseña de administrador:');
-                if (!pass) return;
+        <!-- ✅ Admin discreto al final final -->
+        <div class="admin-hidden">
+          <a href="#" id="adminFooterBtn">Admin</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
-                // ⚠️ Cambia esta contraseña a la que tú quieras
-                if (pass === 'ADMIN123') {
-                    sessionStorage.setItem('isAdmin', '1');
-                    window.location.href = 'dashboard-admin.html';
-                } else {
-                    alert('Contraseña incorrecta.');
-                }
-            });
-        });
-    </script>
+  <script src="js/script.js"></script>
+  <script src="js/auth.js"></script>
 
+  <script>
+    // Animación de contadores (tu misma lógica)
+    document.addEventListener('DOMContentLoaded', function () {
+      const stats = document.querySelectorAll('.stat-number');
+      stats.forEach(stat => {
+        const hasPercent = stat.textContent.includes('%');
+        const hasPlus = stat.textContent.includes('+');
+        const hasSlash = stat.textContent.includes('/');
+
+        if (hasSlash) return; // No animar 24/7
+
+        const finalValue = parseInt(stat.textContent.replace(/[^\d]/g, ''));
+        let currentValue = 0;
+        const increment = finalValue / 100;
+
+        const timer = setInterval(() => {
+          currentValue += increment;
+          if (currentValue >= finalValue) {
+            currentValue = finalValue;
+            clearInterval(timer);
+          }
+
+          let displayValue = Math.floor(currentValue).toLocaleString();
+          if (hasPercent) displayValue += '%';
+          if (hasPlus) displayValue += '+';
+          stat.textContent = displayValue;
+        }, 20);
+      });
+    });
+  </script>
+
+  <script>
+    // Acceso Admin (discreto desde el footer) - demo, NO es seguridad real en GitHub Pages
+    document.addEventListener('DOMContentLoaded', function () {
+      const adminBtn = document.getElementById('adminFooterBtn');
+      if (!adminBtn) return;
+
+      adminBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const pass = prompt('Contraseña de administrador:');
+        if (!pass) return;
+
+        // ⚠️ Cambia esta contraseña a la que tú quieras
+        if (pass === 'ADMIN123') {
+          sessionStorage.setItem('isAdmin', '1');
+          window.location.href = 'dashboard-admin.html';
+        } else {
+          alert('Contraseña incorrecta.');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
 
-    </script>
-</body>
-</html>
 
