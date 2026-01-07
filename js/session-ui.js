@@ -1,8 +1,6 @@
 // js/session-ui.js
 // UI global de sesión: oculta/mostrar botones de auth y muestra menú de usuario
-// Funciona con:
-//  - index.html: <li class="nav-auth" id="navAuth">...</li> y <li id="userMenu">...</li>
-//  - otras páginas: <div id="nav-auth-buttons"></div>
+// Además: "Ir a mi panel" manda a dashboard según rol (adoptante/rescatista)
 
 (function () {
   // ---- Helpers ----
@@ -41,16 +39,21 @@
     return user?.nombre || user?.name || user?.username || user?.email || 'Mi cuenta';
   }
 
+  // ✅ Normaliza rol (adoptante/rescatista)
   function getRole(user) {
-    return String(user?.rol || user?.role || user?.type || user?.userType || '').toLowerCase();
+    const role = String(user?.rol || user?.role || user?.tipo || user?.type || user?.userType || '').toLowerCase();
+
+    // soporta variantes comunes
+    if (role.includes('rescat')) return 'rescatista';
+    if (role.includes('adopt')) return 'adoptante';
+
+    return role; // puede venir vacío
   }
 
+  // ✅ dashboard por rol (lo que pediste)
   function getDashboardByRole(role) {
-    // Ajustado a nombres que tienes en el proyecto
     if (role === 'rescatista') return 'dashboard-rescatista.html';
-    if (role === 'adoptante') return 'dashboard-adoptante.html';
-    if (role === 'administrador' || role === 'admin') return 'dashboard-admin.html';
-    // fallback
+    // por defecto adoptante
     return 'dashboard-adoptante.html';
   }
 
@@ -64,10 +67,7 @@
     localStorage.removeItem('tl_token');
     localStorage.removeItem('tl_token_exp');
 
-    // refresca UI
     updateAuthUI();
-
-    // opcional: mandar al inicio
     window.location.href = 'index.html';
   }
 
@@ -76,12 +76,23 @@
     window.cerrarSesion = logout;
   }
 
+  // Evitar inyección rara en nombre
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
   // ---- UI update ----
   function updateAuthUI() {
     const logged = isLoggedIn();
     const user = getSessionUser();
     const name = getDisplayName(user);
-    const dash = getDashboardByRole(getRole(user));
+    const role = getRole(user);
+    const dash = getDashboardByRole(role);
 
     // Caso A: navbar tipo index (li.nav-auth + userMenu)
     const navAuthLi = document.querySelector('.nav-auth') || document.getElementById('navAuth');
@@ -93,7 +104,11 @@
       if (navAuthLi) navAuthLi.style.display = 'none';
       if (userMenu) userMenu.style.display = 'block';
       if (userNameEl) userNameEl.textContent = name;
-      if (dashLink) dashLink.setAttribute('href', dash);
+
+      // ✅ Este es el cambio: link de "Ir a mi panel" según rol
+      if (dashLink) {
+        dashLink.setAttribute('href', dash);
+      }
     } else {
       if (navAuthLi) navAuthLi.style.display = '';
       if (userMenu) userMenu.style.display = 'none';
@@ -126,17 +141,7 @@
     }
   }
 
-  // Evitar inyección rara en nombre
-  function escapeHtml(str) {
-    return String(str)
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
-  }
-
   // ---- Init ----
   document.addEventListener('DOMContentLoaded', updateAuthUI);
-  window.addEventListener('storage', updateAuthUI); // si cambia session en otra pestaña
+  window.addEventListener('storage', updateAuthUI);
 })();
