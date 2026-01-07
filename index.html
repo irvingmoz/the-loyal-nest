@@ -1,67 +1,27 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Loyal Nest</title>
 
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Fix de estilos SOLO para este index (sin romper otras páginas) -->
   <style>
-    /* 1) Subtítulo visible (tu style.css lo deja blanco) */
+    /* Ajustes mínimos para que se vea bien sin tocar tu style.css global */
     .hero .hero-subtitle { color: var(--gray); }
 
-    /* 2) Imagen del hero bonita y consistente */
-    .hero-img {
-      width: 100%;
-      height: 460px;
-      object-fit: cover;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-lg);
-      display: block;
-    }
-    @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; }
-      .hero-img { height: 280px; }
-    }
-
-    /* 3) How it works (no existía CSS para tus clases) */
-    .how-it-works { padding: 4rem 0; }
-    .how-it-works h2 { text-align: center; font-size: 2.5rem; margin-bottom: 2rem; }
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-    }
-    .step-card {
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 2rem;
-      text-align: center;
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
-    .step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-    .step-icon { font-size: 2.6rem; margin-bottom: 1rem; }
-
-    /* 4) Encabezado y CTA de secciones */
-    .section-header { text-align: center; margin-bottom: 2rem; }
-    .section-cta { text-align: center; margin-top: 2rem; }
-
-    /* 5) CTA final (no existía CSS para tus clases) */
-    .cta-section { background: var(--gray-light); padding: 4rem 0; }
-    .cta-content { text-align: center; max-width: 850px; margin: 0 auto; }
-    .cta-content .cta-buttons {
+    /* Botones del hero: en tu index original estaban con clases/atributos rotos */
+    .cta-buttons {
       display: flex;
-      gap: 1rem;
-      justify-content: center;
+      gap: 12px;
       flex-wrap: wrap;
-      margin-top: 1.25rem;
+      align-items: center;
+      margin-top: 18px;
     }
 
-    /* Admin discretito al final */
+    /* Admin discreto al final final */
     .admin-hidden {
       margin-top: 10px;
       font-size: 0.75rem;
@@ -87,11 +47,13 @@
         <li><a href="shelters-map.html">Refugios</a></li>
         <li><a href="education.html">📚 Educación</a></li>
 
-        <li class="nav-auth">
+        <!-- ✅ Este bloque se OCULTA cuando hay sesión -->
+        <li class="nav-auth" id="navAuth">
           <a href="auth.html" class="btn-outline">Iniciar Sesión</a>
           <a href="register.html" class="btn-primary">Registrarse</a>
         </li>
 
+        <!-- ✅ Este bloque se MUESTRA cuando hay sesión -->
         <li id="userMenu" class="nav-user" style="display: none;">
           <span class="user-info">
             <strong id="userName">Mi cuenta</strong>
@@ -114,26 +76,27 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
-      <h1 class="hero-title">Cambia Vidas, Adopta Amor</h1>
-
+      <h1>Cambia Vidas, Adopta Amor</h1>
       <p class="hero-subtitle">
         Conectamos mascotas necesitadas con hogares extraordinarios.
         Cada adopción es una segunda oportunidad llena de amor incondicional.
       </p>
 
-      <!-- Botones usando clases que SÍ existen en tu style.css -->
-      <div class="hero-actions">
-        <a href="search-pets.html" class="btn-primary btn-large">🐾 Comenzar</a>
-        <a href="#how-it-works" class="btn-outline btn-large">📖 Conocer Más</a>
+      <!-- ✅ Botones usando clases que sí existen -->
+      <div class="cta-buttons">
+        <a href="search-pets.html" class="btn-primary">🐾 Comenzar</a>
+        <a href="#how-it-works" class="btn-outline">📖 Conocer Más</a>
       </div>
     </div>
 
-    <div class="hero-visual">
-      <img
-        src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=600&fit=crop"
-        alt="Mascotas felices"
-        class="hero-img"
-      />
+    <div class="hero-image">
+      <div class="image-placeholder">
+        <img
+          src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=600&fit=crop"
+          alt="Mascotas felices"
+          class="hero-img"
+        >
+      </div>
     </div>
   </section>
 
@@ -165,20 +128,17 @@
   <section id="how-it-works" class="how-it-works">
     <div class="container">
       <h2>¿Cómo Funciona?</h2>
-
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-icon">🔍</div>
           <h3>Busca</h3>
           <p>Explora nuestro catálogo de mascotas disponibles para adopción.</p>
         </div>
-
         <div class="step-card">
           <div class="step-icon">💝</div>
           <h3>Conecta</h3>
           <p>Contacta con el refugio o rescatista para conocer más sobre tu futura mascota.</p>
         </div>
-
         <div class="step-card">
           <div class="step-icon">🏠</div>
           <h3>Adopta</h3>
@@ -196,11 +156,15 @@
         <p>Conoce algunos de nuestros amigos que buscan hogar</p>
       </div>
 
-      <!-- ✅ IMPORTANTE: tu JS usa "petsGrid", no "featuredPets" -->
-      <div class="pets-grid" id="petsGrid"></div>
+      <!-- ✅ IMPORTANTE: tu JS usa petsGrid -->
+      <div class="pets-grid" id="petsGrid">
+        <!-- Pet cards will be generated by JS -->
+      </div>
 
       <div class="section-cta">
-        <a href="search-pets.html" class="btn-primary">Ver Todas las Mascotas 🐾</a>
+        <a href="search-pets.html" class="btn-primary">
+          Ver Todas las Mascotas 🐾
+        </a>
       </div>
     </div>
   </section>
@@ -211,7 +175,6 @@
       <div class="cta-content">
         <h2>¿Eres un Rescatista?</h2>
         <p>Únete a nuestra comunidad y ayuda a más mascotas a encontrar un hogar.</p>
-
         <div class="cta-buttons">
           <a href="register.html" class="btn-primary">Registrarse como Rescatista</a>
           <a href="education.html" class="btn-outline">Recursos Educativos</a>
@@ -228,7 +191,6 @@
           <h3>🐕 The Loyal Nest</h3>
           <p>Conectando corazones, cambiando vidas.</p>
         </div>
-
         <div class="footer-section">
           <h4>Enlaces</h4>
           <ul>
@@ -237,7 +199,6 @@
             <li><a href="education.html">Educación</a></li>
           </ul>
         </div>
-
         <div class="footer-section">
           <h4>Contacto</h4>
           <p>📧 info@theloyalnest.com</p>
@@ -245,7 +206,7 @@
         </div>
       </div>
 
-      <div class="footer-bottom">
+      <div class="footer-bottom" style="text-align: center; color: #9ca3af; font-size: 0.9rem;">
         &copy; 2025 The Loyal Nest. Todos los derechos reservados.
 
         <!-- ✅ Admin discreto al final final -->
@@ -260,7 +221,7 @@
   <script src="js/auth.js"></script>
 
   <script>
-    // Animación de contadores (tu misma lógica)
+    // Animación de contadores
     document.addEventListener('DOMContentLoaded', function () {
       const stats = document.querySelectorAll('.stat-number');
       stats.forEach(stat => {
@@ -291,7 +252,83 @@
   </script>
 
   <script>
-    // Acceso Admin (discreto desde el footer) - demo, NO es seguridad real en GitHub Pages
+    // ✅ Mostrar/Ocultar botones de auth cuando hay sesión
+    function getSessionUser() {
+      // Tu flujo principal (auth.js) usa userSession/sesionActiva
+      const userSessionRaw = localStorage.getItem('userSession');
+      if (userSessionRaw) {
+        try { return JSON.parse(userSessionRaw); } catch { /* ignore */ }
+      }
+      // Otro posible flujo en el proyecto
+      const tlUserRaw = localStorage.getItem('tl_user');
+      if (tlUserRaw) {
+        try { return JSON.parse(tlUserRaw); } catch { /* ignore */ }
+      }
+      return null;
+    }
+
+    function isLoggedIn() {
+      const u = getSessionUser();
+      if (u) return true;
+
+      const sesionActiva = localStorage.getItem('sesionActiva');
+      if (sesionActiva && sesionActiva !== 'false' && sesionActiva !== '0') return true;
+
+      return false;
+    }
+
+    function resolveDashboardLink(user) {
+      const rol = (user?.rol || user?.role || '').toLowerCase();
+      if (rol === 'rescatista') return 'dashboard-rescatista.html';
+      if (rol === 'adoptante') return 'dashboard-adoptante.html';
+      if (rol === 'administrador' || rol === 'admin') return 'dashboard-admin.html';
+      // fallback
+      return 'dashboard-adoptante.html';
+    }
+
+    function updateAuthUI() {
+      const navAuth = document.getElementById('navAuth');
+      const userMenu = document.getElementById('userMenu');
+      const userNameEl = document.getElementById('userName');
+      const dashLink = document.getElementById('userDashboardLink');
+
+      const logged = isLoggedIn();
+      const user = getSessionUser();
+
+      if (logged) {
+        if (navAuth) navAuth.style.display = 'none';
+        if (userMenu) userMenu.style.display = 'block';
+
+        const name = user?.nombre || user?.name || user?.username || user?.email || 'Mi cuenta';
+        if (userNameEl) userNameEl.textContent = name;
+
+        if (dashLink) {
+          dashLink.href = resolveDashboardLink(user);
+          dashLink.addEventListener('click', (e) => {
+            // Evita # si todavía está así
+            if (!dashLink.href) e.preventDefault();
+          });
+        }
+      } else {
+        if (navAuth) navAuth.style.display = 'block';
+        if (userMenu) userMenu.style.display = 'none';
+      }
+    }
+
+    // No romper si ya existe cerrarSesion() en auth.js
+    window.cerrarSesion = window.cerrarSesion || function () {
+      localStorage.removeItem('sesionActiva');
+      localStorage.removeItem('userSession');
+      localStorage.removeItem('tl_user');
+      window.location.href = 'index.html';
+    };
+
+    document.addEventListener('DOMContentLoaded', updateAuthUI);
+    window.addEventListener('storage', updateAuthUI);
+  </script>
+
+  <script>
+    // ✅ Acceso Admin discreto desde el footer (demo)
     document.addEventListener('DOMContentLoaded', function () {
       const adminBtn = document.getElementById('adminFooterBtn');
       if (!adminBtn) return;
@@ -314,3 +351,4 @@
   </script>
 </body>
 </html>
+
